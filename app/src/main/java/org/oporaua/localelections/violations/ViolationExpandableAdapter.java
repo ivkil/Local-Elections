@@ -46,7 +46,8 @@ public class ViolationExpandableAdapter extends ExpandableRecyclerAdapter<Violat
     }
 
     @Override
-    public void onBindParentViewHolder(final ViolationParentViewHolder parentViewHolder, final int position, final ParentListItem parentListItem) {
+    public void onBindParentViewHolder(final ViolationParentViewHolder parentViewHolder,
+                                       final int position, final ParentListItem parentListItem) {
         ViolationParent violationParent = (ViolationParent) parentListItem;
         parentViewHolder.mName.setText(violationParent.getName());
         parentViewHolder.mParentDropDownArrow.setOnClickListener(new View.OnClickListener() {
