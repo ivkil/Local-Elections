@@ -8,11 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class WebViewFragment extends Fragment {
 
     private static final String ARG_PATH = "path";
 
-    private WebView mWebView;
+    @Bind(R.id.webView)
+    WebView mWebView;
+
     private String mPath;
 
     public static WebViewFragment newInstance(String path) {
@@ -23,28 +28,20 @@ public class WebViewFragment extends Fragment {
         return fragment;
     }
 
-    public WebViewFragment() {
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mPath = getArguments().getString(ARG_PATH);
-        }
+        mPath = getArguments().getString(ARG_PATH);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_web_view, container, false);
-        mWebView = (WebView) view.findViewById(R.id.webView);
+        ButterKnife.bind(this, view);
+        mWebView.loadUrl(mPath);
+
         return view;
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mWebView.loadUrl(mPath);
-    }
 }

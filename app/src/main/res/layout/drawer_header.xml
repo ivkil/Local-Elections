@@ -1,11 +1,17 @@
-<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:adjustViewBounds="true"
-    android:orientation="vertical"
-    android:scaleType="fitCenter"
-    android:src="@drawable/logo"
-    android:paddingTop="50dp"
-    android:paddingLeft="25dp"
-    android:paddingRight="25dp"
-    android:paddingBottom="25dp"/>
+    android:layout_height="164dp"
+    android:paddingTop="24dp"
+    android:background="@android:color/white">
+
+    <ImageView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside"
+        android:src="@drawable/logo"
+        android:padding="16dp"/>
+
+</FrameLayout>
+
