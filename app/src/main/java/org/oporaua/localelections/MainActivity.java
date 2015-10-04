@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import org.oporaua.localelections.violations.ViolationsFragment;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -21,8 +23,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     private final static int DRAWER_ID_LAW = 10;
     private final static int DRAWER_ID_MANUAL = 20;
+    private final static int DRAWER_ID_VIOLATIONS = 30;
 
-    @IntDef({DRAWER_ID_LAW, DRAWER_ID_MANUAL})
+    @IntDef({DRAWER_ID_LAW, DRAWER_ID_MANUAL, DRAWER_ID_VIOLATIONS})
     @Retention(RetentionPolicy.SOURCE)
     private @interface DrawerId {
     }
@@ -58,12 +61,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                    mDrawerLayout.openDrawer(GravityCompat.START);
+                mDrawerLayout.openDrawer(GravityCompat.START);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -93,6 +95,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 return WebViewFragment.newInstance("file:///android_asset/law.htm");
             case DRAWER_ID_MANUAL:
                 return WebViewFragment.newInstance("file:///android_asset/law.htm");
+            case DRAWER_ID_VIOLATIONS:
+                return ViolationsFragment.newInstance();
             default:
                 return WebViewFragment.newInstance("file:///android_asset/law.htm");
         }
@@ -119,6 +123,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 return DRAWER_ID_LAW;
             case R.id.manual:
                 return DRAWER_ID_MANUAL;
+            case R.id.violations:
+                return DRAWER_ID_VIOLATIONS;
             default:
                 return DRAWER_ID_LAW;
         }

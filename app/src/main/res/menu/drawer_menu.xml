@@ -5,10 +5,16 @@
             android:checked="true"
             android:icon="@mipmap/ic_launcher"
             android:title="Закон"/>
+
         <item
             android:id="@+id/manual"
             android:icon="@mipmap/ic_launcher"
             android:title="Посібник"/>
+
+        <item
+            android:id="@+id/violations"
+            android:icon="@mipmap/ic_launcher"
+            android:title="Порушення"/>
     </group>
 
 </menu>

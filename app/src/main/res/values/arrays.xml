@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="violation_parent_names">
+        <item>Незаконна агітація</item>
+        <item>Зловживання адміністративним ресурсом</item>
+        <item>Підкуп виборців</item>
+        <item>Маніпуляції зі списками виборців, базою даних ДРВ</item>
+        <item>Перешкоджання роботі журналістів та спостерігачів</item>
+        <item>Порушення з боку виборчих комісій</item>
+        <item>Фальсифікація результатів голосування</item>
+        <item>Кримінальне втручання у виборчий процес</item>
+    </string-array>
+
+    <array name="violation_child_names_arrays">
+        <item>@array/violation_child_name_array0</item>
+        <item>@array/violation_child_name_array1</item>
+        <item>@array/violation_child_name_array2</item>
+        <item>@array/violation_child_name_array3</item>
+        <item>@array/violation_child_name_array4</item>
+        <item>@array/violation_child_name_array5</item>
+        <item>@array/violation_child_name_array6</item>
+        <item>@array/violation_child_name_array7</item>
+    </array>
+
+    <array name="violation_child_source_arrays">
+        <item>@array/violation_child_sources_array0</item>
+        <item>@array/violation_child_sources_array1</item>
+        <item>@array/violation_child_sources_array2</item>
+        <item>@array/violation_child_sources_array3</item>
+        <item>@array/violation_child_sources_array4</item>
+        <item>@array/violation_child_sources_array5</item>
+        <item>@array/violation_child_sources_array6</item>
+        <item>@array/violation_child_sources_array7</item>
+    </array>
+
+
+    <string-array name="violation_child_name_array0">
+        <item>Здійснення агітації іноземцями, іноземними ЗМІ</item>
+        <item>Проведення агітації у заборонений законом час</item>
+        <item>Поширення (встановлення) агітаційних матеріалів у заборонених законом місцях</item>
+        <item>Чорний піар та брудна агітація</item>
+        <item>Фінансування агітації не з виборчого фонду</item>
+        <item>Порушення порядку ведення агітації засобами масової інформації</item>
+    </string-array>
+
+    <string-array name="violation_child_name_array1">
+        <item>Втручання органів державної влади, органів місцевого самоврядування у виборчий процес (роботу виборчих комісій)</item>
+        <item>Упереджене і вибіркове ставлення представників влади до кандидатів, партій</item>
+        <item>Використання в передвиборних цілях матеріально-технічних засобів та кадрових ресурсів за місцем роботи</item>
+        <item>Використання комунальних ЗМІ та офіційних видань в агітаційних цілях</item>
+        <item>Використання посадового (службового) становища для ведення агітації</item>
+    </string-array>
+
+    <string-array name="violation_child_name_array2">
+        <item>Прямий підкуп</item>
+        <item>Непрямий підкуп</item>
+    </string-array>
+
+    <string-array name="violation_child_name_array3">
+        <item>Порушення порядку подання відомостей про виборців</item>
+        <item>Порушення порядку складання та подання списків виборців</item>
+    </string-array>
+    <string-array name="violation_child_name_array4">
+        <item>Недопуск, незаконне позбавлення права присутності на засіданні виборчої комісії чи виборчій дільниці</item>
+        <item>Позбавлення права ознайомлюватися з виборчою документацією</item>
+        <item>Перешкоджання здійсненню фото- та кінозйомки, аудіо- та відеозапису</item>
+    </string-array>
+    <string-array name="violation_child_name_array5">
+        <item>Здійснення агітації членами виборчих комісій</item>
+        <item>Маніпуляції з документами виборчих комісій</item>
+        <item>Ухилення члена виборчої комісії у роботі комісії без поважних причин</item>
+        <item>Неналежне матеріально-технічне забезпечення виборчих комісій</item>
+        <item>Порушення процедури голосування</item>
+    </string-array>
+    <string-array name="violation_child_name_array6">
+        <item>Маніпуляції з бюлетенями</item>
+        <item>Незаконне голосування виборцями</item>
+    </string-array>
+    <string-array name="violation_child_name_array7">
+        <item>Перешкоджання проведенню агітаційних заходів</item>
+        <item>Пошкодження майна та агітації</item>
+        <item>Застосування насильства й погроз</item>
+    </string-array>
+
+
+    <string-array name="violation_child_sources_array0">
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+    </string-array>
+
+    <string-array name="violation_child_sources_array1">
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+    </string-array>
+
+    <string-array name="violation_child_sources_array2">
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+    </string-array>
+
+    <string-array name="violation_child_sources_array3">
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+    </string-array>
+
+    <string-array name="violation_child_sources_array4">
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+    </string-array>
+
+    <string-array name="violation_child_sources_array5">
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+    </string-array>
+
+    <string-array name="violation_child_sources_array6">
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+    </string-array>
+
+    <string-array name="violation_child_sources_array7">
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/law.htm</item>
+    </string-array>
+
+
+</resources>
