@@ -64,7 +64,6 @@
     <string-array name="violation_child_name_array4">
         <item>Недопуск, незаконне позбавлення права присутності на засіданні виборчої комісії чи виборчій дільниці</item>
         <item>Позбавлення права ознайомлюватися з виборчою документацією</item>
-        <item>Перешкоджання здійсненню фото- та кінозйомки, аудіо- та відеозапису</item>
     </string-array>
     <string-array name="violation_child_name_array5">
         <item>Здійснення агітації членами виборчих комісій</item>
@@ -85,55 +84,54 @@
 
 
     <string-array name="violation_child_sources_array0">
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/Violations/1_1.htm</item>
+        <item>file:///android_asset/Violations/1_2.htm</item>
+        <item>file:///android_asset/Violations/1_3.htm</item>
+        <item>file:///android_asset/Violations/1_4.htm</item>
+        <item>file:///android_asset/Violations/1_5.htm</item>
+        <item>file:///android_asset/Violations/1_6.htm</item>
     </string-array>
 
     <string-array name="violation_child_sources_array1">
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/Violations/2_1.htm</item>
+        <item>file:///android_asset/Violations/2_2.htm</item>
+        <item>file:///android_asset/Violations/2_3.htm</item>
+        <item>file:///android_asset/Violations/2_4.htm</item>
+        <item>file:///android_asset/Violations/2_5.htm</item>
     </string-array>
 
     <string-array name="violation_child_sources_array2">
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/Violations/3_1.htm</item>
+        <item>file:///android_asset/Violations/3_2.htm</item>
     </string-array>
 
     <string-array name="violation_child_sources_array3">
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/Violations/4_1.htm</item>
+        <item>file:///android_asset/Violations/4_2.htm</item>
     </string-array>
 
     <string-array name="violation_child_sources_array4">
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/Violations/5_1.htm</item>
+        <item>file:///android_asset/Violations/5_2.htm</item>
     </string-array>
 
     <string-array name="violation_child_sources_array5">
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/Violations/6_1.htm</item>
+        <item>file:///android_asset/Violations/6_2.htm</item>
+        <item>file:///android_asset/Violations/6_3.htm</item>
+        <item>file:///android_asset/Violations/6_4.htm</item>
+        <item>file:///android_asset/Violations/6_5.htm</item>
     </string-array>
 
     <string-array name="violation_child_sources_array6">
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/Violations/7_1.htm</item>
+        <item>file:///android_asset/Violations/7_2.htm</item>
     </string-array>
 
     <string-array name="violation_child_sources_array7">
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
-        <item>file:///android_asset/law.htm</item>
+        <item>file:///android_asset/Violations/8_1.htm</item>
+        <item>file:///android_asset/Violations/8_2.htm</item>
+        <item>file:///android_asset/Violations/8_1.htm</item>
     </string-array>
 
 

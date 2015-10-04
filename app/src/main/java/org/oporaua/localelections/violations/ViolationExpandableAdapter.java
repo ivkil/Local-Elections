@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
 import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
@@ -16,6 +15,7 @@ import com.bignerdranch.expandablerecyclerview.ViewHolder.ChildViewHolder;
 import com.bignerdranch.expandablerecyclerview.ViewHolder.ParentViewHolder;
 
 import org.oporaua.localelections.R;
+import org.oporaua.localelections.WebViewActivity;
 import org.oporaua.localelections.violations.model.ViolationChild;
 import org.oporaua.localelections.violations.model.ViolationParent;
 
@@ -68,7 +68,7 @@ public class ViolationExpandableAdapter extends ExpandableRecyclerAdapter<Violat
         childViewHolder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, violationChild.getName(), Toast.LENGTH_SHORT).show();
+                mContext.startActivity(WebViewActivity.getCallingIntent(mContext, violationChild.getPath()));
             }
         });
 

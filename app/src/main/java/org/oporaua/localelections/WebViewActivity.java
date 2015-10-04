@@ -1,0 +1,52 @@
+package org.oporaua.localelections;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
+
+public class WebViewActivity extends AppCompatActivity {
+
+    private static final String ARG_FILE_URI = "file_uri";
+
+    public static Intent getCallingIntent(Context context, String fileUri) {
+        Intent intent = new Intent(context, WebViewActivity.class);
+        intent.putExtra(ARG_FILE_URI, fileUri);
+        return intent;
+    }
+
+    private String mFileUri;
+
+    @SuppressWarnings("ConstantConditions")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_web_view);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        processIntent();
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.container,
+                    WebViewFragment.newInstance(mFileUri)).commit();
+        }
+    }
+
+    private void processIntent() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null && bundle.containsKey(ARG_FILE_URI)) {
+            mFileUri = bundle.getString(ARG_FILE_URI);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+}

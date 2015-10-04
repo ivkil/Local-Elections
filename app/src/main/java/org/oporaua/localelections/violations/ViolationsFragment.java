@@ -28,6 +28,7 @@ public class ViolationsFragment extends Fragment {
 
     @Bind(R.id.rv_violations)
     RecyclerView mViolationsRecyclerView;
+    private ViolationExpandableAdapter mExpandableAdapter;
 
     public static ViolationsFragment newInstance() {
         return new ViolationsFragment();
@@ -41,7 +42,13 @@ public class ViolationsFragment extends Fragment {
 
         mViolationsRecyclerView.setHasFixedSize(true);
         mViolationsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mViolationsRecyclerView.setAdapter(new ViolationExpandableAdapter(getActivity(), getItemList()));
+        mExpandableAdapter = new ViolationExpandableAdapter(getActivity(), getItemList());
+
+        if (savedInstanceState != null) {
+            mExpandableAdapter.onRestoreInstanceState(savedInstanceState);
+        }
+
+        mViolationsRecyclerView.setAdapter(mExpandableAdapter);
 
         return view;
     }
@@ -79,6 +86,12 @@ public class ViolationsFragment extends Fragment {
         childViolationsSources.recycle();
 
         return violationParents;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mExpandableAdapter.onSaveInstanceState(outState);
     }
 
 
