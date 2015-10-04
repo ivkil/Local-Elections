@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.oporaua.localelections.R;
+import org.oporaua.localelections.interfaces.SetToolbarListener;
 import org.oporaua.localelections.util.GeneralUtil;
 
 import butterknife.Bind;
@@ -41,15 +43,18 @@ public class ViolationsFragment extends Fragment {
 
         mViolationsRecyclerView.setAdapter(mExpandableAdapter);
 
+        if(getActivity() instanceof SetToolbarListener){
+            Toolbar toolbar = ButterKnife.findById(view, R.id.app_toolbar);
+            ((SetToolbarListener)getActivity()).onSetToolbar(toolbar);
+        }
+
         return view;
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mExpandableAdapter.onSaveInstanceState(outState);
     }
-
 
 }

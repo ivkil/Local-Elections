@@ -3,4 +3,8 @@
     <color name="primary">#3949AB</color>
     <color name="primary_dark">#283593</color>
     <color name="parent_item">#ededed</color>
+    <color name="accent">#FF0000</color>
+
+    <color name="gray_light">#ececec</color>
+
 </resources>

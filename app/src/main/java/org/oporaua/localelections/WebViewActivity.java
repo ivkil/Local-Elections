@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-public class WebViewActivity extends AppCompatActivity {
+import org.oporaua.localelections.interfaces.SetToolbarListener;
+
+public class WebViewActivity extends AppCompatActivity implements SetToolbarListener {
 
     private static final String ARG_FILE_URI = "file_uri";
 
@@ -18,16 +21,15 @@ public class WebViewActivity extends AppCompatActivity {
 
     private String mFileUri;
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         processIntent();
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container,
-                    WebViewFragment.newInstance(mFileUri)).commit();
+                    WebViewFragment.newInstance(mFileUri, false)).commit();
         }
     }
 
@@ -48,5 +50,12 @@ public class WebViewActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    @SuppressWarnings("ConstantConditions")
+    @Override
+    public void onSetToolbar(Toolbar toolbar) {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
 }

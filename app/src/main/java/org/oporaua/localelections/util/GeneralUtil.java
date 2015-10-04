@@ -1,9 +1,12 @@
 package org.oporaua.localelections.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 
@@ -51,4 +54,20 @@ public final class GeneralUtil {
 
         return violationParents;
     }
+
+    public static void hideKeyBoard(Context context, View view) {
+        if (view == null)
+            return;
+        InputMethodManager imm = (InputMethodManager) context
+                .getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static void showKeyBoard(Context context, View view) {
+        view.requestFocus();
+        InputMethodManager imm = (InputMethodManager) context
+                .getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+    }
+
 }
