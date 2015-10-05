@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             case DRAWER_ID_LAW:
                 return WebViewFragment.newInstance("file:///android_asset/law.htm", true);
             case DRAWER_ID_MANUAL:
-                return WebViewFragment.newInstance("file:///android_asset/law.htm", true);
+                return WebViewFragment.newInstance("file:///android_asset/manual.htm", true);
             case DRAWER_ID_VIOLATIONS:
                 return ViolationsFragment.newInstance();
             default:

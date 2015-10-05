@@ -115,6 +115,7 @@ public class WebViewFragment extends Fragment implements OnQueryTextListener, On
             case R.id.ib_search:
                 showSearchToolbar(true);
                 GeneralUtil.showKeyBoard(getActivity(), mSearchEditText);
+                mSearchEditText.selectAll();
                 break;
             case R.id.ib_scroll_up:
                 scrollUp();
@@ -129,13 +130,9 @@ public class WebViewFragment extends Fragment implements OnQueryTextListener, On
     }
 
     private void onCloseClick() {
-        if (!TextUtils.isEmpty(mSearchEditText.getText().toString())) {
-            mSearchEditText.getText().clear();
-            mWebView.clearMatches();
-        } else {
-            GeneralUtil.hideKeyBoard(getActivity(), mSearchEditText);
-            showSearchToolbar(false);
-        }
+        mWebView.clearMatches();
+        GeneralUtil.hideKeyBoard(getActivity(), mSearchEditText);
+        showSearchToolbar(false);
     }
 
     private void showSearchToolbar(boolean show) {
