@@ -6,11 +6,11 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView.OnCloseListener;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -135,10 +135,12 @@ public class WebViewFragment extends Fragment implements OnQueryTextListener, On
         showSearchToolbar(false);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void showSearchToolbar(boolean show) {
         mToolbar.findViewById(R.id.root_search_custom).setVisibility(show ? View.VISIBLE : View.GONE);
         mToolbar.findViewById(R.id.root_search_normal).setVisibility(show ? View.GONE : View.VISIBLE);
         mIndicatorTextView.setText(getString(R.string.find_indicator_default));
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(!show);
     }
 
     @Override

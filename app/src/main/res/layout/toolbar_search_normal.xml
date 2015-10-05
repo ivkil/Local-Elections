@@ -9,12 +9,12 @@
 
     <ImageButton
         android:id="@+id/ib_search"
-        style="@style/ActionBarButtonStyle"
+        style="@style/ActionBarButtonStyleMain"
         android:src="@drawable/ic_search_24dp"/>
 
     <ImageButton
         android:id="@+id/ib_scroll_up"
-        style="@style/ActionBarButtonStyle"
+        style="@style/ActionBarButtonStyleMain"
         android:src="@drawable/ic_arrow_up_24dp"/>
 
 </LinearLayout>
