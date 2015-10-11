@@ -11,15 +11,15 @@ import org.oporaua.localelections.interfaces.SetToolbarListener;
 
 public class WebViewActivity extends AppCompatActivity implements SetToolbarListener {
 
-    private static final String ARG_FILE_URI = "file_uri";
+    public static final String ARG_FILE_URL = "file_url";
 
     public static Intent getCallingIntent(Context context, String fileUri) {
         Intent intent = new Intent(context, WebViewActivity.class);
-        intent.putExtra(ARG_FILE_URI, fileUri);
+        intent.putExtra(ARG_FILE_URL, fileUri);
         return intent;
     }
 
-    private String mFileUri;
+    private String mFileUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +29,14 @@ public class WebViewActivity extends AppCompatActivity implements SetToolbarList
         processIntent();
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container,
-                    WebViewFragment.newInstance(mFileUri, false)).commit();
+                    WebViewFragment.newInstance(mFileUrl, false)).commit();
         }
     }
 
     private void processIntent() {
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null && bundle.containsKey(ARG_FILE_URI)) {
-            mFileUri = bundle.getString(ARG_FILE_URI);
+        if (bundle != null && bundle.containsKey(ARG_FILE_URL)) {
+            mFileUrl = bundle.getString(ARG_FILE_URL);
         }
     }
 

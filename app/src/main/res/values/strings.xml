@@ -1,9 +1,10 @@
 <resources>
-    <string name="app_name">Local Elections</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">Місцеві вибори</string>
+
     <string name="drawer_law">Закон</string>
     <string name="drawer_manual">Посібник</string>
 
-    <string name="find_indicator_default">0/0</string>
+    <string name="find_indicator_empty">0/0</string>
     <string name="search_hint">Знайти</string>
+
 </resources>

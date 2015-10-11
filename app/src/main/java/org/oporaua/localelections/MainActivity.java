@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import org.oporaua.localelections.interfaces.SetToolbarListener;
+import org.oporaua.localelections.util.Constants;
 import org.oporaua.localelections.violations.ViolationsFragment;
 
 import java.lang.annotation.Retention;
@@ -84,13 +85,13 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private Fragment getFragmentByDrawerId(@DrawerId int drawerId) {
         switch (drawerId) {
             case DRAWER_ID_LAW:
-                return WebViewFragment.newInstance("file:///android_asset/law.htm", true);
+                return WebViewFragment.newInstance(Constants.LAW_PATH, true);
             case DRAWER_ID_MANUAL:
-                return WebViewFragment.newInstance("file:///android_asset/manual.htm", true);
+                return WebViewFragment.newInstance(Constants.MANUAL_PATH, true);
             case DRAWER_ID_VIOLATIONS:
                 return ViolationsFragment.newInstance();
             default:
-                return WebViewFragment.newInstance("file:///android_asset/law.htm", true);
+                return WebViewFragment.newInstance(Constants.LAW_PATH, true);
         }
     }
 

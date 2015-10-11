@@ -2,35 +2,41 @@ package org.oporaua.localelections;
 
 
 import android.animation.ObjectAnimator;
-import android.annotation.TargetApi;
-import android.os.Build;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView.OnCloseListener;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.oporaua.localelections.interfaces.SetToolbarListener;
+import org.oporaua.localelections.util.Constants;
 import org.oporaua.localelections.util.GeneralUtil;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+
 public class WebViewFragment extends Fragment implements OnQueryTextListener, OnCloseListener,
-        OnClickListener, WebView.FindListener {
+        OnClickListener, TextView.OnEditorActionListener {
 
     private static final int INIT_POSITION = 0;
 
@@ -73,8 +79,13 @@ public class WebViewFragment extends Fragment implements OnQueryTextListener, On
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_web_view, container, false);
         ButterKnife.bind(this, view);
-        mWebView.loadUrl(mPath);
+        if (savedInstanceState == null) {
+            mWebView.loadUrl(mPath);
+        } else {
+            mWebView.restoreState(savedInstanceState);
+        }
         mWebView.setWebViewClient(new MyWebViewClient());
+        mWebView.getSettings().setBuiltInZoomControls(true);
 
         if (mSearchEnabled) {
 
@@ -86,11 +97,37 @@ public class WebViewFragment extends Fragment implements OnQueryTextListener, On
 
             mSearchEditText = ButterKnife.findById(mToolbar, R.id.et_search);
             mSearchEditText.addTextChangedListener(new SearchTextWatcher());
+            mSearchEditText.setOnEditorActionListener(this);
 
             mIndicatorTextView = ButterKnife.findById(mToolbar, R.id.tv_indicator);
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                mWebView.setFindListener(this);
+                mWebView.setFindListener(new WebView.FindListener() {
+                    @Override
+                    public void onFindResultReceived(int activeMatchOrdinal, int numberOfMatches, boolean isDoneCounting) {
+                        if (!isDoneCounting) return;
+                        String result;
+                        if (numberOfMatches != 0) {
+                            mIndicatorTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
+                            result = String.format("%d/%d", ++activeMatchOrdinal,
+                                    numberOfMatches);
+
+                        } else {
+                            if (!TextUtils.isEmpty(mSearchEditText.getText())) {
+                                mIndicatorTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.accent));
+                                result = getString(R.string.find_indicator_empty);
+                            } else {
+                                result = "";
+                            }
+                        }
+                        if (numberOfMatches > 1) {
+                            enabledNavigation(true);
+                        } else {
+                            enabledNavigation(false);
+                        }
+                        mIndicatorTextView.setText(result);
+                    }
+                });
             } else {
                 mIndicatorTextView.setVisibility(View.GONE);
             }
@@ -110,51 +147,62 @@ public class WebViewFragment extends Fragment implements OnQueryTextListener, On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ib_close:
-                onCloseClick();
+                GeneralUtil.hideKeyBoard(getActivity(), mSearchEditText);
+                mWebView.clearMatches();
+                showSearchToolbar(false);
+                enabledNavigation(false);
                 break;
             case R.id.ib_search:
                 showSearchToolbar(true);
                 GeneralUtil.showKeyBoard(getActivity(), mSearchEditText);
                 mSearchEditText.selectAll();
+                mIndicatorTextView.setText("");
+                enabledNavigation(false);
                 break;
             case R.id.ib_scroll_up:
+                GeneralUtil.hideKeyBoard(getActivity(), mSearchEditText);
                 scrollUp();
                 break;
             case R.id.ib_up:
+                GeneralUtil.hideKeyBoard(getActivity(), mSearchEditText);
                 mWebView.findNext(false);
                 break;
             case R.id.ib_down:
+                GeneralUtil.hideKeyBoard(getActivity(), mSearchEditText);
                 mWebView.findNext(true);
                 break;
         }
     }
 
-    private void onCloseClick() {
-        mWebView.clearMatches();
-        GeneralUtil.hideKeyBoard(getActivity(), mSearchEditText);
-        showSearchToolbar(false);
-    }
 
     @SuppressWarnings("ConstantConditions")
     private void showSearchToolbar(boolean show) {
         mToolbar.findViewById(R.id.root_search_custom).setVisibility(show ? View.VISIBLE : View.GONE);
         mToolbar.findViewById(R.id.root_search_normal).setVisibility(show ? View.GONE : View.VISIBLE);
-        mIndicatorTextView.setText(getString(R.string.find_indicator_default));
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(!show);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(!show);
     }
 
-    @Override
-    public void onFindResultReceived(int activeMatchOrdinal, int numberOfMatches,
-                                     boolean isDoneCounting) {
-        if (!isDoneCounting) return;
-        String result;
-        if (numberOfMatches == 0) {
-            result = getString(R.string.find_indicator_default);
+    private void enabledNavigation(boolean enabled) {
+        ImageButton buttonDown = ButterKnife.findById(mToolbar, R.id.ib_down);
+        buttonDown.setClickable(enabled);
+        buttonDown.setEnabled(enabled);
+        buttonDown.setColorFilter(ContextCompat.getColor(getActivity(),
+                enabled ? R.color.white : R.color.gray));
+        ImageButton buttonUp = ButterKnife.findById(mToolbar, R.id.ib_up);
+        buttonUp.setClickable(enabled);
+        buttonUp.setEnabled(enabled);
+        buttonUp.setColorFilter(ContextCompat.getColor(getActivity(),
+                enabled ? R.color.white : R.color.gray));
+
+    }
+
+    @SuppressWarnings("deprecation")
+    private void findInPage(String s) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            mWebView.findAllAsync(s);
         } else {
-            result = String.format("%d/%d", ++activeMatchOrdinal,
-                    numberOfMatches);
+            mWebView.findAll(s);
         }
-        mIndicatorTextView.setText(result);
     }
 
     private class SearchTextWatcher implements TextWatcher {
@@ -163,14 +211,9 @@ public class WebViewFragment extends Fragment implements OnQueryTextListener, On
 
         }
 
-        @SuppressWarnings("deprecation")
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                mWebView.findAllAsync(s.toString());
-            } else {
-                mWebView.findAll(s.toString());
-            }
+            findInPage(s.toString());
         }
 
         @Override
@@ -182,9 +225,21 @@ public class WebViewFragment extends Fragment implements OnQueryTextListener, On
     private class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            return false;
+            Uri uri = Uri.parse(url);
+            if (uri.getScheme().equalsIgnoreCase(Constants.LAW_SCHEME)) {
+                String fragment = uri.getAuthority();
+                Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                url = Uri.parse(Constants.LAW_PATH)
+                        .buildUpon()
+                        .encodedFragment(fragment)
+                        .build().toString();
+                intent.putExtra(WebViewActivity.ARG_FILE_URL, url);
+                startActivity(intent);
+            }
+            return true;
         }
 
+        @Override
         public void onPageFinished(WebView view, String url) {
             mProgressBar.setVisibility(View.GONE);
         }
@@ -215,5 +270,22 @@ public class WebViewFragment extends Fragment implements OnQueryTextListener, On
     public boolean onClose() {
         return false;
     }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            findInPage(mSearchEditText.getText().toString());
+            GeneralUtil.hideKeyBoard(getActivity(), mSearchEditText);
+        }
+        return false;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        mWebView.saveState(outState);
+        super.onSaveInstanceState(outState);
+    }
+
 
 }
