@@ -1,0 +1,38 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/law"
+            android:checked="true"
+            android:icon="@mipmap/ic_launcher"
+            android:title="@string/drawer_law_title" />
+
+        <item
+            android:id="@+id/manual"
+            android:icon="@mipmap/ic_launcher"
+            android:title="@string/drawer_manual_title" />
+
+        <item
+            android:id="@+id/violations"
+            android:icon="@mipmap/ic_launcher"
+            android:title="@string/drawer_violations_title" />
+
+        <item
+            android:id="@+id/blanks"
+            android:icon="@mipmap/ic_launcher"
+            android:title="@string/drawer_blanks_title" />
+
+    </group>
+    <group>
+        <item
+            android:id="@+id/navigation_subheader"
+            android:title="@string/nav_subheader">
+            <menu>
+                <item
+                    android:id="@+id/contacts"
+                    android:icon="@mipmap/ic_launcher"
+                    android:title="@string/drawer_contacts_title" />
+            </menu>
+        </item>
+    </group>
+
+</menu>

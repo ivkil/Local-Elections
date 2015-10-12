@@ -14,12 +14,13 @@
     <string name="drawer_blanks_title">Бланки документів</string>
     <string name="drawer_contacts_title">Контакти</string>
 
-    <string name="action_search_title">Search</string>
-    <string name="action_scroll_up_title">Scroll Up</string>
-    <string name="action_print_title">Print</string>
+    <string name="action_search_title">Пошук</string>
+    <string name="action_scroll_up_title">Угору</string>
+    <string name="action_print_title">Друк</string>
     <string name="contacts_mail">info@opora.org.ua</string>
-    <string name="contacts_phone">044</string>
+    <string name="contacts_phone">044 286 26 70</string>
     <string name="contacts_address">м. Київ, вул. Професора Підвисоцького, 10/10, офіс 3</string>
+    <string name="nav_subheader">Інше</string>
 
 
 </resources>

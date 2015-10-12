@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.oporaua.localelections.R;
-import org.oporaua.localelections.WebViewActivity;
+import org.oporaua.localelections.ui.activity.WebViewActivity;
 
 import java.util.ArrayList;
 import java.util.List;

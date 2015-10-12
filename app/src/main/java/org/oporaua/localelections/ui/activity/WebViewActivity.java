@@ -1,4 +1,4 @@
-package org.oporaua.localelections;
+package org.oporaua.localelections.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import org.oporaua.localelections.R;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
+import org.oporaua.localelections.ui.fragment.WebViewFragment;
 
 public class WebViewActivity extends AppCompatActivity implements SetToolbarListener {
 

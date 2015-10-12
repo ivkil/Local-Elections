@@ -1,4 +1,4 @@
-package org.oporaua.localelections;
+package org.oporaua.localelections.ui.fragment;
 
 
 import android.animation.ObjectAnimator;
@@ -36,12 +36,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import org.oporaua.localelections.R;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
+import org.oporaua.localelections.ui.activity.WebViewActivity;
 import org.oporaua.localelections.util.Constants;
 import org.oporaua.localelections.util.GeneralUtil;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
 
 
 public class WebViewFragment extends Fragment implements OnQueryTextListener, OnCloseListener,

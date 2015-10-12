@@ -15,7 +15,7 @@ import com.bignerdranch.expandablerecyclerview.ViewHolder.ChildViewHolder;
 import com.bignerdranch.expandablerecyclerview.ViewHolder.ParentViewHolder;
 
 import org.oporaua.localelections.R;
-import org.oporaua.localelections.WebViewActivity;
+import org.oporaua.localelections.ui.activity.WebViewActivity;
 import org.oporaua.localelections.violations.model.ViolationChild;
 import org.oporaua.localelections.violations.model.ViolationParent;
 
@@ -23,6 +23,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
 
 public class ViolationExpandableAdapter extends ExpandableRecyclerAdapter<ViolationExpandableAdapter.ViolationParentViewHolder, ViolationExpandableAdapter.ViolationChildViewHolder> {
 

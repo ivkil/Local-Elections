@@ -104,13 +104,13 @@
     </string-array>
 
     <string-array name="violation_child_sources_array3">
-        <item>file:///android_asset/Violations/4_1.htm</item>
-        <item>file:///android_asset/Violations/4_2.htm</item>
+        <item>file:///android_asset/violations/4_1.htm</item>
+        <item>file:///android_asset/violations/4_2.htm</item>
     </string-array>
 
     <string-array name="violation_child_sources_array4">
-        <item>file:///android_asset/Violations/5_1.htm</item>
-        <item>file:///android_asset/Violations/5_2.htm</item>
+        <item>file:///android_asset/violations/5_1.htm</item>
+        <item>file:///android_asset/violations/5_2.htm</item>
     </string-array>
 
     <string-array name="violation_child_sources_array5">

@@ -1,4 +1,4 @@
-package org.oporaua.localelections;
+package org.oporaua.localelections.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.IntDef;
@@ -11,8 +11,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import org.oporaua.localelections.R;
 import org.oporaua.localelections.blanks.BlanksFragment;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
+import org.oporaua.localelections.ui.fragment.ContactsFragment;
+import org.oporaua.localelections.ui.fragment.WebViewFragment;
 import org.oporaua.localelections.util.Constants;
 import org.oporaua.localelections.violations.ViolationsFragment;
 
@@ -24,11 +27,15 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, SetToolbarListener {
 
+    private static final String PREV_MENU_ID_TAG = "prev_menu_id";
+
     private final static int DRAWER_ID_LAW = 10;
     private final static int DRAWER_ID_MANUAL = 20;
     private final static int DRAWER_ID_VIOLATIONS = 30;
     private final static int DRAWER_ID_BLANKS = 40;
     private final static int DRAWER_ID_CONTACTS = 50;
+
+    private int mPreviousMenuItem = -1;
 
     @IntDef({DRAWER_ID_LAW, DRAWER_ID_MANUAL, DRAWER_ID_VIOLATIONS, DRAWER_ID_BLANKS, DRAWER_ID_CONTACTS})
     @Retention(RetentionPolicy.SOURCE)
@@ -42,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     NavigationView mNavigationView;
 
     @DrawerId
-    private int mCurrentDrawerId = DRAWER_ID_LAW;
+    private int mCurrentDrawerId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +60,13 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         mNavigationView.setNavigationItemSelectedListener(this);
 
         if (savedInstanceState == null) {
-            replaceFragment(getFragmentByDrawerId(mCurrentDrawerId));
+            replaceFragment(getFragmentByDrawerId(DRAWER_ID_LAW));
+            mNavigationView.getMenu().findItem(R.id.law).setCheckable(true);
+            mNavigationView.getMenu().findItem(R.id.law).setChecked(true);
+        } else {
+            mPreviousMenuItem = savedInstanceState.getInt(PREV_MENU_ID_TAG);
+            mNavigationView.getMenu().findItem(mPreviousMenuItem).setCheckable(true);
+            mNavigationView.getMenu().findItem(mPreviousMenuItem).setChecked(true);
         }
     }
 
@@ -74,6 +87,13 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             closeDrawer();
             return false;
         }
+
+        menuItem.setCheckable(true);
+        menuItem.setChecked(true);
+        if (mPreviousMenuItem != -1) {
+            mNavigationView.getMenu().findItem(mPreviousMenuItem).setChecked(false);
+        }
+        mPreviousMenuItem = menuItem.getItemId();
 
         mCurrentDrawerId = getDrawerIdByMenuItem(menuItem);
         replaceFragment(getFragmentByDrawerId(mCurrentDrawerId));
@@ -143,5 +163,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(PREV_MENU_ID_TAG, mPreviousMenuItem);
+        super.onSaveInstanceState(outState);
+    }
 }
