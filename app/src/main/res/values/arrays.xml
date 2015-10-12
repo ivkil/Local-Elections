@@ -84,25 +84,25 @@
 
 
     <string-array name="violation_child_sources_array0">
-        <item>file:///android_asset/Violations/1_1.htm</item>
-        <item>file:///android_asset/Violations/1_2.htm</item>
-        <item>file:///android_asset/Violations/1_3.htm</item>
-        <item>file:///android_asset/Violations/1_4.htm</item>
-        <item>file:///android_asset/Violations/1_5.htm</item>
-        <item>file:///android_asset/Violations/1_6.htm</item>
+        <item>file:///android_asset/violations/1_1.htm</item>
+        <item>file:///android_asset/violations/1_2.htm</item>
+        <item>file:///android_asset/violations/1_3.htm</item>
+        <item>file:///android_asset/violations/1_4.htm</item>
+        <item>file:///android_asset/violations/1_5.htm</item>
+        <item>file:///android_asset/violations/1_6.htm</item>
     </string-array>
 
     <string-array name="violation_child_sources_array1">
-        <item>file:///android_asset/Violations/2_1.htm</item>
-        <item>file:///android_asset/Violations/2_2.htm</item>
-        <item>file:///android_asset/Violations/2_3.htm</item>
-        <item>file:///android_asset/Violations/2_4.htm</item>
-        <item>file:///android_asset/Violations/2_5.htm</item>
+        <item>file:///android_asset/violations/2_1.htm</item>
+        <item>file:///android_asset/violations/2_2.htm</item>
+        <item>file:///android_asset/violations/2_3.htm</item>
+        <item>file:///android_asset/violations/2_4.htm</item>
+        <item>file:///android_asset/violations/2_5.htm</item>
     </string-array>
 
     <string-array name="violation_child_sources_array2">
-        <item>file:///android_asset/Violations/3_1.htm</item>
-        <item>file:///android_asset/Violations/3_2.htm</item>
+        <item>file:///android_asset/violations/3_1.htm</item>
+        <item>file:///android_asset/violations/3_2.htm</item>
     </string-array>
 
     <string-array name="violation_child_sources_array3">
@@ -116,22 +116,22 @@
     </string-array>
 
     <string-array name="violation_child_sources_array5">
-        <item>file:///android_asset/Violations/6_1.htm</item>
-        <item>file:///android_asset/Violations/6_2.htm</item>
-        <item>file:///android_asset/Violations/6_3.htm</item>
-        <item>file:///android_asset/Violations/6_4.htm</item>
-        <item>file:///android_asset/Violations/6_5.htm</item>
+        <item>file:///android_asset/violations/6_1.htm</item>
+        <item>file:///android_asset/violations/6_2.htm</item>
+        <item>file:///android_asset/violations/6_3.htm</item>
+        <item>file:///android_asset/violations/6_4.htm</item>
+        <item>file:///android_asset/violations/6_5.htm</item>
     </string-array>
 
     <string-array name="violation_child_sources_array6">
-        <item>file:///android_asset/Violations/7_1.htm</item>
-        <item>file:///android_asset/Violations/7_2.htm</item>
+        <item>file:///android_asset/violations/7_1.htm</item>
+        <item>file:///android_asset/violations/7_2.htm</item>
     </string-array>
 
     <string-array name="violation_child_sources_array7">
-        <item>file:///android_asset/Violations/8_1.htm</item>
-        <item>file:///android_asset/Violations/8_2.htm</item>
-        <item>file:///android_asset/Violations/8_1.htm</item>
+        <item>file:///android_asset/violations/8_1.htm</item>
+        <item>file:///android_asset/violations/8_2.htm</item>
+        <item>file:///android_asset/violations/8_1.htm</item>
     </string-array>
 
 
