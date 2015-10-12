@@ -7,14 +7,19 @@
     <string name="find_indicator_empty">0/0</string>
     <string name="search_hint">Знайти</string>
 
-<!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="drawer_law_title">Закон</string>
     <string name="drawer_manual_title">Посібник</string>
     <string name="drawer_violations_title">Порушення</string>
     <string name="drawer_blanks_title">Бланки документів</string>
+    <string name="drawer_contacts_title">Контакти</string>
+
     <string name="action_search_title">Search</string>
     <string name="action_scroll_up_title">Scroll Up</string>
     <string name="action_print_title">Print</string>
+    <string name="contacts_mail">info@opora.org.ua</string>
+    <string name="contacts_phone">044</string>
+    <string name="contacts_address">м. Київ, вул. Професора Підвисоцького, 10/10, офіс 3</string>
+
 
 </resources>

@@ -28,8 +28,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private final static int DRAWER_ID_MANUAL = 20;
     private final static int DRAWER_ID_VIOLATIONS = 30;
     private final static int DRAWER_ID_BLANKS = 40;
+    private final static int DRAWER_ID_CONTACTS = 50;
 
-    @IntDef({DRAWER_ID_LAW, DRAWER_ID_MANUAL, DRAWER_ID_VIOLATIONS, DRAWER_ID_BLANKS})
+    @IntDef({DRAWER_ID_LAW, DRAWER_ID_MANUAL, DRAWER_ID_VIOLATIONS, DRAWER_ID_BLANKS, DRAWER_ID_CONTACTS})
     @Retention(RetentionPolicy.SOURCE)
     private @interface DrawerId {
     }
@@ -94,6 +95,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 return ViolationsFragment.newInstance();
             case DRAWER_ID_BLANKS:
                 return BlanksFragment.newInstance();
+            case DRAWER_ID_CONTACTS:
+                return ContactsFragment.newInstance();
             default:
                 return WebViewFragment.newInstance(Constants.LAW_PATH, true, false);
         }
@@ -124,6 +127,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 return DRAWER_ID_VIOLATIONS;
             case R.id.blanks:
                 return DRAWER_ID_BLANKS;
+            case R.id.contacts:
+                return DRAWER_ID_CONTACTS;
             default:
                 return DRAWER_ID_LAW;
         }
