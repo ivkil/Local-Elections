@@ -69,7 +69,7 @@ public class ViolationExpandableAdapter extends ExpandableRecyclerAdapter<Violat
         childViewHolder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContext.startActivity(WebViewActivity.getCallingIntent(mContext, violationChild.getPath()));
+                mContext.startActivity(WebViewActivity.getCallingIntent(mContext, violationChild.getPath(), false));
             }
         });
 

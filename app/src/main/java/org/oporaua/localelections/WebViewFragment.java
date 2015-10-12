@@ -2,9 +2,14 @@ package org.oporaua.localelections;
 
 
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +21,9 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -26,6 +34,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import org.oporaua.localelections.interfaces.SetToolbarListener;
 import org.oporaua.localelections.util.Constants;
@@ -36,12 +45,13 @@ import butterknife.ButterKnife;
 
 
 public class WebViewFragment extends Fragment implements OnQueryTextListener, OnCloseListener,
-        OnClickListener, TextView.OnEditorActionListener {
+        OnClickListener, OnEditorActionListener {
 
     private static final int INIT_POSITION = 0;
 
     private static final String ARG_PATH = "path";
     private static final String ARG_SEARCH_ENABLE = "enable";
+    private static final String ARG_PRINT_ENABLE = "print";
 
     @Bind(R.id.webView)
     WebView mWebView;
@@ -54,15 +64,17 @@ public class WebViewFragment extends Fragment implements OnQueryTextListener, On
 
     private String mPath;
     private boolean mSearchEnabled;
+    private boolean mPrintEnable;
 
     private EditText mSearchEditText;
     private TextView mIndicatorTextView;
 
-    public static WebViewFragment newInstance(String path, boolean searchEnabled) {
+    public static WebViewFragment newInstance(String path, boolean searchEnabled, boolean printEnable) {
         WebViewFragment fragment = new WebViewFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PATH, path);
         args.putBoolean(ARG_SEARCH_ENABLE, searchEnabled);
+        args.putBoolean(ARG_PRINT_ENABLE, printEnable);
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,8 +82,10 @@ public class WebViewFragment extends Fragment implements OnQueryTextListener, On
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         mPath = getArguments().getString(ARG_PATH);
         mSearchEnabled = getArguments().getBoolean(ARG_SEARCH_ENABLE);
+        mPrintEnable = getArguments().getBoolean(ARG_PRINT_ENABLE);
     }
 
     @Override
@@ -99,6 +113,46 @@ public class WebViewFragment extends Fragment implements OnQueryTextListener, On
         }
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (mPrintEnable) {
+            inflater.inflate(R.menu.menu_web_view_print, menu);
+        }
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_print:
+                createWebPrintJob();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void createWebPrintJob() {
+        if (isKitkat()) {
+            PrintManager printManager = (PrintManager) getActivity().getSystemService(Context.PRINT_SERVICE);
+            PrintDocumentAdapter printAdapter = mWebView.createPrintDocumentAdapter();
+            String jobName = getString(R.string.app_name) + " Document";
+            printManager.print(jobName, printAdapter, new PrintAttributes.Builder().build());
+        }
+    }
+
+    private boolean isKitkat() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem item = menu.findItem(R.id.action_print);
+        if (!isKitkat() && item != null) {
+            item.setVisible(false);
+        }
     }
 
     private void configureSearch() {
@@ -176,7 +230,6 @@ public class WebViewFragment extends Fragment implements OnQueryTextListener, On
                 break;
         }
     }
-
 
     @SuppressWarnings("ConstantConditions")
     private void showSearchToolbar(boolean show) {

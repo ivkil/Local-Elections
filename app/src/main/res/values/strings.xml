@@ -13,5 +13,8 @@
     <string name="drawer_manual_title">Посібник</string>
     <string name="drawer_violations_title">Порушення</string>
     <string name="drawer_blanks_title">Бланки документів</string>
+    <string name="action_search_title">Search</string>
+    <string name="action_scroll_up_title">Scroll Up</string>
+    <string name="action_print_title">Print</string>
 
 </resources>

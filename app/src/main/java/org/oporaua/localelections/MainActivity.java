@@ -87,15 +87,15 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private Fragment getFragmentByDrawerId(@DrawerId int drawerId) {
         switch (drawerId) {
             case DRAWER_ID_LAW:
-                return WebViewFragment.newInstance(Constants.LAW_PATH, true);
+                return WebViewFragment.newInstance(Constants.LAW_PATH, true, false);
             case DRAWER_ID_MANUAL:
-                return WebViewFragment.newInstance(Constants.MANUAL_PATH, true);
+                return WebViewFragment.newInstance(Constants.MANUAL_PATH, true, false);
             case DRAWER_ID_VIOLATIONS:
                 return ViolationsFragment.newInstance();
             case DRAWER_ID_BLANKS:
                 return BlanksFragment.newInstance();
             default:
-                return WebViewFragment.newInstance(Constants.LAW_PATH, true);
+                return WebViewFragment.newInstance(Constants.LAW_PATH, true, false);
         }
     }
 
