@@ -38,7 +38,7 @@ public class BlankAdapter extends RecyclerView.Adapter<BlankAdapter.BlankViewHol
         holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContext.startActivity(WebViewActivity.getCallingIntent(mContext, blank.getUri()));
+                mContext.startActivity(WebViewActivity.getCallingIntent(mContext, blank.getUri(), true));
             }
         });
         holder.title.setText(blank.getTitle());

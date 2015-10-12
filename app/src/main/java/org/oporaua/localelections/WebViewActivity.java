@@ -12,14 +12,17 @@ import org.oporaua.localelections.interfaces.SetToolbarListener;
 public class WebViewActivity extends AppCompatActivity implements SetToolbarListener {
 
     public static final String ARG_FILE_URL = "file_url";
+    public static final String ARG_PRINT_ENABLED = "print_url";
 
-    public static Intent getCallingIntent(Context context, String fileUri) {
+    public static Intent getCallingIntent(Context context, String fileUri, boolean printEnabled) {
         Intent intent = new Intent(context, WebViewActivity.class);
         intent.putExtra(ARG_FILE_URL, fileUri);
+        intent.putExtra(ARG_PRINT_ENABLED, printEnabled);
         return intent;
     }
 
     private String mFileUrl;
+    private boolean mPrintEnabled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +32,7 @@ public class WebViewActivity extends AppCompatActivity implements SetToolbarList
         processIntent();
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container,
-                    WebViewFragment.newInstance(mFileUrl, false)).commit();
+                    WebViewFragment.newInstance(mFileUrl, false, mPrintEnabled)).commit();
         }
     }
 
@@ -37,6 +40,7 @@ public class WebViewActivity extends AppCompatActivity implements SetToolbarList
         Bundle bundle = getIntent().getExtras();
         if (bundle != null && bundle.containsKey(ARG_FILE_URL)) {
             mFileUrl = bundle.getString(ARG_FILE_URL);
+            mPrintEnabled = bundle.getBoolean(ARG_PRINT_ENABLED);
         }
     }
 
