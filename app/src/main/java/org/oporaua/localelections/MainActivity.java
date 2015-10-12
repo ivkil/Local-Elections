@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import org.oporaua.localelections.blanks.BlanksFragment;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
 import org.oporaua.localelections.util.Constants;
 import org.oporaua.localelections.violations.ViolationsFragment;
@@ -26,8 +27,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private final static int DRAWER_ID_LAW = 10;
     private final static int DRAWER_ID_MANUAL = 20;
     private final static int DRAWER_ID_VIOLATIONS = 30;
+    private final static int DRAWER_ID_BLANKS = 40;
 
-    @IntDef({DRAWER_ID_LAW, DRAWER_ID_MANUAL, DRAWER_ID_VIOLATIONS})
+    @IntDef({DRAWER_ID_LAW, DRAWER_ID_MANUAL, DRAWER_ID_VIOLATIONS, DRAWER_ID_BLANKS})
     @Retention(RetentionPolicy.SOURCE)
     private @interface DrawerId {
     }
@@ -90,6 +92,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 return WebViewFragment.newInstance(Constants.MANUAL_PATH, true);
             case DRAWER_ID_VIOLATIONS:
                 return ViolationsFragment.newInstance();
+            case DRAWER_ID_BLANKS:
+                return BlanksFragment.newInstance();
             default:
                 return WebViewFragment.newInstance(Constants.LAW_PATH, true);
         }
@@ -118,6 +122,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 return DRAWER_ID_MANUAL;
             case R.id.violations:
                 return DRAWER_ID_VIOLATIONS;
+            case R.id.blanks:
+                return DRAWER_ID_BLANKS;
             default:
                 return DRAWER_ID_LAW;
         }

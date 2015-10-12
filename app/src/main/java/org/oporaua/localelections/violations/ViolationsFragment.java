@@ -21,6 +21,7 @@ public class ViolationsFragment extends Fragment {
 
     @Bind(R.id.rv_violations)
     RecyclerView mViolationsRecyclerView;
+
     private ViolationExpandableAdapter mExpandableAdapter;
 
     public static ViolationsFragment newInstance() {

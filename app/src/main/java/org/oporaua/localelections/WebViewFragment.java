@@ -88,49 +88,7 @@ public class WebViewFragment extends Fragment implements OnQueryTextListener, On
         mWebView.getSettings().setBuiltInZoomControls(true);
 
         if (mSearchEnabled) {
-
-            ButterKnife.findById(mToolbar, R.id.ib_close).setOnClickListener(this);
-            ButterKnife.findById(mToolbar, R.id.ib_down).setOnClickListener(this);
-            ButterKnife.findById(mToolbar, R.id.ib_up).setOnClickListener(this);
-            ButterKnife.findById(mToolbar, R.id.ib_scroll_up).setOnClickListener(this);
-            ButterKnife.findById(mToolbar, R.id.ib_search).setOnClickListener(this);
-
-            mSearchEditText = ButterKnife.findById(mToolbar, R.id.et_search);
-            mSearchEditText.addTextChangedListener(new SearchTextWatcher());
-            mSearchEditText.setOnEditorActionListener(this);
-
-            mIndicatorTextView = ButterKnife.findById(mToolbar, R.id.tv_indicator);
-
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                mWebView.setFindListener(new WebView.FindListener() {
-                    @Override
-                    public void onFindResultReceived(int activeMatchOrdinal, int numberOfMatches, boolean isDoneCounting) {
-                        if (!isDoneCounting) return;
-                        String result;
-                        if (numberOfMatches != 0) {
-                            mIndicatorTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
-                            result = String.format("%d/%d", ++activeMatchOrdinal,
-                                    numberOfMatches);
-
-                        } else {
-                            if (!TextUtils.isEmpty(mSearchEditText.getText())) {
-                                mIndicatorTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.accent));
-                                result = getString(R.string.find_indicator_empty);
-                            } else {
-                                result = "";
-                            }
-                        }
-                        if (numberOfMatches > 1) {
-                            enabledNavigation(true);
-                        } else {
-                            enabledNavigation(false);
-                        }
-                        mIndicatorTextView.setText(result);
-                    }
-                });
-            } else {
-                mIndicatorTextView.setVisibility(View.GONE);
-            }
+            configureSearch();
         } else {
             mToolbar.findViewById(R.id.root_search_custom).setVisibility(View.GONE);
             mToolbar.findViewById(R.id.root_search_normal).setVisibility(View.GONE);
@@ -141,6 +99,51 @@ public class WebViewFragment extends Fragment implements OnQueryTextListener, On
         }
 
         return view;
+    }
+
+    private void configureSearch() {
+        ButterKnife.findById(mToolbar, R.id.ib_close).setOnClickListener(this);
+        ButterKnife.findById(mToolbar, R.id.ib_down).setOnClickListener(this);
+        ButterKnife.findById(mToolbar, R.id.ib_up).setOnClickListener(this);
+        ButterKnife.findById(mToolbar, R.id.ib_scroll_up).setOnClickListener(this);
+        ButterKnife.findById(mToolbar, R.id.ib_search).setOnClickListener(this);
+
+        mSearchEditText = ButterKnife.findById(mToolbar, R.id.et_search);
+        mSearchEditText.addTextChangedListener(new SearchTextWatcher());
+        mSearchEditText.setOnEditorActionListener(this);
+
+        mIndicatorTextView = ButterKnife.findById(mToolbar, R.id.tv_indicator);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            mWebView.setFindListener(new WebView.FindListener() {
+                @Override
+                public void onFindResultReceived(int activeMatchOrdinal, int numberOfMatches, boolean isDoneCounting) {
+                    if (!isDoneCounting) return;
+                    String result;
+                    if (numberOfMatches != 0) {
+                        mIndicatorTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
+                        result = String.format("%d/%d", ++activeMatchOrdinal,
+                                numberOfMatches);
+
+                    } else {
+                        if (!TextUtils.isEmpty(mSearchEditText.getText())) {
+                            mIndicatorTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.accent));
+                            result = getString(R.string.find_indicator_empty);
+                        } else {
+                            result = "";
+                        }
+                    }
+                    if (numberOfMatches > 1) {
+                        enabledNavigation(true);
+                    } else {
+                        enabledNavigation(false);
+                    }
+                    mIndicatorTextView.setText(result);
+                }
+            });
+        } else {
+            mIndicatorTextView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -193,7 +196,6 @@ public class WebViewFragment extends Fragment implements OnQueryTextListener, On
         buttonUp.setEnabled(enabled);
         buttonUp.setColorFilter(ContextCompat.getColor(getActivity(),
                 enabled ? R.color.white : R.color.gray));
-
     }
 
     @SuppressWarnings("deprecation")
@@ -208,7 +210,6 @@ public class WebViewFragment extends Fragment implements OnQueryTextListener, On
     private class SearchTextWatcher implements TextWatcher {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
         }
 
         @Override
@@ -286,6 +287,5 @@ public class WebViewFragment extends Fragment implements OnQueryTextListener, On
         mWebView.saveState(outState);
         super.onSaveInstanceState(outState);
     }
-
 
 }

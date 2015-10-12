@@ -4,17 +4,22 @@
             android:id="@+id/law"
             android:checked="true"
             android:icon="@mipmap/ic_launcher"
-            android:title="Закон"/>
+            android:title="@string/drawer_law_title"/>
 
         <item
             android:id="@+id/manual"
             android:icon="@mipmap/ic_launcher"
-            android:title="Посібник"/>
+            android:title="@string/drawer_manual_title"/>
 
         <item
             android:id="@+id/violations"
             android:icon="@mipmap/ic_launcher"
-            android:title="Порушення"/>
+            android:title="@string/drawer_violations_title"/>
+
+        <item
+            android:id="@+id/blanks"
+            android:icon="@mipmap/ic_launcher"
+            android:title="@string/drawer_blanks_title"/>
     </group>
 
 </menu>

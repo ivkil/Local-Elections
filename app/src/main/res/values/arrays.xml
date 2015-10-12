@@ -34,7 +34,6 @@
         <item>@array/violation_child_sources_array7</item>
     </array>
 
-
     <string-array name="violation_child_name_array0">
         <item>Здійснення агітації іноземцями, іноземними ЗМІ</item>
         <item>Проведення агітації у заборонений законом час</item>
@@ -81,7 +80,6 @@
         <item>Пошкодження майна та агітації</item>
         <item>Застосування насильства й погроз</item>
     </string-array>
-
 
     <string-array name="violation_child_sources_array0">
         <item>file:///android_asset/violations/1_1.htm</item>
@@ -134,5 +132,18 @@
         <item>file:///android_asset/violations/8_1.htm</item>
     </string-array>
 
+    <string-array name="blank_titles">
+        <item>Скарга на рішення/дії/бездіяльність</item>
+        <item>Акт про виявлення порушення</item>
+        <item>Повідомлення про правопорушення</item>
+        <item>Повідомлення про злочин</item>
+    </string-array>
+
+    <string-array name="blank_paths">
+        <item>file:///android_asset/blanks/skarha.htm</item>
+        <item>file:///android_asset/blanks/akt.htm</item>
+        <item>file:///android_asset/blanks/admin.htm</item>
+        <item>file:///android_asset/blanks/criminal.htm</item>
+    </string-array>
 
 </resources>
