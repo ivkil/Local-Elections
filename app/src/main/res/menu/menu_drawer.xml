@@ -2,7 +2,6 @@
     <group>
         <item
             android:id="@+id/law"
-            android:checked="true"
             android:icon="@mipmap/ic_launcher"
             android:title="@string/drawer_law_title" />
 
@@ -20,6 +19,11 @@
             android:id="@+id/blanks"
             android:icon="@mipmap/ic_launcher"
             android:title="@string/drawer_blanks_title" />
+
+        <item
+            android:id="@+id/tvkmembers"
+            android:icon="@mipmap/ic_launcher"
+            android:title="@string/drawer_tvkmembers_title" />
 
     </group>
     <group>

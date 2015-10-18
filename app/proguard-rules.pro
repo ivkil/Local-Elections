@@ -25,7 +25,7 @@
     @butterknife.* <methods>;
 }
 
-#
-#-keepclassmembers class ** {
-#    public void onEvent*(**);
-#}
+-dontwarn retrofit.**
+-keep class retrofit.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions

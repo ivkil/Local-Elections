@@ -1,5 +1,6 @@
 package org.oporaua.localelections.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.design.widget.NavigationView;
@@ -9,12 +10,18 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.blanks.BlanksFragment;
+import org.oporaua.localelections.gcm.RegistrationIntentService;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
 import org.oporaua.localelections.ui.fragment.ContactsFragment;
+import org.oporaua.localelections.ui.fragment.TvkMembersFragment;
 import org.oporaua.localelections.ui.fragment.WebViewFragment;
 import org.oporaua.localelections.util.Constants;
 import org.oporaua.localelections.violations.ViolationsFragment;
@@ -28,16 +35,18 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, SetToolbarListener {
 
     private static final String PREV_MENU_ID_TAG = "prev_menu_id";
+    private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
     private final static int DRAWER_ID_LAW = 10;
     private final static int DRAWER_ID_MANUAL = 20;
     private final static int DRAWER_ID_VIOLATIONS = 30;
     private final static int DRAWER_ID_BLANKS = 40;
-    private final static int DRAWER_ID_CONTACTS = 50;
+    private final static int DRAWER_ID_TVK_MEMBERS = 50;
+    private final static int DRAWER_ID_CONTACTS = 60;
 
     private int mPreviousMenuItem = -1;
 
-    @IntDef({DRAWER_ID_LAW, DRAWER_ID_MANUAL, DRAWER_ID_VIOLATIONS, DRAWER_ID_BLANKS, DRAWER_ID_CONTACTS})
+    @IntDef({DRAWER_ID_LAW, DRAWER_ID_MANUAL, DRAWER_ID_VIOLATIONS, DRAWER_ID_BLANKS, DRAWER_ID_TVK_MEMBERS, DRAWER_ID_CONTACTS})
     @Retention(RetentionPolicy.SOURCE)
     private @interface DrawerId {
     }
@@ -61,12 +70,16 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         if (savedInstanceState == null) {
             replaceFragment(getFragmentByDrawerId(DRAWER_ID_LAW));
-            mNavigationView.getMenu().findItem(R.id.law).setCheckable(true);
-            mNavigationView.getMenu().findItem(R.id.law).setChecked(true);
+            mPreviousMenuItem = R.id.law;
         } else {
             mPreviousMenuItem = savedInstanceState.getInt(PREV_MENU_ID_TAG);
-            mNavigationView.getMenu().findItem(mPreviousMenuItem).setCheckable(true);
-            mNavigationView.getMenu().findItem(mPreviousMenuItem).setChecked(true);
+        }
+        mNavigationView.getMenu().findItem(mPreviousMenuItem).setCheckable(true);
+        mNavigationView.getMenu().findItem(mPreviousMenuItem).setChecked(true);
+
+        if (checkPlayServices()) {
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
         }
     }
 
@@ -115,6 +128,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 return ViolationsFragment.newInstance();
             case DRAWER_ID_BLANKS:
                 return BlanksFragment.newInstance();
+            case DRAWER_ID_TVK_MEMBERS:
+                return TvkMembersFragment.newInstance();
             case DRAWER_ID_CONTACTS:
                 return ContactsFragment.newInstance();
             default:
@@ -147,13 +162,14 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 return DRAWER_ID_VIOLATIONS;
             case R.id.blanks:
                 return DRAWER_ID_BLANKS;
+            case R.id.tvkmembers:
+                return DRAWER_ID_TVK_MEMBERS;
             case R.id.contacts:
                 return DRAWER_ID_CONTACTS;
             default:
                 return DRAWER_ID_LAW;
         }
     }
-
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -165,7 +181,23 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(PREV_MENU_ID_TAG, mPreviousMenuItem);
         super.onSaveInstanceState(outState);
+        outState.putInt(PREV_MENU_ID_TAG, mPreviousMenuItem);
+    }
+
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, Constants.PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(LOG_TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 }

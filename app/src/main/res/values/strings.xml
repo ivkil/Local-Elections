@@ -12,6 +12,7 @@
     <string name="drawer_manual_title">Посібник</string>
     <string name="drawer_violations_title">Порушення</string>
     <string name="drawer_blanks_title">Бланки документів</string>
+    <string name="drawer_tvkmembers_title">ТВК. Пошук ротацій</string>
     <string name="drawer_contacts_title">Контакти</string>
 
     <string name="action_search_title">Пошук</string>
