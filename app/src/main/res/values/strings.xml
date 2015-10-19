@@ -25,6 +25,7 @@
 
     <string name="sync_account_type">dts2015.oporaua.org</string>
     <string name="content_authority">org.oporaua.localelections</string>
+    <string name="no_accidents_found">Немає порушень</string>
 
 
 </resources>
