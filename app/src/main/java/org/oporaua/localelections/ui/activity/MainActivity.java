@@ -20,6 +20,7 @@ import org.oporaua.localelections.R;
 import org.oporaua.localelections.blanks.BlanksFragment;
 import org.oporaua.localelections.gcm.RegistrationIntentService;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
+import org.oporaua.localelections.sync.OporaSyncAdapter;
 import org.oporaua.localelections.ui.fragment.ContactsFragment;
 import org.oporaua.localelections.tvk.TvkMembersFragment;
 import org.oporaua.localelections.ui.fragment.WebViewFragment;
@@ -81,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }
+        OporaSyncAdapter.initializeSyncAdapter(this);
+        OporaSyncAdapter.syncImmediately(this);
     }
 
     @Override

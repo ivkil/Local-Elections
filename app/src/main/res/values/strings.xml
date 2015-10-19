@@ -23,5 +23,8 @@
     <string name="contacts_address">м. Київ, вул. Професора Підвисоцького, 10/10, офіс 3</string>
     <string name="nav_subheader">Інше</string>
 
+    <string name="sync_account_type">dts2015.oporaua.org</string>
+    <string name="content_authority">org.oporaua.localelections</string>
+
 
 </resources>
