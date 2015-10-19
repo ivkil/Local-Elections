@@ -17,6 +17,8 @@ import org.oporaua.localelections.violations.model.ViolationParent;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Subscription;
+
 public final class GeneralUtil {
 
 
@@ -68,6 +70,12 @@ public final class GeneralUtil {
         InputMethodManager imm = (InputMethodManager) context
                 .getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    public static void unsubscribeSubscription(Subscription subscription) {
+        if (subscription != null && !subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
     }
 
 }

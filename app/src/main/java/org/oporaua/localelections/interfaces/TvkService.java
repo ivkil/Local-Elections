@@ -1,12 +1,18 @@
 package org.oporaua.localelections.interfaces;
 
-import org.oporaua.localelections.model.TvkMember;
+import org.oporaua.localelections.tvk.TvkMember;
 
-import retrofit.Call;
+import java.util.List;
+
 import retrofit.http.GET;
 import retrofit.http.Query;
+import rx.Observable;
 
 public interface TvkService {
+//
+//    @GET("/search/index.json")
+//    Call<TvkMember[]> loadTvkMembers(@Query("q") String name);
+
     @GET("/search/index.json")
-    Call<TvkMember[]> loadTvkMembers(@Query("q") String name);
+    Observable<List<TvkMember>> loadTvkMembers(@Query("q") String name);
 }
