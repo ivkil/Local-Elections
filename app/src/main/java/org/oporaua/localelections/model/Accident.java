@@ -1,15 +1,19 @@
 package org.oporaua.localelections.model;
 
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
+import com.google.maps.android.clustering.ClusterItem;
 
-public class Accident {
+import java.util.Date;
+
+public class Accident implements ClusterItem {
 
     @SerializedName("id")
     private long id;
 
     @SerializedName("date")
-    private String date;
+    private Date date;
 
     @SerializedName("source")
     private String source;
@@ -21,7 +25,7 @@ public class Accident {
     private String offender;
 
     @SerializedName("offender_party_id")
-    private int offenderPartyId;
+    private long offenderPartyId;
 
     @SerializedName("victim")
     private String victim;
@@ -73,11 +77,11 @@ public class Accident {
         return id;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -101,11 +105,11 @@ public class Accident {
         this.offender = offender;
     }
 
-    public int getOffenderPartyId() {
+    public long getOffenderPartyId() {
         return offenderPartyId;
     }
 
-    public void setOffenderPartyId(int offenderPartyId) {
+    public void setOffenderPartyId(long offenderPartyId) {
         this.offenderPartyId = offenderPartyId;
     }
 
@@ -169,19 +173,17 @@ public class Accident {
         this.title = title;
     }
 
-    public double getLatitude() {
-        return latitude;
+    @Override
+    public LatLng getPosition() {
+        return new LatLng(latitude, longitude);
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public void setPosition(LatLng position) {
+        latitude = position.latitude;
+        longitude = position.longitude;
     }
 
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setId(long id) {
+        this.id = id;
     }
 }

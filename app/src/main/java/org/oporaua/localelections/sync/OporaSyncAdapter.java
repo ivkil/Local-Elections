@@ -14,9 +14,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.oporaua.localelections.R;
-import org.oporaua.localelections.data.AccidentsContract.AccidentEntry;
-import org.oporaua.localelections.data.AccidentsProvider;
+import org.oporaua.localelections.data.OporaContract;
+import org.oporaua.localelections.data.OporaContract.AccidentEntry;
+import org.oporaua.localelections.data.OporaProvider;
 import org.oporaua.localelections.interfaces.AccidentsService;
 import org.oporaua.localelections.model.Accident;
 
@@ -41,9 +45,12 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
 
     public OporaSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd")
+                .create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://dts2015.oporaua.org")
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         mAccidentsService = retrofit.create(AccidentsService.class);
     }
@@ -58,7 +65,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                 null,
                 null,
                 null,
-                AccidentsProvider.sOnlyFirstAccident
+                OporaProvider.sOnlyFirstAccident
         );
 
         if (cursor != null && cursor.moveToFirst()) {
@@ -71,7 +78,9 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
             List<Accident> accidents = response.body();
             Vector<ContentValues> cVVector = new Vector<>(accidents.size());
             for (Accident accident : accidents) {
-                cVVector.add(getAccidentValues(accident));
+                if (accident.getId() != 933) {
+                    cVVector.add(getAccidentValues(accident));
+                }
             }
             if (cVVector.size() > 0) {
                 ContentValues[] cVArray = new ContentValues[cVVector.size()];
@@ -149,12 +158,12 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
         ContentValues accidentValues = new ContentValues();
 
         accidentValues.put(AccidentEntry._ID, accident.getId());
-        accidentValues.put(AccidentEntry.COLUMN_DATE_TEXT, accident.getDate());
+        accidentValues.put(AccidentEntry.COLUMN_DATE_TEXT, OporaContract.getDbDateString(accident.getDate()));
         accidentValues.put(AccidentEntry.COLUMN_TITLE, accident.getTitle());
         accidentValues.put(AccidentEntry.COLUMN_SOURCE, accident.getSource());
         accidentValues.put(AccidentEntry.COLUMN_EVIDENCE_URL, accident.getEvidence().getUrl());
-        accidentValues.put(AccidentEntry.COLUMN_LAT, accident.getLatitude());
-        accidentValues.put(AccidentEntry.COLUMN_LNG, accident.getLongitude());
+        accidentValues.put(AccidentEntry.COLUMN_LAT, accident.getPosition().latitude);
+        accidentValues.put(AccidentEntry.COLUMN_LNG, accident.getPosition().longitude);
         accidentValues.put(AccidentEntry.COLUMN_REGION_ID, accident.getRegionId());
         accidentValues.put(AccidentEntry.COLUMN_LOCALITY_ID, accident.getLocalityId());
         accidentValues.put(AccidentEntry.COLUMN_ELECTIONS_ID, accident.getElectionsId());

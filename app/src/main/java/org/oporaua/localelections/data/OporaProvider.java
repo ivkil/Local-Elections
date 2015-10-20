@@ -10,29 +10,31 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 @SuppressWarnings("ConstantConditions")
-public class AccidentsProvider extends ContentProvider {
+public class OporaProvider extends ContentProvider {
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
-    private AccidentsDbHelper mOpenHelper;
+    private OporaDbHelper mOpenHelper;
 
     private static final int ACCIDENTS = 100;
     private static final int ACCIDENT_ID = 101;
 
-    public final static String sOnlyFirstAccident = AccidentsContract.AccidentEntry._ID + " DESC LIMIT 1";
+    public final static String sOnlyFirstAccident = OporaContract.AccidentEntry._ID + " DESC LIMIT 1";
+    public final static String sSortByDate =
+            "date (" + OporaContract.AccidentEntry.COLUMN_DATE_TEXT + ") DESC";
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
-        final String authority = AccidentsContract.CONTENT_AUTHORITY;
+        final String authority = OporaContract.CONTENT_AUTHORITY;
 
-        matcher.addURI(authority, AccidentsContract.PATH_ACCIDENTS, ACCIDENTS);
-        matcher.addURI(authority, AccidentsContract.PATH_ACCIDENTS + "/#", ACCIDENT_ID);
+        matcher.addURI(authority, OporaContract.PATH_ACCIDENTS, ACCIDENTS);
+        matcher.addURI(authority, OporaContract.PATH_ACCIDENTS + "/#", ACCIDENT_ID);
 
         return matcher;
     }
 
     @Override
     public boolean onCreate() {
-        mOpenHelper = new AccidentsDbHelper(getContext());
+        mOpenHelper = new OporaDbHelper(getContext());
         return true;
     }
 
@@ -43,9 +45,9 @@ public class AccidentsProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case ACCIDENT_ID: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
-                        AccidentsContract.AccidentEntry.TABLE_NAME,
+                        OporaContract.AccidentEntry.TABLE_NAME,
                         projection,
-                        AccidentsContract.AccidentEntry._ID + " = '" + ContentUris.parseId(uri) + "'",
+                        OporaContract.AccidentEntry._ID + " = '" + ContentUris.parseId(uri) + "'",
                         null,
                         null,
                         null,
@@ -55,7 +57,7 @@ public class AccidentsProvider extends ContentProvider {
             }
             case ACCIDENTS: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
-                        AccidentsContract.AccidentEntry.TABLE_NAME,
+                        OporaContract.AccidentEntry.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -81,9 +83,9 @@ public class AccidentsProvider extends ContentProvider {
 
         switch (match) {
             case ACCIDENTS:
-                return AccidentsContract.AccidentEntry.CONTENT_TYPE;
+                return OporaContract.AccidentEntry.CONTENT_TYPE;
             case ACCIDENT_ID:
-                return AccidentsContract.AccidentEntry.CONTENT_ITEM_TYPE;
+                return OporaContract.AccidentEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -97,9 +99,9 @@ public class AccidentsProvider extends ContentProvider {
 
         switch (match) {
             case ACCIDENTS: {
-                long _id = db.insert(AccidentsContract.AccidentEntry.TABLE_NAME, null, values);
+                long _id = db.insert(OporaContract.AccidentEntry.TABLE_NAME, null, values);
                 if (_id > 0)
-                    returnUri = AccidentsContract.AccidentEntry.buildAccidentUri(_id);
+                    returnUri = OporaContract.AccidentEntry.buildAccidentUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
@@ -119,7 +121,7 @@ public class AccidentsProvider extends ContentProvider {
         switch (match) {
             case ACCIDENTS:
                 rowsDeleted = db.delete(
-                        AccidentsContract.AccidentEntry.TABLE_NAME, selection, selectionArgs);
+                        OporaContract.AccidentEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -140,7 +142,7 @@ public class AccidentsProvider extends ContentProvider {
 
         switch (match) {
             case ACCIDENTS:
-                rowsUpdated = db.update(AccidentsContract.AccidentEntry.TABLE_NAME, values, selection,
+                rowsUpdated = db.update(OporaContract.AccidentEntry.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
             default:
@@ -162,7 +164,7 @@ public class AccidentsProvider extends ContentProvider {
                 int returnCount = 0;
                 try {
                     for (ContentValues value : values) {
-                        long _id = db.insert(AccidentsContract.AccidentEntry.TABLE_NAME, null, value);
+                        long _id = db.insert(OporaContract.AccidentEntry.TABLE_NAME, null, value);
                         if (_id != -1) {
                             returnCount++;
                         }

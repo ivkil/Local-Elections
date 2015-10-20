@@ -6,17 +6,33 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.oporaua.localelections.R;
-import org.oporaua.localelections.data.AccidentsContract;
+import org.oporaua.localelections.adapter.AccidentsAdapter;
+import org.oporaua.localelections.data.OporaProvider;
+import org.oporaua.localelections.data.OporaContract.AccidentEntry;
 
 public class AccidentsListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private SimpleCursorAdapter mAccidentsAdapter;
+    private AccidentsAdapter mAccidentsAdapter;
+
+    private static final String[] ACCIDENTS_COLUMNS = {
+            AccidentEntry._ID,
+            AccidentEntry.COLUMN_TITLE,
+            AccidentEntry.COLUMN_DATE_TEXT,
+            AccidentEntry.COLUMN_SOURCE,
+            AccidentEntry.COLUMN_EVIDENCE_URL
+    };
+
+    public final static int COL_ACCIDENT_ID = 0;
+    public final static int COL_ACCIDENT_TITLE = 1;
+    public final static int COL_ACCIDENT_DATE = 2;
+    public final static int COL_ACCIDENT_SOURCE = 3;
+    public final static int COL_ACCIDENT_EVIDENCE_URL = 4;
+
 
     public static AccidentsListFragment newInstance() {
         return new AccidentsListFragment();
@@ -24,18 +40,7 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mAccidentsAdapter = new SimpleCursorAdapter(getActivity(),
-                R.layout.list_item_accident,
-                null,
-                new String[]{
-                        AccidentsContract.AccidentEntry.COLUMN_DATE_TEXT,
-                        AccidentsContract.AccidentEntry.COLUMN_SOURCE
-
-                },
-                new int[]{
-                        R.id.list_item_date_textview,
-                        R.id.list_item_source_textview
-                }, 0);
+        mAccidentsAdapter = new AccidentsAdapter(getActivity(), null, 0);
         setListAdapter(mAccidentsAdapter);
         return inflater.inflate(R.layout.fragment_accidents_list, container, false);
     }
@@ -48,7 +53,14 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), AccidentsContract.AccidentEntry.CONTENT_URI, null, null, null, null);
+        return new CursorLoader(
+                getActivity(),
+                AccidentEntry.CONTENT_URI,
+                ACCIDENTS_COLUMNS,
+                null,
+                null,
+                OporaProvider.sSortByDate
+        );
     }
 
     @Override

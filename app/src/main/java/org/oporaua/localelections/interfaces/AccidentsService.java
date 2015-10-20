@@ -12,12 +12,6 @@ import retrofit.http.Query;
 public interface AccidentsService {
 
     @GET("/violations")
-    Call<List<Accident>> loadAccidents();
-
-    @GET("/violations")
-    Call<List<Accident>> loadAccidents(@Query("count") int count);
-
-    @GET("/violations")
     Call<List<Accident>> getAccidents(@Query("since_id") long sinceId);
 
     @GET("/violations")

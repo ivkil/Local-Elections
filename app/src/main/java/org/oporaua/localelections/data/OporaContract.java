@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.Locale;
 
 
-public class AccidentsContract {
+public class OporaContract {
 
     public static final String CONTENT_AUTHORITY = "org.oporaua.localelections";
 
@@ -59,6 +59,8 @@ public class AccidentsContract {
         public static final String COLUMN_LOCALITY_ID = "locality_id";
         public static final String COLUMN_ELECTIONS_ID = "elections_id";
         public static final String COLUMN_OFFENDER_PARTY_ID = "offender_party_id";
+
+
 
         public static Uri buildAccidentUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
