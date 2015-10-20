@@ -22,7 +22,7 @@ import org.oporaua.localelections.gcm.RegistrationIntentService;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
 import org.oporaua.localelections.sync.OporaSyncAdapter;
 import org.oporaua.localelections.ui.fragment.ContactsFragment;
-import org.oporaua.localelections.ui.fragment.TvkMembersFragment;
+import org.oporaua.localelections.tvk.TvkMembersFragment;
 import org.oporaua.localelections.ui.fragment.WebViewFragment;
 import org.oporaua.localelections.util.Constants;
 import org.oporaua.localelections.violations.ViolationsFragment;

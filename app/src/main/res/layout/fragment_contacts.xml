@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <include layout="@layout/app_toolbar"/>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <include layout="@layout/app_toolbar" />
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,7 +27,7 @@
                 android:background="?attr/selectableItemBackground"
                 android:padding="@dimen/opora_medium_dimen"
                 android:src="@drawable/logo_opora"
-                tools:ignore="contentDescription" />
+                tools:ignore="contentDescription"/>
 
             <LinearLayout
                 android:id="@+id/contacts_mail_view"
@@ -43,7 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_email_24dp"
-                    tools:ignore="contentDescription" />
+                    tools:ignore="contentDescription"/>
 
                 <TextView
                     style="@style/TextAppearance.AppCompat.Body1"
@@ -53,7 +54,7 @@
                     android:paddingLeft="@dimen/opora_medium_dimen"
                     android:paddingRight="@dimen/opora_medium_dimen"
                     android:paddingStart="@dimen/opora_medium_dimen"
-                    android:text="@string/contacts_mail" />
+                    android:text="@string/contacts_mail"/>
             </LinearLayout>
 
             <LinearLayout
@@ -72,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_call_24dp"
-                    tools:ignore="contentDescription" />
+                    tools:ignore="contentDescription"/>
 
                 <TextView
                     style="@style/TextAppearance.AppCompat.Body1"
@@ -82,7 +83,7 @@
                     android:paddingLeft="@dimen/opora_medium_dimen"
                     android:paddingRight="@dimen/opora_medium_dimen"
                     android:paddingStart="@dimen/opora_medium_dimen"
-                    android:text="@string/contacts_phone" />
+                    android:text="@string/contacts_phone"/>
             </LinearLayout>
 
             <LinearLayout
@@ -101,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_location_on_24dp"
-                    tools:ignore="contentDescription" />
+                    tools:ignore="contentDescription"/>
 
                 <TextView
                     style="@style/TextAppearance.AppCompat.Body1"
@@ -111,8 +112,8 @@
                     android:paddingLeft="@dimen/opora_medium_dimen"
                     android:paddingRight="@dimen/opora_medium_dimen"
                     android:paddingStart="@dimen/opora_medium_dimen"
-                    android:text="@string/contacts_address" />
+                    android:text="@string/contacts_address"/>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</LinearLayout>

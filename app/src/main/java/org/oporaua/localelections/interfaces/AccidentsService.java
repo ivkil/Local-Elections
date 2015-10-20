@@ -9,6 +9,10 @@ import retrofit.Call;
 import retrofit.http.GET;
 
 public interface AccidentsService {
+
     @GET("/violations")
     Call<List<Accident>> loadAccidents();
+
+    @GET("/violations")
+    Call<List<Accident>> loadAccidents(@Query"count" int count);
 }

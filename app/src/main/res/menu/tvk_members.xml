@@ -4,14 +4,6 @@
       tools:context=".MainActivity">
 
     <item
-        android:id="@+id/action_scroll__up"
-        android:icon="@drawable/ic_arrow_up_24dp"
-        android:orderInCategory="2"
-        android:title="@string/action_scroll_up_title"
-        app:showAsAction="ifRoom"/>
-
-
-    <item
         android:id="@+id/action_search"
         android:title="@string/action_search_title"
         android:orderInCategory="1"
