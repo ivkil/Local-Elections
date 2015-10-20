@@ -36,7 +36,14 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
                         R.id.list_item_date_textview,
                         R.id.list_item_source_textview
                 }, 0);
+        setListAdapter(mAccidentsAdapter);
         return inflater.inflate(R.layout.fragment_accidents_list, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -47,8 +54,6 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mAccidentsAdapter.swapCursor(data);
-
-
     }
 
     @Override

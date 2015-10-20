@@ -5,19 +5,24 @@ import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SyncRequest;
 import android.content.SyncResult;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
 import org.oporaua.localelections.R;
+import org.oporaua.localelections.data.AccidentsContract.AccidentEntry;
+import org.oporaua.localelections.data.AccidentsProvider;
 import org.oporaua.localelections.interfaces.AccidentsService;
 import org.oporaua.localelections.model.Accident;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Vector;
 
 import retrofit.Call;
 import retrofit.GsonConverterFactory;
@@ -37,7 +42,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
     public OporaSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://rails.oporaua.org:3000/")
+                .baseUrl("https://dts2015.oporaua.org")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         mAccidentsService = retrofit.create(AccidentsService.class);
@@ -46,16 +51,45 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         Log.d(LOG_TAG, "Starting sync");
-        Call<List<Accident>> call = mAccidentsService.loadAccidents();
+        long sinceId = -1;
+
+        Cursor cursor = getContext().getContentResolver().query(
+                AccidentEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                AccidentsProvider.sOnlyFirstAccident
+        );
+
+        if (cursor != null && cursor.moveToFirst()) {
+            sinceId = cursor.getLong(0);
+        }
+
+        Call<List<Accident>> call = mAccidentsService.getAccidents(sinceId);
         try {
             Response<List<Accident>> response = call.execute();
             List<Accident> accidents = response.body();
+            Vector<ContentValues> cVVector = new Vector<>(accidents.size());
             for (Accident accident : accidents) {
-                Log.d(LOG_TAG, accident.getDate() + ", " + accident.getSource());
+                cVVector.add(getAccidentValues(accident));
+            }
+            if (cVVector.size() > 0) {
+                ContentValues[] cVArray = new ContentValues[cVVector.size()];
+                cVVector.toArray(cVArray);
+                int count = getContext().getContentResolver().bulkInsert(
+                        AccidentEntry.CONTENT_URI,
+                        cVArray
+                );
+                Log.d(LOG_TAG, count + " accidents inserted");
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
+
 
     }
 
@@ -111,5 +145,22 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
         getSyncAccount(context);
     }
 
+    private static ContentValues getAccidentValues(Accident accident) {
+        ContentValues accidentValues = new ContentValues();
+
+        accidentValues.put(AccidentEntry._ID, accident.getId());
+        accidentValues.put(AccidentEntry.COLUMN_DATE_TEXT, accident.getDate());
+        accidentValues.put(AccidentEntry.COLUMN_TITLE, accident.getTitle());
+        accidentValues.put(AccidentEntry.COLUMN_SOURCE, accident.getSource());
+        accidentValues.put(AccidentEntry.COLUMN_EVIDENCE_URL, accident.getEvidence().getUrl());
+        accidentValues.put(AccidentEntry.COLUMN_LAT, accident.getLatitude());
+        accidentValues.put(AccidentEntry.COLUMN_LNG, accident.getLongitude());
+        accidentValues.put(AccidentEntry.COLUMN_REGION_ID, accident.getRegionId());
+        accidentValues.put(AccidentEntry.COLUMN_LOCALITY_ID, accident.getLocalityId());
+        accidentValues.put(AccidentEntry.COLUMN_ELECTIONS_ID, accident.getElectionsId());
+        accidentValues.put(AccidentEntry.COLUMN_OFFENDER_PARTY_ID, accident.getOffenderPartyId());
+
+        return accidentValues;
+    }
 
 }

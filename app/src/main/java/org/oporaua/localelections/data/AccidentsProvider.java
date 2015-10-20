@@ -18,6 +18,8 @@ public class AccidentsProvider extends ContentProvider {
     private static final int ACCIDENTS = 100;
     private static final int ACCIDENT_ID = 101;
 
+    public final static String sOnlyFirstAccident = AccidentsContract.AccidentEntry._ID + " DESC LIMIT 1";
+
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = AccidentsContract.CONTENT_AUTHORITY;

@@ -7,6 +7,7 @@ import java.util.List;
 
 import retrofit.Call;
 import retrofit.http.GET;
+import retrofit.http.Query;
 
 public interface AccidentsService {
 
@@ -14,5 +15,12 @@ public interface AccidentsService {
     Call<List<Accident>> loadAccidents();
 
     @GET("/violations")
-    Call<List<Accident>> loadAccidents(@Query"count" int count);
+    Call<List<Accident>> loadAccidents(@Query("count") int count);
+
+    @GET("/violations")
+    Call<List<Accident>> getAccidents(@Query("since_id") long sinceId);
+
+    @GET("/violations")
+    Call<Accident> getAccident(@Query("id") long id);
+
 }

@@ -25,6 +25,11 @@
             android:icon="@mipmap/ic_launcher"
             android:title="@string/drawer_tvkmembers_title" />
 
+        <item
+            android:id="@+id/accidents_list"
+            android:icon="@mipmap/ic_launcher"
+            android:title="@string/drawer_accidents_list" />
+
     </group>
     <group>
         <item

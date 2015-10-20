@@ -38,7 +38,15 @@ public class AccidentsDbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_ACCIDENTS_TABLE = "CREATE TABLE " + AccidentEntry.TABLE_NAME + " (" +
                 AccidentEntry._ID + " INTEGER PRIMARY KEY," +
                 AccidentEntry.COLUMN_DATE_TEXT + " TEXT NOT NULL, " +
-                AccidentEntry.COLUMN_SOURCE + " TEXT NOT NULL); ";
+                AccidentEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
+                AccidentEntry.COLUMN_SOURCE + " TEXT NOT NULL, " +
+                AccidentEntry.COLUMN_EVIDENCE_URL + " TEXT, " +
+                AccidentEntry.COLUMN_LAT + " REAL NOT NULL, " +
+                AccidentEntry.COLUMN_LNG + " REAL NOT NULL, " +
+                AccidentEntry.COLUMN_REGION_ID + " INTEGER NOT NULL, " +
+                AccidentEntry.COLUMN_LOCALITY_ID + " INTEGER NOT NULL, " +
+                AccidentEntry.COLUMN_ELECTIONS_ID + " INTEGER NOT NULL, " +
+                AccidentEntry.COLUMN_OFFENDER_PARTY_ID + " INTEGER NOT NULL);";
 
         sqLiteDatabase.execSQL(SQL_CREATE_ACCIDENTS_TABLE);
     }
