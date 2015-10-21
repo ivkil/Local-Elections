@@ -1,4 +1,4 @@
-package org.oporaua.localelections.content;
+package org.oporaua.localelections.accidents;
 
 import android.content.Context;
 import android.database.ContentObserver;
@@ -8,7 +8,6 @@ import android.support.v4.content.AsyncTaskLoader;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.oporaua.localelections.data.OporaContract.AccidentEntry;
-import org.oporaua.localelections.model.Accident;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ public class AccidentsLoader extends AsyncTaskLoader<List<Accident>> {
     public List<Accident> loadInBackground() {
         Cursor data = getContext().getContentResolver().query(
                 AccidentEntry.CONTENT_URI,
-                null,
+                ACCIDENTS_COLUMNS,
                 null,
                 null,
                 null

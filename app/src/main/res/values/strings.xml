@@ -30,6 +30,8 @@
 
     <string name="accident_id_tag">accident id</string>
     <string name="drawer_accidents_map">Карта інцидентів</string>
+    <string name="title_activity_accident_details">AccidentDetailsActivity</string>
+    <string name="is_elections_types">is_elections_types</string>
 
 
 </resources>

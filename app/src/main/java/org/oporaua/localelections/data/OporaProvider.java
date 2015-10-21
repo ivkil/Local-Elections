@@ -6,8 +6,17 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+
+import org.oporaua.localelections.data.OporaContract.AccidentEntry;
+import org.oporaua.localelections.data.OporaContract.AccidentSubtypeEntry;
+import org.oporaua.localelections.data.OporaContract.AccidentTypeEntry;
+import org.oporaua.localelections.data.OporaContract.ElectionTypeEntry;
+import org.oporaua.localelections.data.OporaContract.LocalityEntry;
+import org.oporaua.localelections.data.OporaContract.PartyEntry;
+import org.oporaua.localelections.data.OporaContract.RegionEntry;
 
 @SuppressWarnings("ConstantConditions")
 public class OporaProvider extends ContentProvider {
@@ -15,19 +24,51 @@ public class OporaProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private OporaDbHelper mOpenHelper;
 
-    private static final int ACCIDENTS = 100;
-    private static final int ACCIDENT_ID = 101;
+    private static final int ACCIDENTS_TYPES = 100;
+    private static final int ACCIDENTS_SUBTYPES = 200;
+    private static final int REGIONS = 300;
+    private static final int LOCALITIES = 400;
+    private static final int PARTIES = 500;
+    private static final int ELECTIONS_TYPES = 600;
+    private static final int ACCIDENTS = 700;
+    private static final int ACCIDENT_WITH_DATA = 701;
 
-    public final static String sOnlyFirstAccident = OporaContract.AccidentEntry._ID + " DESC LIMIT 1";
-    public final static String sSortByDate =
-            "date (" + OporaContract.AccidentEntry.COLUMN_DATE_TEXT + ") DESC";
+    private static final SQLiteQueryBuilder sAccidentsWithDataQueryBuilder;
+
+    static {
+        sAccidentsWithDataQueryBuilder = new SQLiteQueryBuilder();
+        sAccidentsWithDataQueryBuilder.setTables(
+                AccidentEntry.TABLE_NAME + " INNER JOIN " +
+                        RegionEntry.TABLE_NAME + " ON " +
+                        AccidentEntry.TABLE_NAME + "." + AccidentEntry.COLUMN_REGION_ID +
+                        " = " + RegionEntry.TABLE_NAME + "." + RegionEntry._ID +
+                        " LEFT OUTER JOIN " +
+                        LocalityEntry.TABLE_NAME + " ON " +
+                        AccidentEntry.TABLE_NAME + "." + AccidentEntry.COLUMN_LOCALITY_ID +
+                        " = " + LocalityEntry.TABLE_NAME + "." + LocalityEntry._ID +
+                        " LEFT OUTER JOIN " +
+                        ElectionTypeEntry.TABLE_NAME + " ON " +
+                        AccidentEntry.TABLE_NAME + "." + AccidentEntry.COLUMN_ELECTIONS_ID +
+                        " = " + ElectionTypeEntry.TABLE_NAME + "." + ElectionTypeEntry._ID +
+                        " LEFT OUTER JOIN " +
+                        PartyEntry.TABLE_NAME + " ON " +
+                        AccidentEntry.TABLE_NAME + "." + AccidentEntry.COLUMN_OFFENDER_PARTY_ID +
+                        " = " + PartyEntry.TABLE_NAME + "." + PartyEntry._ID);
+    }
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = OporaContract.CONTENT_AUTHORITY;
 
+        matcher.addURI(authority, OporaContract.PATH_ACCIDENTS_TYPES, ACCIDENTS_TYPES);
+        matcher.addURI(authority, OporaContract.PATH_ACCIDENTS_SUBTYPES, ACCIDENTS_SUBTYPES);
+        matcher.addURI(authority, OporaContract.PATH_REGIONS, REGIONS);
+        matcher.addURI(authority, OporaContract.PATH_LOCALITIES, LOCALITIES);
+        matcher.addURI(authority, OporaContract.PATH_PARTIES, PARTIES);
+        matcher.addURI(authority, OporaContract.PATH_ELECTIONS_TYPES, ELECTIONS_TYPES);
+
         matcher.addURI(authority, OporaContract.PATH_ACCIDENTS, ACCIDENTS);
-        matcher.addURI(authority, OporaContract.PATH_ACCIDENTS + "/#", ACCIDENT_ID);
+        matcher.addURI(authority, OporaContract.PATH_ACCIDENTS + "/#", ACCIDENT_WITH_DATA);
 
         return matcher;
     }
@@ -43,21 +84,9 @@ public class OporaProvider extends ContentProvider {
                         String sortOrder) {
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
-            case ACCIDENT_ID: {
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        OporaContract.AccidentEntry.TABLE_NAME,
-                        projection,
-                        OporaContract.AccidentEntry._ID + " = '" + ContentUris.parseId(uri) + "'",
-                        null,
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-            }
             case ACCIDENTS: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
-                        OporaContract.AccidentEntry.TABLE_NAME,
+                        AccidentEntry.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -67,7 +96,18 @@ public class OporaProvider extends ContentProvider {
                 );
                 break;
             }
-
+            case ACCIDENT_WITH_DATA: {
+                retCursor = sAccidentsWithDataQueryBuilder.query(
+                        mOpenHelper.getReadableDatabase(),
+                        projection,
+                        AccidentEntry.TABLE_NAME + "." + AccidentEntry._ID + " = '" + ContentUris.parseId(uri) + "'",
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -78,14 +118,13 @@ public class OporaProvider extends ContentProvider {
     @Override
     public String getType(@NonNull Uri uri) {
 
-        // Use the Uri Matcher to determine what kind of URI this is.
         final int match = sUriMatcher.match(uri);
 
         switch (match) {
             case ACCIDENTS:
-                return OporaContract.AccidentEntry.CONTENT_TYPE;
-            case ACCIDENT_ID:
-                return OporaContract.AccidentEntry.CONTENT_ITEM_TYPE;
+                return AccidentEntry.CONTENT_TYPE;
+            case ACCIDENT_WITH_DATA:
+                return AccidentEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -98,10 +137,58 @@ public class OporaProvider extends ContentProvider {
         Uri returnUri;
 
         switch (match) {
-            case ACCIDENTS: {
-                long _id = db.insert(OporaContract.AccidentEntry.TABLE_NAME, null, values);
+            case ACCIDENTS_TYPES: {
+                long _id = db.insert(AccidentTypeEntry.TABLE_NAME, null, values);
                 if (_id > 0)
-                    returnUri = OporaContract.AccidentEntry.buildAccidentUri(_id);
+                    returnUri = AccidentTypeEntry.buildAccidentTypeUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
+            case ACCIDENTS_SUBTYPES: {
+                long _id = db.insert(AccidentSubtypeEntry.TABLE_NAME, null, values);
+                if (_id > 0)
+                    returnUri = AccidentSubtypeEntry.buildAccidentSubtypeUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
+            case REGIONS: {
+                long _id = db.insert(RegionEntry.TABLE_NAME, null, values);
+                if (_id > 0)
+                    returnUri = RegionEntry.buildRegionUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
+            case LOCALITIES: {
+                long _id = db.insert(LocalityEntry.TABLE_NAME, null, values);
+                if (_id > 0)
+                    returnUri = LocalityEntry.buildLocalityUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
+            case PARTIES: {
+                long _id = db.insert(PartyEntry.TABLE_NAME, null, values);
+                if (_id > 0)
+                    returnUri = PartyEntry.buildPartyUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
+            case ELECTIONS_TYPES: {
+                long _id = db.insert(ElectionTypeEntry.TABLE_NAME, null, values);
+                if (_id > 0)
+                    returnUri = ElectionTypeEntry.buildElectionsTypeUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
+            case ACCIDENTS: {
+                long _id = db.insert(AccidentEntry.TABLE_NAME, null, values);
+                if (_id > 0)
+                    returnUri = AccidentEntry.buildAccidentUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
@@ -121,7 +208,7 @@ public class OporaProvider extends ContentProvider {
         switch (match) {
             case ACCIDENTS:
                 rowsDeleted = db.delete(
-                        OporaContract.AccidentEntry.TABLE_NAME, selection, selectionArgs);
+                        AccidentEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -142,7 +229,7 @@ public class OporaProvider extends ContentProvider {
 
         switch (match) {
             case ACCIDENTS:
-                rowsUpdated = db.update(OporaContract.AccidentEntry.TABLE_NAME, values, selection,
+                rowsUpdated = db.update(AccidentEntry.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
             default:
@@ -158,25 +245,48 @@ public class OporaProvider extends ContentProvider {
     public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
+        String tableName;
         switch (match) {
+            case ACCIDENTS_TYPES:
+                tableName = AccidentTypeEntry.TABLE_NAME;
+                break;
+            case ACCIDENTS_SUBTYPES:
+                tableName = AccidentSubtypeEntry.TABLE_NAME;
+                break;
+            case REGIONS:
+                tableName = RegionEntry.TABLE_NAME;
+                break;
+            case LOCALITIES:
+                tableName = LocalityEntry.TABLE_NAME;
+                break;
+            case PARTIES:
+                tableName = PartyEntry.TABLE_NAME;
+                break;
+            case ELECTIONS_TYPES:
+                tableName = ElectionTypeEntry.TABLE_NAME;
+                break;
             case ACCIDENTS:
-                db.beginTransaction();
-                int returnCount = 0;
-                try {
-                    for (ContentValues value : values) {
-                        long _id = db.insert(OporaContract.AccidentEntry.TABLE_NAME, null, value);
-                        if (_id != -1) {
-                            returnCount++;
-                        }
-                    }
-                    db.setTransactionSuccessful();
-                } finally {
-                    db.endTransaction();
-                }
-                getContext().getContentResolver().notifyChange(uri, null);
-                return returnCount;
+                tableName = AccidentEntry.TABLE_NAME;
+                break;
             default:
                 return super.bulkInsert(uri, values);
         }
+
+        db.beginTransaction();
+        int returnCount = 0;
+        try {
+            for (ContentValues value : values) {
+                long _id = db.insert(tableName, null, value);
+                if (_id != -1) {
+                    returnCount++;
+                }
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return returnCount;
+
     }
 }

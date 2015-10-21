@@ -15,8 +15,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.maps.android.clustering.ClusterManager;
 
 import org.oporaua.localelections.R;
-import org.oporaua.localelections.content.AccidentsLoader;
-import org.oporaua.localelections.model.Accident;
+import org.oporaua.localelections.accidents.AccidentsLoader;
+import org.oporaua.localelections.accidents.Accident;
 
 import java.util.List;
 

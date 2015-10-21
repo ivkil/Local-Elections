@@ -1,10 +1,10 @@
-package org.oporaua.localelections.adapter;
+package org.oporaua.localelections.accidents;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.oporaua.localelections.ui.activity.AccidentDetailsActivity;
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.data.OporaContract;
 import org.oporaua.localelections.ui.fragment.AccidentsListFragment;
@@ -83,7 +84,9 @@ public class AccidentsAdapter extends CursorAdapter {
             @Override
             public void onClick(View v) {
                 long id = (long) v.getTag(R.string.accident_id_tag);
-                Log.d("id", Long.toString(id));
+                Intent intent = new Intent(mContext, AccidentDetailsActivity.class);
+                intent.putExtra(AccidentDetailsActivity.ACCIDENT_ID_TAG, id);
+                mContext.startActivity(intent);
             }
         });
     }

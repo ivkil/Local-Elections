@@ -26,6 +26,7 @@ import org.oporaua.localelections.ui.fragment.AccidentsMapFragment;
 import org.oporaua.localelections.ui.fragment.ContactsFragment;
 import org.oporaua.localelections.tvk.TvkMembersFragment;
 import org.oporaua.localelections.ui.fragment.WebViewFragment;
+import org.oporaua.localelections.util.AppPrefs;
 import org.oporaua.localelections.util.Constants;
 import org.oporaua.localelections.violations.ViolationsFragment;
 
@@ -88,7 +89,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             startService(intent);
         }
         OporaSyncAdapter.initializeSyncAdapter(this);
-        OporaSyncAdapter.syncImmediately(this);
+        AppPrefs.initialize(this);
+        loadData();
     }
 
     @Override
@@ -215,5 +217,27 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             return false;
         }
         return true;
+    }
+
+    private void loadData() {
+        OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_ACCIDENTS);
+        if (!AppPrefs.getInstance().isAccidentsTypes()) {
+            OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_ACCIDENT_TYPES);
+        }
+        if (!AppPrefs.getInstance().isAccidentsSubtypes()) {
+            OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_ACCIDENT_SUBTYPES);
+        }
+        if (!AppPrefs.getInstance().isRegions()) {
+            OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_REGIONS);
+        }
+        if (!AppPrefs.getInstance().isLocalities()) {
+            OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_LOCALITIES);
+        }
+        if (!AppPrefs.getInstance().isParties()) {
+            OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_PARTIES);
+        }
+        if (!AppPrefs.getInstance().isElectionsTypes()) {
+            OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_ELECTIONS_TYPES);
+        }
     }
 }

@@ -11,8 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.oporaua.localelections.R;
-import org.oporaua.localelections.adapter.AccidentsAdapter;
-import org.oporaua.localelections.data.OporaProvider;
+import org.oporaua.localelections.accidents.AccidentsAdapter;
 import org.oporaua.localelections.data.OporaContract.AccidentEntry;
 
 public class AccidentsListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -53,13 +52,14 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String sortOrder = "date (" + AccidentEntry.COLUMN_DATE_TEXT + ") DESC";
         return new CursorLoader(
                 getActivity(),
                 AccidentEntry.CONTENT_URI,
                 ACCIDENTS_COLUMNS,
                 null,
                 null,
-                OporaProvider.sSortByDate
+                sortOrder
         );
     }
 

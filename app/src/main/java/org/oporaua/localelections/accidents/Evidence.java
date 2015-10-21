@@ -1,4 +1,4 @@
-package org.oporaua.localelections.model;
+package org.oporaua.localelections.accidents;
 
 import com.google.gson.annotations.SerializedName;
 

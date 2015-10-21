@@ -19,7 +19,6 @@ import com.squareup.okhttp.OkHttpClient;
 
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
-import org.oporaua.localelections.interfaces.TvkService;
 import org.oporaua.localelections.util.GeneralUtil;
 
 import java.util.List;
