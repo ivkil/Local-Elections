@@ -10,4 +10,8 @@ public class Evidence {
 
     @SerializedName("url")
     private String url;
+
+    public Evidence(String url) {
+        this.url = url;
+    }
 }

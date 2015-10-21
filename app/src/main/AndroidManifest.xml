@@ -67,8 +67,8 @@
             android:exported="false" />
 
         <provider
+            android:name=".data.OporaProvider"
             android:authorities="@string/content_authority"
-            android:name=".data.AccidentsProvider"
             android:exported="false"
             android:syncable="true" />
 
@@ -85,8 +85,7 @@
 
         <service
             android:name=".sync.OporaSyncService"
-            android:exported="true"
-            android:process=":sync">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
@@ -94,6 +93,10 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDm3_AJJnuladjCh8Ez07d8nuQD403lfGo"/>
 
     </application>
 

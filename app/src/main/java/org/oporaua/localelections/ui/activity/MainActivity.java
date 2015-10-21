@@ -22,6 +22,7 @@ import org.oporaua.localelections.gcm.RegistrationIntentService;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
 import org.oporaua.localelections.sync.OporaSyncAdapter;
 import org.oporaua.localelections.ui.fragment.AccidentsListFragment;
+import org.oporaua.localelections.ui.fragment.AccidentsMapFragment;
 import org.oporaua.localelections.ui.fragment.ContactsFragment;
 import org.oporaua.localelections.tvk.TvkMembersFragment;
 import org.oporaua.localelections.ui.fragment.WebViewFragment;
@@ -44,13 +45,14 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private final static int DRAWER_ID_VIOLATIONS = 30;
     private final static int DRAWER_ID_BLANKS = 40;
     private final static int DRAWER_ID_TVK_MEMBERS = 50;
-    private final static int DRAWER_ID_ACCIDENTS_LIST = 60;
-    private final static int DRAWER_ID_CONTACTS = 70;
+    private final static int DRAWER_ID_ACCIDENTS_MAP = 60;
+    private final static int DRAWER_ID_ACCIDENTS_LIST = 70;
+    private final static int DRAWER_ID_CONTACTS = 80;
 
     private int mPreviousMenuItem = -1;
 
     @IntDef({DRAWER_ID_LAW, DRAWER_ID_MANUAL, DRAWER_ID_VIOLATIONS, DRAWER_ID_BLANKS,
-            DRAWER_ID_TVK_MEMBERS, DRAWER_ID_ACCIDENTS_LIST, DRAWER_ID_CONTACTS})
+            DRAWER_ID_TVK_MEMBERS, DRAWER_ID_ACCIDENTS_MAP, DRAWER_ID_ACCIDENTS_LIST, DRAWER_ID_CONTACTS})
     @Retention(RetentionPolicy.SOURCE)
     private @interface DrawerId {
     }
@@ -136,6 +138,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 return BlanksFragment.newInstance();
             case DRAWER_ID_TVK_MEMBERS:
                 return TvkMembersFragment.newInstance();
+            case DRAWER_ID_ACCIDENTS_MAP:
+                return AccidentsMapFragment.newInstance();
             case DRAWER_ID_ACCIDENTS_LIST:
                 return AccidentsListFragment.newInstance();
             case DRAWER_ID_CONTACTS:
@@ -172,6 +176,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 return DRAWER_ID_BLANKS;
             case R.id.tvkmembers:
                 return DRAWER_ID_TVK_MEMBERS;
+            case R.id.accidents_map:
+                return DRAWER_ID_ACCIDENTS_MAP;
             case R.id.accidents_list:
                 return DRAWER_ID_ACCIDENTS_LIST;
             case R.id.contacts:

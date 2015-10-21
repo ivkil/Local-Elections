@@ -28,5 +28,8 @@
     <string name="no_accidents_found">Немає порушень</string>
     <string name="drawer_accidents_list">Список інцидентів</string>
 
+    <string name="accident_id_tag">accident id</string>
+    <string name="drawer_accidents_map">Карта інцидентів</string>
+
 
 </resources>

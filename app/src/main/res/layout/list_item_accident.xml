@@ -1,27 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:minHeight="?android:attr/listPreferredItemHeight"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:padding="16dp">
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/list_item_date_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:id="@+id/list_item_title_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text=" - " />
+        android:id="@+id/list_item_date_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/list_item_source_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="5" />
+
+    <ImageView
+        android:id="@+id/list_item_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="180dp"
+        android:scaleType="centerCrop"
+        tools:ignore="ContentDescription" />
 
 </LinearLayout>
