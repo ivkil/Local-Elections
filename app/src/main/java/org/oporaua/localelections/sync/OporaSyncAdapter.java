@@ -32,6 +32,7 @@ import org.oporaua.localelections.data.OporaContract.PartyEntry;
 import org.oporaua.localelections.data.OporaContract.RegionEntry;
 import org.oporaua.localelections.data.Party;
 import org.oporaua.localelections.data.Region;
+import org.oporaua.localelections.ui.activity.AccidentDetailsActivity;
 import org.oporaua.localelections.util.AppPrefs;
 import org.oporaua.localelections.util.Constants;
 
@@ -59,7 +60,6 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
     public final static int SYNC_ACCIDENT = 800;
 
     private AccidentsService mAccidentsService;
-    private Context mContext;
 
 
     public OporaSyncAdapter(Context context, boolean autoInitialize) {
@@ -68,7 +68,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                 .setDateFormat("yyyy-MM-dd")
                 .create();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.ACCIDENTS_ENDPOINT)
+                .baseUrl(Constants.TEST_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         mAccidentsService = retrofit.create(AccidentsService.class);
@@ -102,10 +102,31 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                     syncAccidents();
                     break;
                 case SYNC_ACCIDENT:
+                    long id = extras.getLong(AccidentDetailsActivity.ACCIDENT_ID_TAG);
+                    syncAccident(id);
                     break;
                 default:
                     throw new UnsupportedOperationException("Unknown sync mode");
             }
+        }
+    }
+
+    private void syncAccident(long id) {
+        Call<Accident> call = mAccidentsService.getAccident(id);
+        try {
+            Response<Accident> response = call.execute();
+            Accident accident = response.body();
+            ContentValues accidentValues = getAccidentValues(accident);
+            int count = getContext().getContentResolver().update(
+                    AccidentEntry.CONTENT_URI,
+                    accidentValues,
+                    AccidentEntry._ID + " = ? ",
+                    new String[]{String.valueOf(id)});
+            if (count == 0) {
+                getContext().getContentResolver().insert(AccidentEntry.CONTENT_URI, accidentValues);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -366,6 +387,16 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         bundle.putInt(SYNC_MODE, mode);
+        ContentResolver.requestSync(getSyncAccount(context),
+                context.getString(R.string.content_authority), bundle);
+    }
+
+    public static void syncImmediately(Context context, long id) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        bundle.putInt(SYNC_MODE, SYNC_ACCIDENT);
+        bundle.putLong(AccidentDetailsActivity.ACCIDENT_ID_TAG, id);
         ContentResolver.requestSync(getSyncAccount(context),
                 context.getString(R.string.content_authority), bundle);
     }
