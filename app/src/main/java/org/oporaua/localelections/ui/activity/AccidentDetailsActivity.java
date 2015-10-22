@@ -7,7 +7,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.text.Html;
+import android.widget.TextView;
 
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.data.OporaContract.AccidentEntry;
@@ -16,10 +17,34 @@ import org.oporaua.localelections.data.OporaContract.LocalityEntry;
 import org.oporaua.localelections.data.OporaContract.PartyEntry;
 import org.oporaua.localelections.data.OporaContract.RegionEntry;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class AccidentDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public final static String ACCIDENT_ID_TAG = "accident_id";
     private long mId;
+
+    @Bind(R.id.accident_date_textview)
+    TextView mTextViewDate;
+
+    @Bind(R.id.accident_title_textview)
+    TextView mTextViewTitle;
+
+    @Bind(R.id.accident_region_textview)
+    TextView mTextViewRegion;
+
+    @Bind(R.id.accident_locality_textview)
+    TextView mTextViewLocality;
+
+    @Bind(R.id.accident_elections_type_textview)
+    TextView mTextViewElectionsType;
+
+    @Bind(R.id.accident_party_offender_textview)
+    TextView mTextViewParty;
+
+    @Bind(R.id.accident_source_textview)
+    TextView mTextViewSource;
 
     private static final String[] ACCIDENTS_COLUMNS = {
             AccidentEntry.TABLE_NAME + "." + AccidentEntry._ID,
@@ -32,7 +57,7 @@ public class AccidentDetailsActivity extends AppCompatActivity implements Loader
             RegionEntry.TABLE_NAME + "." + RegionEntry.COLUMN_TITLE,
             LocalityEntry.TABLE_NAME + "." + LocalityEntry.COLUMN_TITLE,
             ElectionTypeEntry.TABLE_NAME + "." + ElectionTypeEntry.COLUMN_TITLE,
-            RegionEntry.TABLE_NAME + "." + PartyEntry.COLUMN_TITLE
+            PartyEntry.TABLE_NAME + "." + PartyEntry.COLUMN_TITLE
     };
 
     private static final int COL_ACCIDENT_ID = 0;
@@ -44,13 +69,14 @@ public class AccidentDetailsActivity extends AppCompatActivity implements Loader
     private static final int COL_ACCIDENT_LNG = 6;
     private static final int COL_ACCIDENT_REGION = 7;
     private static final int COL_ACCIDENT_LOCALITY = 8;
-    private static final int COL_ACCIDENT_ELECTIONS_TYPE = 8;
+    private static final int COL_ACCIDENT_ELECTIONS_TYPE = 9;
     private static final int COL_ACCIDENT_OFFENDER_PARTY = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accident_details);
+        ButterKnife.bind(this);
         mId = getIntent().getLongExtra(ACCIDENT_ID_TAG, -1);
         getSupportLoaderManager().initLoader(0, null, this);
     }
@@ -72,9 +98,25 @@ public class AccidentDetailsActivity extends AppCompatActivity implements Loader
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null && data.moveToFirst()) {
             String title = data.getString(COL_ACCIDENT_TITLE);
-            Log.d("log", title);
+            mTextViewTitle.setText(title);
+
+            String date = data.getString(COL_ACCIDENT_DATE);
+            mTextViewDate.setText(date);
+
+            String region = data.getString(COL_ACCIDENT_REGION);
+            mTextViewRegion.setText(region);
+
+            String locality = data.getString(COL_ACCIDENT_LOCALITY);
+            mTextViewLocality.setText(locality);
+
+            String elections = data.getString(COL_ACCIDENT_ELECTIONS_TYPE);
+            mTextViewElectionsType.setText(elections);
+
             String party = data.getString(COL_ACCIDENT_OFFENDER_PARTY);
-            Log.d("log", party);
+            mTextViewParty.setText(party);
+
+            String source = data.getString(COL_ACCIDENT_SOURCE);
+            mTextViewSource.setText(Html.fromHtml(source));
         }
 
     }
