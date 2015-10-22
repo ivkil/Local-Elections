@@ -34,7 +34,8 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class TvkMembersFragment extends Fragment implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
+public class TvkMembersFragment extends Fragment implements SearchView.OnQueryTextListener,
+        SearchView.OnCloseListener {
 
     private static final String TVK_OPORA_BASE_URL = "http://tvk.oporaua.org/";
 
@@ -80,8 +81,6 @@ public class TvkMembersFragment extends Fragment implements SearchView.OnQueryTe
         mTvkMemberAdapter = new TvkMemberAdapter(getActivity());
         mTvkMembersRecyclerView.setAdapter(mTvkMemberAdapter);
 
-        loadMembers("Боярин Юрій");
-
         return view;
     }
 
@@ -95,12 +94,17 @@ public class TvkMembersFragment extends Fragment implements SearchView.OnQueryTe
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        loadMembers(query);
-        return true;
+        return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
+        if (newText.length() < 3) {
+            loadMembers(newText);
+            return true;
+        } else {
+            mTvkMemberAdapter.clearAll();
+        }
         return false;
     }
 
