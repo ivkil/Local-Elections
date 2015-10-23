@@ -10,8 +10,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import org.oporaua.localelections.R;
@@ -24,7 +22,7 @@ import org.oporaua.localelections.sync.OporaSyncAdapter;
 import org.oporaua.localelections.tvk.TvkMembersFragment;
 import org.oporaua.localelections.ui.fragment.ContactsFragment;
 import org.oporaua.localelections.ui.fragment.WebViewFragment;
-import org.oporaua.localelections.util.AppPrefs;
+import org.oporaua.localelections.util.PrefUtil;
 import org.oporaua.localelections.util.Constants;
 import org.oporaua.localelections.util.GeneralUtil;
 import org.oporaua.localelections.violations.ViolationsFragment;
@@ -93,12 +91,12 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         loadData();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_settings, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.menu_settings, menu);
+//        return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -106,9 +104,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
-            case R.id.settings:
-                startActivity(new Intent(this, ElectionsPreferenceActivity.class));
-                return true;
+//            case R.id.settings:
+//                startActivity(new Intent(this, ElectionsPreferenceActivity.class));
+//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -224,22 +222,22 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     private void loadData() {
         OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_ACCIDENTS);
-        if (!AppPrefs.getInstance().isAccidentsTypes()) {
+        if (!PrefUtil.getInstance().isAccidentsTypes()) {
             OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_ACCIDENT_TYPES);
         }
-        if (!AppPrefs.getInstance().isAccidentsSubtypes()) {
+        if (!PrefUtil.getInstance().isAccidentsSubtypes()) {
             OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_ACCIDENT_SUBTYPES);
         }
-        if (!AppPrefs.getInstance().isRegions()) {
+        if (!PrefUtil.getInstance().isRegions()) {
             OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_REGIONS);
         }
-        if (!AppPrefs.getInstance().isLocalities()) {
+        if (!PrefUtil.getInstance().isLocalities()) {
             OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_LOCALITIES);
         }
-        if (!AppPrefs.getInstance().isParties()) {
+        if (!PrefUtil.getInstance().isParties()) {
             OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_PARTIES);
         }
-        if (!AppPrefs.getInstance().isElectionsTypes()) {
+        if (!PrefUtil.getInstance().isElectionsTypes()) {
             OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_ELECTIONS_TYPES);
         }
     }
