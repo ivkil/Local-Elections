@@ -43,7 +43,7 @@ public class NewAccidentActivity extends AppCompatActivity {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         client.interceptors().add(interceptor);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.TEST_URL)
+                .baseUrl(Constants.ACCIDENTS_ENDPOINT)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(client)
                 .build();
