@@ -19,7 +19,7 @@ import java.io.IOException;
 public class RegistrationIntentService extends IntentService {
 
     private static final String TAG = RegistrationIntentService.class.getSimpleName();
-    private static final String[] TOPICS = {"lviv"};
+    private static final String[] TOPICS = {"accidents"};
 
     public RegistrationIntentService() {
         super(TAG);
