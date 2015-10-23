@@ -33,7 +33,7 @@ import org.oporaua.localelections.data.OporaContract.PartyEntry;
 import org.oporaua.localelections.data.OporaContract.RegionEntry;
 import org.oporaua.localelections.data.Party;
 import org.oporaua.localelections.data.Region;
-import org.oporaua.localelections.util.AppPrefs;
+import org.oporaua.localelections.util.PrefUtil;
 import org.oporaua.localelections.util.Constants;
 
 import java.io.IOException;
@@ -151,7 +151,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                             cVArray
                     );
                     if (count > 0) {
-                        AppPrefs.getInstance().setElectionsTypes(true);
+                        PrefUtil.getInstance().setElectionsTypes(true);
                     }
                     Log.d(LOG_TAG, count + " elections types inserted");
                 }
@@ -185,7 +185,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                             cVArray
                     );
                     if (count > 0) {
-                        AppPrefs.getInstance().setParties(true);
+                        PrefUtil.getInstance().setParties(true);
                     }
                     Log.d(LOG_TAG, count + " parties inserted");
                 }
@@ -221,7 +221,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                             cVArray
                     );
                     if (count > 0) {
-                        AppPrefs.getInstance().setLocalities(true);
+                        PrefUtil.getInstance().setLocalities(true);
                     }
                     Log.d(LOG_TAG, count + " localities inserted");
                 }
@@ -260,7 +260,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                     );
                     Log.d(LOG_TAG, count + " regions inserted");
                     if (count > 0) {
-                        AppPrefs.getInstance().setRegions(true);
+                        PrefUtil.getInstance().setRegions(true);
                     }
                 }
 
@@ -296,7 +296,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                     );
                     Log.d(LOG_TAG, count + " accidents subtypes inserted");
                     if (count > 0) {
-                        AppPrefs.getInstance().setAccidentsSubtypes(true);
+                        PrefUtil.getInstance().setAccidentsSubtypes(true);
                     }
                 }
             }
@@ -334,7 +334,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                     );
                     Log.d(LOG_TAG, count + " accidents types inserted");
                     if (count > 0) {
-                        AppPrefs.getInstance().setAccidentsTypes(true);
+                        PrefUtil.getInstance().setAccidentsTypes(true);
                     }
                 }
             }

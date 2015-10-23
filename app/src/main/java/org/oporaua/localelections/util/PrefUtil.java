@@ -2,9 +2,17 @@ package org.oporaua.localelections.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.StringRes;
 
-public final class AppPrefs {
+import org.oporaua.localelections.R;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+public final class PrefUtil {
 
     private static final String SAVED_ACCIDENTS_TYPES = "accidents_types";
     private static final String SAVED_ACCIDENTS_SUBTYPES = "accidents_subtypes";
@@ -13,11 +21,11 @@ public final class AppPrefs {
     private static final String SAVED_PARTIES = "parties";
     private static final String SAVED_ELECTIONS_TYPES = "elections_types";
 
-    private static AppPrefs sInstance;
+    private static PrefUtil sInstance;
 
     private Context mContext;
 
-    private AppPrefs(Context context) {
+    private PrefUtil(Context context) {
         this.mContext = context;
     }
 
@@ -25,14 +33,18 @@ public final class AppPrefs {
         if (sInstance != null) {
             throw new IllegalStateException("AppPrefs have already been initialized");
         }
-        sInstance = new AppPrefs(context);
+        sInstance = new PrefUtil(context);
     }
 
-    public static AppPrefs getInstance() {
+    public static PrefUtil getInstance() {
         if (sInstance == null) {
             throw new IllegalStateException("AppPrefs should be initialized first");
         }
         return sInstance;
+    }
+
+    private static String getString(@StringRes int resourceId) {
+        return getInstance().mContext.getString(resourceId);
     }
 
     private SharedPreferences getPrefs() {
@@ -86,4 +98,19 @@ public final class AppPrefs {
     public void setElectionsTypes(boolean electionsTypes) {
         getPrefs().edit().putBoolean(SAVED_ELECTIONS_TYPES, electionsTypes).apply();
     }
+
+    public static Set<String> getRegionSubscribeIds() {
+        return getInstance().getPersistentObjectSet(getString(R.string.pref_regions_key));
+    }
+
+    private Set<String> getPersistentObjectSet(String key) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            return getPrefs().getStringSet(key, null);
+        } else {
+            String s = getPrefs().getString(key, null);
+            if (s != null) return new HashSet<>(Arrays.asList(s.split(",")));
+            else return null;
+        }
+    }
+
 }

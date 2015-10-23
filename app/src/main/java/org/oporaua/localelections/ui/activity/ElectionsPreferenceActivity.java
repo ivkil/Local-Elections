@@ -2,11 +2,15 @@ package org.oporaua.localelections.ui.activity;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.util.Log;
 
 import org.oporaua.localelections.R;
+import org.oporaua.localelections.util.PrefUtil;
+
+import java.util.Set;
 
 
-public class ElectionsPreferenceActivity extends PreferenceActivity{
+public class ElectionsPreferenceActivity extends PreferenceActivity {
 //        implements Preference.OnPreferenceChangeListener {
 
 //    private boolean mBindingPreference;
@@ -18,6 +22,17 @@ public class ElectionsPreferenceActivity extends PreferenceActivity{
         addPreferencesFromResource(R.xml.preferences);
 //        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_key)));
 //        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_units_key)));
+
+        Set<String> selections = PrefUtil.getRegionSubscribeIds();
+
+        String[] selected = new String[0];
+        if (selections != null) {
+            selected = selections.toArray(new String[selections.size()]);
+        }
+        for (String s : selected) {
+            Log.d("TAG", s);
+        }
+//        Toast.makeText(this, selected[all], Toast.LENGTH_LONG).show();
     }
 
 //

@@ -1,19 +1,22 @@
 <resources>
+
+    <string name="pref_regions_key">regions_key</string>
+    <string name="content_authority">org.oporaua.localelections</string>
+
+
     <string name="app_name">Місцеві вибори</string>
 
     <string name="drawer_law">Закон</string>
     <string name="drawer_manual">Посібник</string>
-
-    <string name="find_indicator_empty">0/0</string>
-    <string name="search_hint">Знайти</string>
-
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="drawer_law_title">Закон</string>
     <string name="drawer_manual_title">Посібник</string>
     <string name="drawer_violations_title">Порушення</string>
     <string name="drawer_blanks_title">Бланки документів</string>
     <string name="drawer_tvk_members_title">ТВК. Пошук ротацій</string>
     <string name="drawer_contacts_title">Контакти</string>
+
+    <string name="find_indicator_empty">0/0</string>
+    <string name="search_hint">Знайти</string>
 
     <string name="action_search_title">Пошук</string>
     <string name="action_scroll_up_title">Угору</string>
@@ -24,7 +27,6 @@
     <string name="nav_sub_header">Інше</string>
 
     <string name="sync_account_type">dts2015.oporaua.org</string>
-    <string name="content_authority">org.oporaua.localelections</string>
     <string name="no_accidents_found">Немає порушень</string>
     <string name="drawer_accidents_list">Список інцидентів</string>
 
@@ -34,11 +36,8 @@
 
     <string name="is_elections_types">is_elections_types</string>
     <string name="title_activity_settings">Налаштування</string>
-
     <string name="members_empty">Нічого не знайдено</string>
-
     <string name="settings_title">Налаштування</string>
-
     <string name="settings">Налаштування</string>
 
 </resources>

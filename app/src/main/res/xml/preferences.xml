@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
+
     <PreferenceCategory android:title="Сповіщення">
 
         <MultiSelectListPreference
@@ -8,9 +9,10 @@
             android:dialogTitle="Підписки на"
             android:entries="@array/entries_list_preference"
             android:entryValues="@array/entries_ids_list_preference"
-            android:key="list_key"
+            android:key="@string/pref_regions_key"
             android:summary="не знаю що тут написати"
             android:title="Оберіть на що підписатись"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>
