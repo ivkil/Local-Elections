@@ -131,7 +131,7 @@ public class AccidentsLoader extends AsyncTaskLoader<List<AccidentMap>> {
     }
 
 
-    public class AccidentsContentObserver extends ContentObserver {
+    private class AccidentsContentObserver extends ContentObserver {
 
         private AccidentsLoader mLoader;
 

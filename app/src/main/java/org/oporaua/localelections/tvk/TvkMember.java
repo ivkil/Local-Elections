@@ -86,4 +86,5 @@ public class TvkMember implements Parcelable {
             return new TvkMember[size];
         }
     };
+
 }

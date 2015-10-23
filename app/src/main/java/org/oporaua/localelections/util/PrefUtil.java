@@ -25,8 +25,11 @@ public final class PrefUtil {
 
     private Context mContext;
 
+    private SharedPreferences mSharedPreferences;
+
     private PrefUtil(Context context) {
         this.mContext = context;
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     }
 
     public static void initialize(Context context) {
@@ -47,56 +50,60 @@ public final class PrefUtil {
         return getInstance().mContext.getString(resourceId);
     }
 
-    private SharedPreferences getPrefs() {
-        return PreferenceManager.getDefaultSharedPreferences(mContext);
+    private static SharedPreferences getPrefs() {
+        return getInstance().mSharedPreferences;
     }
 
-    public boolean isAccidentsTypes() {
+    private static SharedPreferences.Editor getEditor() {
+        return getPrefs().edit();
+    }
+
+    public static boolean isAccidentsTypes() {
         return getPrefs().getBoolean(SAVED_ACCIDENTS_TYPES, false);
     }
 
-    public void setAccidentsTypes(boolean accidentsTypes) {
-        getPrefs().edit().putBoolean(SAVED_ACCIDENTS_TYPES, accidentsTypes).apply();
+    public static void setAccidentsTypes(boolean accidentsTypes) {
+        getEditor().putBoolean(SAVED_ACCIDENTS_TYPES, accidentsTypes).apply();
     }
 
-    public boolean isAccidentsSubtypes() {
+    public static boolean isAccidentsSubtypes() {
         return getPrefs().getBoolean(SAVED_ACCIDENTS_SUBTYPES, false);
     }
 
-    public void setAccidentsSubtypes(boolean accidentsSubtypes) {
-        getPrefs().edit().putBoolean(SAVED_ACCIDENTS_SUBTYPES, accidentsSubtypes).apply();
+    public static void setAccidentsSubtypes(boolean accidentsSubtypes) {
+        getEditor().putBoolean(SAVED_ACCIDENTS_SUBTYPES, accidentsSubtypes).apply();
     }
 
-    public boolean isRegions() {
+    public static boolean isRegions() {
         return getPrefs().getBoolean(SAVED_REGIONS, false);
     }
 
-    public void setRegions(boolean regions) {
-        getPrefs().edit().putBoolean(SAVED_REGIONS, regions).apply();
+    public static void setRegions(boolean regions) {
+        getEditor().putBoolean(SAVED_REGIONS, regions).apply();
     }
 
-    public boolean isLocalities() {
+    public static boolean isLocalities() {
         return getPrefs().getBoolean(SAVED_LOCALITIES, false);
     }
 
-    public void setLocalities(boolean localities) {
-        getPrefs().edit().putBoolean(SAVED_LOCALITIES, localities).apply();
+    public static void setLocalities(boolean localities) {
+        getEditor().putBoolean(SAVED_LOCALITIES, localities).apply();
     }
 
-    public boolean isParties() {
+    public static boolean isParties() {
         return getPrefs().getBoolean(SAVED_PARTIES, false);
     }
 
-    public void setParties(boolean parties) {
-        getPrefs().edit().putBoolean(SAVED_PARTIES, parties).apply();
+    public static void setParties(boolean parties) {
+        getEditor().putBoolean(SAVED_PARTIES, parties).apply();
     }
 
-    public boolean isElectionsTypes() {
+    public static boolean isElectionsTypes() {
         return getPrefs().getBoolean(SAVED_ELECTIONS_TYPES, false);
     }
 
-    public void setElectionsTypes(boolean electionsTypes) {
-        getPrefs().edit().putBoolean(SAVED_ELECTIONS_TYPES, electionsTypes).apply();
+    public static void setElectionsTypes(boolean electionsTypes) {
+        getEditor().putBoolean(SAVED_ELECTIONS_TYPES, electionsTypes).apply();
     }
 
     public static Set<String> getRegionSubscribeIds() {
@@ -105,9 +112,9 @@ public final class PrefUtil {
 
     private Set<String> getPersistentObjectSet(String key) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            return getPrefs().getStringSet(key, null);
+            return mSharedPreferences.getStringSet(key, null);
         } else {
-            String s = getPrefs().getString(key, null);
+            String s = mSharedPreferences.getString(key, null);
             if (s != null) return new HashSet<>(Arrays.asList(s.split(",")));
             else return null;
         }

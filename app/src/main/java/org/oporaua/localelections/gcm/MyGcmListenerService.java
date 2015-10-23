@@ -11,9 +11,8 @@ import org.oporaua.localelections.sync.OporaSyncAdapter;
 
 public class MyGcmListenerService extends GcmListenerService {
 
-//    private static final String LOG_TAG = MyGcmListenerService.class.getSimpleName();
     private static final String ACTION_UPDATE_ACCIDENT = "org.oporaua.localelections.ACTION_UPDATE_ACCIDENT";
-    public static final String ACTION_DELETE_ACCIDENT = "org.oporaua.localelections.ACTION_DELETE_ACCIDENT";
+    private static final String ACTION_DELETE_ACCIDENT = "org.oporaua.localelections.ACTION_DELETE_ACCIDENT";
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
@@ -27,7 +26,7 @@ public class MyGcmListenerService extends GcmListenerService {
                     break;
                 case ACTION_DELETE_ACCIDENT:
                     Intent deleteIntent = new Intent(this, AccidentIntentService.class);
-                    deleteIntent.setAction(ACTION_DELETE_ACCIDENT);
+                    deleteIntent.setAction(AccidentIntentService.ACTION_DELETE_ACCIDENT);
                     deleteIntent.putExtra(AccidentDetailsActivity.ARG_ACCIDENT_ID, id);
                     startService(deleteIntent);
                     break;

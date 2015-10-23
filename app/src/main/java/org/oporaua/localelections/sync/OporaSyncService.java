@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 public class OporaSyncService extends Service {
+
     private static final Object sSyncAdapterLock = new Object();
     private static OporaSyncAdapter sOporaSyncAdapter = null;
 

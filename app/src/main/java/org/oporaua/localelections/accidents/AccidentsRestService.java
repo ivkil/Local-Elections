@@ -14,7 +14,7 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Query;
 
-public interface AccidentsService {
+public interface AccidentsRestService {
 
     @GET("/violations")
     Call<Accident[]> getAccidents(@Query("since_id") long sinceId);

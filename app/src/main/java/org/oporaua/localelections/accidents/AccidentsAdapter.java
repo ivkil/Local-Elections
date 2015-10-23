@@ -50,7 +50,6 @@ public class AccidentsAdapter extends CursorAdapter {
         Date date = OporaContract.getDateFromDb(cursor.getString(AccidentsListFragment.COL_ACCIDENT_DATE));
 
         if (date != null) {
-//            viewHolder.tvDate.setText(DateFormat.getDateInstance().format(date));
             SimpleDateFormat friendlyDateFormat = new SimpleDateFormat("dd MMM yyyy 'р.'", new Locale("uk"));
             viewHolder.tvDate.setText(friendlyDateFormat.format(date));
         }

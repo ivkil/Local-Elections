@@ -45,8 +45,6 @@ import org.oporaua.localelections.util.GeneralUtil;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-
-
 public class WebViewFragment extends Fragment implements OnQueryTextListener, OnCloseListener,
         OnClickListener, OnEditorActionListener {
 

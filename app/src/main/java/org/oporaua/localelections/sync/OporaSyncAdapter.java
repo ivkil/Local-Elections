@@ -18,7 +18,7 @@ import com.google.gson.GsonBuilder;
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.accidents.Accident;
 import org.oporaua.localelections.accidents.AccidentDetailsActivity;
-import org.oporaua.localelections.accidents.AccidentsService;
+import org.oporaua.localelections.accidents.AccidentsRestService;
 import org.oporaua.localelections.data.AccidentSubtype;
 import org.oporaua.localelections.data.AccidentType;
 import org.oporaua.localelections.data.ElectionsType;
@@ -47,8 +47,8 @@ import retrofit.Retrofit;
 
 public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
 
-    public final String LOG_TAG = OporaSyncAdapter.class.getSimpleName();
-    public static final String SYNC_MODE = "sync_mode";
+    private final String LOG_TAG = OporaSyncAdapter.class.getSimpleName();
+    private static final String SYNC_MODE = "sync_mode";
 
     public final static int SYNC_ACCIDENT_TYPES = 100;
     public final static int SYNC_ACCIDENT_SUBTYPES = 200;
@@ -59,8 +59,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
     public final static int SYNC_ACCIDENTS = 700;
     public final static int SYNC_ACCIDENT = 800;
 
-    private AccidentsService mAccidentsService;
-
+    private AccidentsRestService mAccidentsRestService;
 
     public OporaSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -71,7 +70,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                 .baseUrl(Constants.ACCIDENTS_ENDPOINT)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
-        mAccidentsService = retrofit.create(AccidentsService.class);
+        mAccidentsRestService = retrofit.create(AccidentsRestService.class);
     }
 
     @Override
@@ -112,7 +111,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private void syncAccident(long id) {
-        Call<Accident> call = mAccidentsService.getAccident(id);
+        Call<Accident> call = mAccidentsRestService.getAccident(id);
         try {
             Response<Accident> response = call.execute();
             Accident accident = response.body();
@@ -131,7 +130,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private void syncElectionsTypes() {
-        Call<ElectionsType[]> call = mAccidentsService.getElectionsTypes();
+        Call<ElectionsType[]> call = mAccidentsRestService.getElectionsTypes();
         call.enqueue(new Callback<ElectionsType[]>() {
             @Override
             public void onResponse(Response<ElectionsType[]> response, Retrofit retrofit) {
@@ -165,7 +164,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private void syncParties() {
-        Call<Party[]> call = mAccidentsService.getParties();
+        Call<Party[]> call = mAccidentsRestService.getParties();
         call.enqueue(new Callback<Party[]>() {
             @Override
             public void onResponse(Response<Party[]> response, Retrofit retrofit) {
@@ -199,7 +198,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private void syncLocalities() {
-        Call<Locality[]> call = mAccidentsService.getLocalities();
+        Call<Locality[]> call = mAccidentsRestService.getLocalities();
         call.enqueue(new Callback<Locality[]>() {
             @Override
             public void onResponse(Response<Locality[]> response, Retrofit retrofit) {
@@ -235,7 +234,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private void syncRegions() {
-        Call<Region[]> call = mAccidentsService.getRegions();
+        Call<Region[]> call = mAccidentsRestService.getRegions();
         call.enqueue(new Callback<Region[]>() {
             @Override
             public void onResponse(Response<Region[]> response, Retrofit retrofit) {
@@ -274,7 +273,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private void syncAccidentsSubtypes() {
-        Call<AccidentSubtype[]> call = mAccidentsService.getAccidentSubtypes();
+        Call<AccidentSubtype[]> call = mAccidentsRestService.getAccidentSubtypes();
         call.enqueue(new Callback<AccidentSubtype[]>() {
             @Override
             public void onResponse(Response<AccidentSubtype[]> response, Retrofit retrofit) {
@@ -309,7 +308,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private void syncAccidentTypes() {
-        Call<AccidentType[]> call = mAccidentsService.getAccidentTypes();
+        Call<AccidentType[]> call = mAccidentsRestService.getAccidentTypes();
         call.enqueue(new Callback<AccidentType[]>() {
             @Override
             public void onResponse(Response<AccidentType[]> response, Retrofit retrofit) {
@@ -362,7 +361,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
             sinceId = cursor.getLong(COL_ACCIDENT_ID);
             cursor.close();
         }
-        Call<Accident[]> call = mAccidentsService.getAccidents(sinceId);
+        Call<Accident[]> call = mAccidentsRestService.getAccidents(sinceId);
         try {
             Response<Accident[]> response = call.execute();
             Accident[] accidents = response.body();
@@ -389,7 +388,6 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private void notifyAccident() {
     }
-
 
     public static void syncImmediately(Context context, int mode) {
         Bundle bundle = new Bundle();
@@ -429,7 +427,6 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private static ContentValues getAccidentValues(Accident accident) {
         ContentValues accidentValues = new ContentValues();
-
         accidentValues.put(AccidentEntry._ID, accident.getId());
         accidentValues.put(AccidentEntry.COLUMN_DATE_TEXT, OporaContract.getDbDateString(accident.getDate()));
         accidentValues.put(AccidentEntry.COLUMN_TITLE, accident.getTitle());
@@ -442,7 +439,6 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
         accidentValues.put(AccidentEntry.COLUMN_ELECTIONS_ID, accident.getElectionsId());
         accidentValues.put(AccidentEntry.COLUMN_OFFENDER_PARTY_ID, accident.getOffenderPartyId());
         accidentValues.put(AccidentEntry.COLUMN_ACCIDENT_SUBTYPE, accident.getAccidentSubtypeId());
-
         return accidentValues;
     }
 
