@@ -68,4 +68,8 @@ public class TvkMemberAdapter extends RecyclerView.Adapter<TvkMemberAdapter.TvkM
         notifyDataSetChanged();
     }
 
+    public void clearAll() {
+        mTvkMembers = new ArrayList<>();
+        notifyDataSetChanged();
+    }
 }

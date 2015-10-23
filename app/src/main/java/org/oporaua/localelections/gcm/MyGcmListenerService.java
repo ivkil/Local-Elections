@@ -5,9 +5,9 @@ import android.os.Bundle;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
+import org.oporaua.localelections.accidents.AccidentDetailsActivity;
 import org.oporaua.localelections.accidents.AccidentIntentService;
 import org.oporaua.localelections.sync.OporaSyncAdapter;
-import org.oporaua.localelections.ui.activity.AccidentDetailsActivity;
 
 public class MyGcmListenerService extends GcmListenerService {
 
@@ -29,7 +29,7 @@ public class MyGcmListenerService extends GcmListenerService {
                 case ACTION_DELETE_ACCIDENT:
                     Intent deleteIntent = new Intent(this, AccidentIntentService.class);
                     deleteIntent.setAction(ACTION_DELETE_ACCIDENT);
-                    deleteIntent.putExtra(AccidentDetailsActivity.ACCIDENT_ID_TAG, id);
+                    deleteIntent.putExtra(AccidentDetailsActivity.ARG_ACCIDENT_ID, id);
                     startService(deleteIntent);
                     break;
             }

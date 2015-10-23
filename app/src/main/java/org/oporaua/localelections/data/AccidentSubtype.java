@@ -3,6 +3,7 @@ package org.oporaua.localelections.data;
 import com.google.gson.annotations.SerializedName;
 
 public class AccidentSubtype {
+
     @SerializedName("id")
     private long id;
 
@@ -16,4 +17,5 @@ public class AccidentSubtype {
     public String getTitle() {
         return title;
     }
+
 }

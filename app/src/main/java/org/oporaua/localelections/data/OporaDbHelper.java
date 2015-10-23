@@ -89,4 +89,5 @@ public class OporaDbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + AccidentEntry.TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
+
 }

@@ -1,4 +1,4 @@
-package org.oporaua.localelections.ui.activity;
+package org.oporaua.localelections.accidents;
 
 import android.database.Cursor;
 import android.net.Uri;
@@ -22,7 +22,10 @@ import butterknife.ButterKnife;
 
 public class AccidentDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    public final static String ACCIDENT_ID_TAG = "accident_id";
+    public final static String ARG_ACCIDENT_ID = "accident_id";
+
+    private static final int ACCIDENT_LOADER_ID = 15;
+
     private long mId;
 
     @Bind(R.id.accident_date_textview)
@@ -77,8 +80,10 @@ public class AccidentDetailsActivity extends AppCompatActivity implements Loader
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accident_details);
         ButterKnife.bind(this);
-        mId = getIntent().getLongExtra(ACCIDENT_ID_TAG, -1);
-        getSupportLoaderManager().initLoader(0, null, this);
+        if (getIntent().getExtras() != null) {
+            mId = getIntent().getLongExtra(ARG_ACCIDENT_ID, -1);
+        }
+        getSupportLoaderManager().initLoader(ACCIDENT_LOADER_ID, null, this);
     }
 
     @Override

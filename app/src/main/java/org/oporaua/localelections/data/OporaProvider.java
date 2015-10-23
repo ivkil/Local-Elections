@@ -108,6 +108,18 @@ public class OporaProvider extends ContentProvider {
                 );
                 break;
             }
+            case REGIONS: {
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        RegionEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -289,4 +301,5 @@ public class OporaProvider extends ContentProvider {
         return returnCount;
 
     }
+
 }

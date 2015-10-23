@@ -17,4 +17,5 @@ public class ElectionsType {
     public String getTitle() {
         return title;
     }
+
 }

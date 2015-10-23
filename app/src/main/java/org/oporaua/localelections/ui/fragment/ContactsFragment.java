@@ -29,9 +29,6 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
     @Bind(R.id.contacts_address_view)
     View mViewAddress;
 
-    @Bind(R.id.app_toolbar)
-    Toolbar mToolbar;
-
     public static ContactsFragment newInstance() {
         return new ContactsFragment();
     }
@@ -42,7 +39,8 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
         ButterKnife.bind(this, view);
         if (getActivity() instanceof SetToolbarListener) {
-            ((SetToolbarListener) getActivity()).onSetToolbar(mToolbar);
+            Toolbar toolbar = ButterKnife.findById(view, R.id.app_toolbar);
+            ((SetToolbarListener) getActivity()).onSetToolbar(toolbar);
         }
         return view;
     }

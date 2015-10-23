@@ -8,11 +8,11 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.ThemedSpinnerAdapter;
 
 
-public class SpinnerAdapter extends SimpleCursorAdapter implements android.support.v7.widget.ThemedSpinnerAdapter {
+public class MySpinnerAdapter extends SimpleCursorAdapter implements ThemedSpinnerAdapter {
 
     private final ThemedSpinnerAdapter.Helper mDropDownHelper;
 
-    public SpinnerAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
+    public MySpinnerAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
         super(context, layout, c, from, to, flags);
         mDropDownHelper = new ThemedSpinnerAdapter.Helper(context);
     }
@@ -21,6 +21,7 @@ public class SpinnerAdapter extends SimpleCursorAdapter implements android.suppo
     public void setDropDownViewTheme(Resources.Theme theme) {
         mDropDownHelper.setDropDownViewTheme(theme);
     }
+
 
     @Nullable
     @Override

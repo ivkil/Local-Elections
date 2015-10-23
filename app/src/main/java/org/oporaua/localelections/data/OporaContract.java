@@ -16,7 +16,6 @@ public class OporaContract {
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
-
     public static final String PATH_ACCIDENTS_TYPES = "accident_types";
     public static final String PATH_ACCIDENTS_SUBTYPES = "accident_subtypes";
     public static final String PATH_REGIONS = "regions";
@@ -25,9 +24,7 @@ public class OporaContract {
     public static final String PATH_ELECTIONS_TYPES = "elections_types";
     public static final String PATH_ACCIDENTS = "accidents";
 
-
     public static final String DATE_FORMAT = "yyyyMMdd";
-
 
     public static String getDbDateString(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT, new Locale("ua"));
@@ -165,7 +162,6 @@ public class OporaContract {
 
     }
 
-
     public static final class AccidentEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI =
@@ -189,9 +185,9 @@ public class OporaContract {
         public static final String COLUMN_ELECTIONS_ID = "elections_id";
         public static final String COLUMN_OFFENDER_PARTY_ID = "offender_party_id";
 
-
         public static Uri buildAccidentUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
+
 }

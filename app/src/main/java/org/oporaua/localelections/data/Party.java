@@ -17,4 +17,5 @@ public class Party {
     public String getTitle() {
         return title;
     }
+
 }

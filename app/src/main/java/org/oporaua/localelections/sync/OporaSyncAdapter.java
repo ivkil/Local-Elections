@@ -17,6 +17,7 @@ import com.google.gson.GsonBuilder;
 
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.accidents.Accident;
+import org.oporaua.localelections.accidents.AccidentDetailsActivity;
 import org.oporaua.localelections.accidents.AccidentsService;
 import org.oporaua.localelections.data.AccidentSubtype;
 import org.oporaua.localelections.data.AccidentType;
@@ -32,7 +33,6 @@ import org.oporaua.localelections.data.OporaContract.PartyEntry;
 import org.oporaua.localelections.data.OporaContract.RegionEntry;
 import org.oporaua.localelections.data.Party;
 import org.oporaua.localelections.data.Region;
-import org.oporaua.localelections.ui.activity.AccidentDetailsActivity;
 import org.oporaua.localelections.util.AppPrefs;
 import org.oporaua.localelections.util.Constants;
 
@@ -68,7 +68,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                 .setDateFormat("yyyy-MM-dd")
                 .create();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.TEST_URL)
+                .baseUrl(Constants.ACCIDENTS_ENDPOINT)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         mAccidentsService = retrofit.create(AccidentsService.class);
@@ -102,7 +102,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                     syncAccidents();
                     break;
                 case SYNC_ACCIDENT:
-                    long id = extras.getLong(AccidentDetailsActivity.ACCIDENT_ID_TAG);
+                    long id = extras.getLong(AccidentDetailsActivity.ARG_ACCIDENT_ID);
                     syncAccident(id);
                     break;
                 default:
@@ -241,6 +241,10 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
             public void onResponse(Response<Region[]> response, Retrofit retrofit) {
                 Region[] regions = response.body();
                 Vector<ContentValues> cVVector = new Vector<>(regions.length);
+                ContentValues values = new ContentValues();
+                values.put(RegionEntry._ID, -1);
+                values.put(RegionEntry.COLUMN_TITLE, "Усі регіони");
+                cVVector.add(values);
                 for (Region region : regions) {
                     ContentValues valuesRegions = new ContentValues();
                     valuesRegions.put(RegionEntry._ID, region.getId());
@@ -396,7 +400,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         bundle.putInt(SYNC_MODE, SYNC_ACCIDENT);
-        bundle.putLong(AccidentDetailsActivity.ACCIDENT_ID_TAG, id);
+        bundle.putLong(AccidentDetailsActivity.ARG_ACCIDENT_ID, id);
         ContentResolver.requestSync(getSyncAccount(context),
                 context.getString(R.string.content_authority), bundle);
     }

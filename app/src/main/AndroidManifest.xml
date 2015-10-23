@@ -96,7 +96,7 @@
             android:value="AIzaSyDm3_AJJnuladjCh8Ez07d8nuQD403lfGo" />
 
         <activity
-            android:name=".ui.activity.AccidentDetailsActivity"
+            android:name=".accidents.AccidentDetailsActivity"
             android:label="@string/title_activity_accident_details"
             android:theme="@style/AppTheme" />
 

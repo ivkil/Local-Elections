@@ -17,4 +17,5 @@ public class AccidentType {
     public String getTitle() {
         return title;
     }
+
 }

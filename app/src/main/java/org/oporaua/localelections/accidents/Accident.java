@@ -72,7 +72,6 @@ public class Accident implements ClusterItem {
     @SerializedName("lang")
     private double longitude;
 
-
     public long getId() {
         return id;
     }

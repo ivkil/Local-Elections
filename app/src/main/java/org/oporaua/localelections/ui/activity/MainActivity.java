@@ -20,13 +20,13 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.oporaua.localelections.PrefsActivity;
 import org.oporaua.localelections.R;
+import org.oporaua.localelections.accidents.AccidentsListFragment;
+import org.oporaua.localelections.accidents.AccidentsMapFragment;
 import org.oporaua.localelections.blanks.BlanksFragment;
 import org.oporaua.localelections.gcm.RegistrationIntentService;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
 import org.oporaua.localelections.sync.OporaSyncAdapter;
 import org.oporaua.localelections.tvk.TvkMembersFragment;
-import org.oporaua.localelections.ui.fragment.AccidentsListFragment;
-import org.oporaua.localelections.ui.fragment.AccidentsMapFragment;
 import org.oporaua.localelections.ui.fragment.ContactsFragment;
 import org.oporaua.localelections.ui.fragment.WebViewFragment;
 import org.oporaua.localelections.util.AppPrefs;
