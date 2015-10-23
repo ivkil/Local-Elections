@@ -43,6 +43,7 @@ import com.google.maps.android.ui.SquareTextView;
 
 import org.oporaua.localelections.MySpinnerAdapter;
 import org.oporaua.localelections.R;
+import org.oporaua.localelections.data.AccidentType;
 import org.oporaua.localelections.data.OporaContract.AccidentEntry;
 import org.oporaua.localelections.data.OporaContract.AccidentTypeEntry;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
@@ -75,7 +76,6 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
 
     private boolean mAlreadyConnected;
 
-    private Spinner mSpinner;
     private MySpinnerAdapter mSpinnerAdapter;
 
     private long mAccidentTypeId = -1;
@@ -91,7 +91,7 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
         if (getActivity() instanceof SetToolbarListener) {
             Toolbar toolbar = ButterKnife.findById(view, R.id.filter_toolbar);
             ((SetToolbarListener) getActivity()).onSetToolbar(toolbar);
-            mSpinner = ButterKnife.findById(toolbar, R.id.spinner_filter);
+            Spinner mSpinner = ButterKnife.findById(toolbar, R.id.spinner_filter);
             mSpinnerAdapter = new MySpinnerAdapter(getActivity(), R.layout.spinner_dropdown_item, null,
                     new String[]{AccidentEntry.COLUMN_TITLE},
                     new int[]{android.R.id.text1},
@@ -231,16 +231,32 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
 
         @Override
         protected void onBeforeClusterItemRendered(AccidentMap item, MarkerOptions markerOptions) {
-
-
-//            final String dateValue = GeneralUtil.getInstance().getFriendlyDayString(item.getDate());
-//            final String snippet = String.format("%s, %s", dateValue, item.getPlaceName());
-//
-//            markerOptions.icon(BitmapDescriptorFactory.fromResource(GeneralUtil.getInstance().getViolationResource(item)))
-//                    .title(item.getType())
-//                    .snippet(snippet);
-
             markerOptions.title(item.getTitle());
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(getMarkerColor((int) item.getAccidentType())));
+        }
+
+        private float getMarkerColor(int accidentType) {
+            switch (accidentType) {
+                case AccidentType.ILLEGAL_CAMPAIGNING:
+                    return BitmapDescriptorFactory.HUE_VIOLET;
+                case AccidentType.ADMINISTRATIVE_RESOURCES:
+                    return BitmapDescriptorFactory.HUE_BLUE;
+                case AccidentType.VOTERS_BRIBING:
+                    return BitmapDescriptorFactory.HUE_RED;
+                case AccidentType.VOTERS_LISTS_MANIPULATIONS:
+                    return BitmapDescriptorFactory.HUE_YELLOW;
+                case AccidentType.OBSERVERS_OBSTRUCTION:
+                    return BitmapDescriptorFactory.HUE_GREEN;
+                case AccidentType.COMMISSIONS_VIOLATIONS:
+                    return BitmapDescriptorFactory.HUE_ROSE;
+                case AccidentType.FALSIFICATIONS:
+                    return BitmapDescriptorFactory.HUE_ORANGE;
+                case AccidentType.CRIMINAL_INFLUENCE:
+                    return BitmapDescriptorFactory.HUE_CYAN;
+                default:
+                    return BitmapDescriptorFactory.HUE_RED;
+            }
+
         }
 
 
@@ -303,7 +319,7 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {
-
+            mSpinnerAdapter.swapCursor(null);
         }
     }
 
