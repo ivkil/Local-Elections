@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import org.oporaua.localelections.PrefsActivity;
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.accidents.AccidentsListFragment;
 import org.oporaua.localelections.accidents.AccidentsMapFragment;
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     private static final String PREV_MENU_ID_TAG = "prev_menu_id";
 
-    private final static String LOG_TAG = MainActivity.class.getSimpleName();
+//    private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
     private final static int DRAWER_ID_LAW = 10;
     private final static int DRAWER_ID_MANUAL = 20;
@@ -108,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
             case R.id.settings:
-                startActivity(new Intent(this, PrefsActivity.class));
+                startActivity(new Intent(this, ElectionsPreferenceActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

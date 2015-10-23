@@ -5,12 +5,12 @@
 
         <MultiSelectListPreference
             android:defaultValue="@array/empty_array"
-            android:dialogTitle="TITLE"
-            android:entries="@array/text2"
-            android:entryValues="@array/test1"
+            android:dialogTitle="Підписки на"
+            android:entries="@array/entries_list_preference"
+            android:entryValues="@array/entries_ids_list_preference"
             android:key="list_key"
-            android:summary="HUI"
-            android:title="HUI"/>
+            android:summary="не знаю що тут написати"
+            android:title="Оберіть на що підписатись"/>
     </PreferenceCategory>
 
 </PreferenceScreen>
