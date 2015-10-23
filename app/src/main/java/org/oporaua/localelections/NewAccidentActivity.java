@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
@@ -61,12 +60,12 @@ public class NewAccidentActivity extends AppCompatActivity {
         accident.setLocalityId(12658);
         accident.setOffender("offender");
         accident.setOffenderPartyId(19);
-        accident.setBeneficciary("benef");
+        accident.setBeneficiary("benef");
         accident.setBeneficiaryPartyId(19);
         accident.setVictim("victim");
         accident.setVictimPartyId(19);
         accident.setSource("Юрій Іванович");
-        accident.setPosition(new LatLng(25, 34));
+        //accident.setPosition(new LatLng(25, 34));
         accident.setDate(new Date());
         accident.setLastIp("192.18.0.1");
         accident.setEvidence(new Evidence("/url"));

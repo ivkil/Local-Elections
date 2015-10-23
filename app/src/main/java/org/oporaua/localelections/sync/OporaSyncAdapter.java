@@ -2,14 +2,20 @@ package org.oporaua.localelections.sync;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -33,10 +39,11 @@ import org.oporaua.localelections.data.OporaContract.PartyEntry;
 import org.oporaua.localelections.data.OporaContract.RegionEntry;
 import org.oporaua.localelections.data.Party;
 import org.oporaua.localelections.data.Region;
-import org.oporaua.localelections.util.PrefUtil;
 import org.oporaua.localelections.util.Constants;
+import org.oporaua.localelections.util.PrefUtil;
 
 import java.io.IOException;
+import java.util.Set;
 import java.util.Vector;
 
 import retrofit.Call;
@@ -124,6 +131,11 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                     new String[]{String.valueOf(id)});
             if (count == 0) {
                 getContext().getContentResolver().insert(AccidentEntry.CONTENT_URI, accidentValues);
+            }
+            String region = Long.toString(accident.getRegionId());
+            Set<String> regions = PrefUtil.getRegionSubscribeIds();
+            if (regions.contains(region)) {
+                notifyAccident(id, accident.getTitle());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -387,7 +399,30 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
 
     }
 
-    private void notifyAccident() {
+    private void notifyAccident(long id, String title) {
+        boolean whiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
+        int notificationIconRes = whiteIcon ? R.drawable.ic_stat_icon : R.mipmap.ic_launcher;
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(getContext())
+                        .setSmallIcon(notificationIconRes)
+                        .setContentTitle(getContext().getString(R.string.new_accident))
+                        .setColor(ContextCompat.getColor(getContext(), R.color.primary))
+                        .setContentText(title);
+        Intent resultIntent = new Intent(getContext(), AccidentDetailsActivity.class);
+        resultIntent.putExtra(AccidentDetailsActivity.ARG_ACCIDENT_ID, id);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
+        stackBuilder.addParentStack(AccidentDetailsActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        mBuilder.setAutoCancel(true);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(3004, mBuilder.build());
     }
 
 
@@ -435,8 +470,8 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
         accidentValues.put(AccidentEntry.COLUMN_TITLE, accident.getTitle());
         accidentValues.put(AccidentEntry.COLUMN_SOURCE, accident.getSource());
         accidentValues.put(AccidentEntry.COLUMN_EVIDENCE_URL, accident.getEvidence().getUrl());
-        accidentValues.put(AccidentEntry.COLUMN_LAT, accident.getPosition().latitude);
-        accidentValues.put(AccidentEntry.COLUMN_LNG, accident.getPosition().longitude);
+        accidentValues.put(AccidentEntry.COLUMN_LAT, accident.getLatitude());
+        accidentValues.put(AccidentEntry.COLUMN_LNG, accident.getLongitude());
         accidentValues.put(AccidentEntry.COLUMN_REGION_ID, accident.getRegionId());
         accidentValues.put(AccidentEntry.COLUMN_LOCALITY_ID, accident.getLocalityId());
         accidentValues.put(AccidentEntry.COLUMN_ELECTIONS_ID, accident.getElectionsId());

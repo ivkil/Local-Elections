@@ -1,14 +1,11 @@
 package org.oporaua.localelections.accidents;
 
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
-import com.google.maps.android.clustering.ClusterItem;
 
 import java.util.Date;
 
-public class Accident implements ClusterItem {
-
+public class Accident {
     @SerializedName("id")
     private long id;
 
@@ -34,7 +31,7 @@ public class Accident implements ClusterItem {
     private long victimPartyId;
 
     @SerializedName("beneficiary")
-    private String beneficciary;
+    private String beneficiary;
 
     @SerializedName("beneficiary_party_id")
 
@@ -120,8 +117,8 @@ public class Accident implements ClusterItem {
         this.victimPartyId = victimPartyId;
     }
 
-    public void setBeneficciary(String beneficciary) {
-        this.beneficciary = beneficciary;
+    public void setBeneficiary(String beneficiary) {
+        this.beneficiary = beneficiary;
     }
 
     public void setBeneficiaryPartyId(long beneficiaryPartyId) {
@@ -172,17 +169,23 @@ public class Accident implements ClusterItem {
         this.title = title;
     }
 
-    @Override
-    public LatLng getPosition() {
-        return new LatLng(latitude, longitude);
-    }
-
-    public void setPosition(LatLng position) {
-        latitude = position.latitude;
-        longitude = position.longitude;
-    }
-
     public void setId(long id) {
         this.id = id;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }
