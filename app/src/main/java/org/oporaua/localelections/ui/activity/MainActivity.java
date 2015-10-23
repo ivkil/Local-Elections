@@ -10,13 +10,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.oporaua.localelections.PrefsActivity;
 import org.oporaua.localelections.R;
@@ -31,6 +27,7 @@ import org.oporaua.localelections.ui.fragment.ContactsFragment;
 import org.oporaua.localelections.ui.fragment.WebViewFragment;
 import org.oporaua.localelections.util.AppPrefs;
 import org.oporaua.localelections.util.Constants;
+import org.oporaua.localelections.util.GeneralUtil;
 import org.oporaua.localelections.violations.ViolationsFragment;
 
 import java.lang.annotation.Retention;
@@ -87,12 +84,10 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         mNavigationView.getMenu().findItem(mPreviousMenuItem).setCheckable(true);
         mNavigationView.getMenu().findItem(mPreviousMenuItem).setChecked(true);
 
-        if (checkPlayServices()) {
+        if (GeneralUtil.isPlayServicesAvailable(this)) {
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }
-        OporaSyncAdapter.initializeSyncAdapter(this);
-        AppPrefs.initialize(this);
         loadData();
     }
 
@@ -215,22 +210,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(PREV_MENU_ID_TAG, mPreviousMenuItem);
-    }
-
-    private boolean checkPlayServices() {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, Constants.PLAY_SERVICES_RESOLUTION_REQUEST)
-                        .show();
-            } else {
-                Log.i(LOG_TAG, "This device is not supported.");
-                finish();
-            }
-            return false;
-        }
-        return true;
     }
 
     private void loadData() {

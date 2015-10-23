@@ -74,6 +74,7 @@ public class OporaContract {
         public static final String TABLE_NAME = "accident_subtypes";
 
         public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_ACCIDENT_TYPE_ID = "type_id";
 
         public static Uri buildAccidentSubtypeUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
@@ -184,9 +185,14 @@ public class OporaContract {
         public static final String COLUMN_LOCALITY_ID = "locality_id";
         public static final String COLUMN_ELECTIONS_ID = "elections_id";
         public static final String COLUMN_OFFENDER_PARTY_ID = "offender_party_id";
+        public static final String COLUMN_ACCIDENT_SUBTYPE = "subtype";
 
         public static Uri buildAccidentUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildAccidentWithTypeUri() {
+            return CONTENT_URI.buildUpon().appendPath("types").build();
         }
     }
 

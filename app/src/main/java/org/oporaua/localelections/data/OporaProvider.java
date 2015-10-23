@@ -32,13 +32,15 @@ public class OporaProvider extends ContentProvider {
     private static final int ELECTIONS_TYPES = 600;
     private static final int ACCIDENTS = 700;
     private static final int ACCIDENT_WITH_DATA = 701;
+    private static final int ACCIDENT_WITH_TYPE = 702;
 
     private static final SQLiteQueryBuilder sAccidentsWithDataQueryBuilder;
+    private static final SQLiteQueryBuilder sAccidentsWithTypeQueryBuilder;
 
     static {
         sAccidentsWithDataQueryBuilder = new SQLiteQueryBuilder();
         sAccidentsWithDataQueryBuilder.setTables(
-                AccidentEntry.TABLE_NAME + " INNER JOIN " +
+                AccidentEntry.TABLE_NAME + " LEFT OUTER JOIN " +
                         RegionEntry.TABLE_NAME + " ON " +
                         AccidentEntry.TABLE_NAME + "." + AccidentEntry.COLUMN_REGION_ID +
                         " = " + RegionEntry.TABLE_NAME + "." + RegionEntry._ID +
@@ -56,6 +58,15 @@ public class OporaProvider extends ContentProvider {
                         " = " + PartyEntry.TABLE_NAME + "." + PartyEntry._ID);
     }
 
+    static {
+        sAccidentsWithTypeQueryBuilder = new SQLiteQueryBuilder();
+        sAccidentsWithTypeQueryBuilder.setTables(
+                AccidentEntry.TABLE_NAME + " LEFT OUTER JOIN " +
+                        AccidentSubtypeEntry.TABLE_NAME + " ON " +
+                        AccidentEntry.TABLE_NAME + "." + AccidentEntry.COLUMN_ACCIDENT_SUBTYPE +
+                        " = " + AccidentSubtypeEntry.TABLE_NAME + "." + AccidentSubtypeEntry._ID);
+    }
+
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = OporaContract.CONTENT_AUTHORITY;
@@ -69,6 +80,7 @@ public class OporaProvider extends ContentProvider {
 
         matcher.addURI(authority, OporaContract.PATH_ACCIDENTS, ACCIDENTS);
         matcher.addURI(authority, OporaContract.PATH_ACCIDENTS + "/#", ACCIDENT_WITH_DATA);
+        matcher.addURI(authority, OporaContract.PATH_ACCIDENTS + "/*", ACCIDENT_WITH_TYPE);
 
         return matcher;
     }
@@ -101,6 +113,18 @@ public class OporaProvider extends ContentProvider {
                         mOpenHelper.getReadableDatabase(),
                         projection,
                         AccidentEntry.TABLE_NAME + "." + AccidentEntry._ID + " = '" + ContentUris.parseId(uri) + "'",
+                        null,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+            case ACCIDENT_WITH_TYPE: {
+                retCursor = sAccidentsWithTypeQueryBuilder.query(
+                        mOpenHelper.getReadableDatabase(),
+                        projection,
+                        selection,
                         selectionArgs,
                         null,
                         null,
@@ -111,6 +135,18 @@ public class OporaProvider extends ContentProvider {
             case REGIONS: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         RegionEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+            case ACCIDENTS_TYPES: {
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        AccidentTypeEntry.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -135,8 +171,14 @@ public class OporaProvider extends ContentProvider {
         switch (match) {
             case ACCIDENTS:
                 return AccidentEntry.CONTENT_TYPE;
+            case ACCIDENT_WITH_TYPE:
+                return AccidentEntry.CONTENT_TYPE;
             case ACCIDENT_WITH_DATA:
                 return AccidentEntry.CONTENT_ITEM_TYPE;
+            case REGIONS:
+                return RegionEntry.CONTENT_TYPE;
+            case ACCIDENTS_TYPES:
+                return AccidentTypeEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }

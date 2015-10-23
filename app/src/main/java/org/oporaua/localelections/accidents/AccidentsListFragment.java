@@ -14,20 +14,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.oporaua.localelections.MySpinnerAdapter;
 import org.oporaua.localelections.NewAccidentActivity;
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.data.OporaContract.AccidentEntry;
-import org.oporaua.localelections.data.OporaContract.PartyEntry;
 import org.oporaua.localelections.data.OporaContract.RegionEntry;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class AccidentsListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     public static final int ACCIDENTS_LOADER_ID = 0;
+    private static final int REGIONS_LOADER_ID = 1;
     private AccidentsAdapter mAccidentsAdapter;
     private MySpinnerAdapter mSpinnerAdapter;
 
@@ -56,6 +58,7 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_accidents_list, container, false);
+        ButterKnife.bind(this, view);
         if (getActivity() instanceof SetToolbarListener) {
             Toolbar toolbar = ButterKnife.findById(view, R.id.filter_toolbar);
             ((SetToolbarListener) getActivity()).onSetToolbar(toolbar);
@@ -63,7 +66,7 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
         }
         mAccidentsAdapter = new AccidentsAdapter(getActivity());
         mSpinnerAdapter = new MySpinnerAdapter(getActivity(), R.layout.spinner_dropdown_item, null,
-                new String[]{PartyEntry.COLUMN_TITLE},
+                new String[]{RegionEntry.COLUMN_TITLE},
                 new int[]{android.R.id.text1},
                 0);
         setListAdapter(mAccidentsAdapter);
@@ -77,15 +80,16 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(1, null, this);
+        getLoaderManager().initLoader(REGIONS_LOADER_ID, null, this);
         getLoaderManager().initLoader(ACCIDENTS_LOADER_ID, null, this);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String sortOrder;
         switch (id) {
             case 0:
-                String sortOrder = "date (" + AccidentEntry.COLUMN_DATE_TEXT + ") DESC";
+                sortOrder = "date (" + AccidentEntry.COLUMN_DATE_TEXT + ") DESC";
                 String selection = null;
                 String[] selectionArgs = null;
                 if (mRegionId != -1) {
@@ -101,13 +105,14 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
                         sortOrder
                 );
             case 1:
+                sortOrder = RegionEntry.COLUMN_TITLE + " COLLATE LOCALIZED ASC";
                 return new CursorLoader(
                         getActivity(),
                         RegionEntry.CONTENT_URI,
                         null,
                         null,
                         null,
-                        null
+                        sortOrder
                 );
             default:
                 throw new UnsupportedOperationException("Unknown loader");
@@ -119,10 +124,10 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         int id = loader.getId();
         switch (id) {
-            case 0:
+            case ACCIDENTS_LOADER_ID:
                 mAccidentsAdapter.swapCursor(data);
                 break;
-            case 1:
+            case REGIONS_LOADER_ID:
                 mSpinnerAdapter.swapCursor(data);
                 break;
         }
@@ -133,6 +138,7 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
     public void onLoaderReset(Loader<Cursor> loader) {
         mAccidentsAdapter.swapCursor(null);
     }
+
 
     @Override
     public void onClick(View v) {
@@ -153,4 +159,11 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+
+    @OnClick(R.id.fab)
+    void addNewAccident() {
+        Toast.makeText(getActivity(), "New One", Toast.LENGTH_SHORT).show();
+    }
+
 }

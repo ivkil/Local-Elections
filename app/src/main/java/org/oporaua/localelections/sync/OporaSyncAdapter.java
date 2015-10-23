@@ -243,7 +243,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                 Vector<ContentValues> cVVector = new Vector<>(regions.length);
                 ContentValues values = new ContentValues();
                 values.put(RegionEntry._ID, -1);
-                values.put(RegionEntry.COLUMN_TITLE, "Усі регіони");
+                values.put(RegionEntry.COLUMN_TITLE, " Усі регіони");
                 cVVector.add(values);
                 for (Region region : regions) {
                     ContentValues valuesRegions = new ContentValues();
@@ -284,6 +284,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                     ContentValues valuesAccidentsSubtypes = new ContentValues();
                     valuesAccidentsSubtypes.put(AccidentSubtypeEntry._ID, accidentSubtype.getId());
                     valuesAccidentsSubtypes.put(AccidentSubtypeEntry.COLUMN_TITLE, accidentSubtype.getTitle());
+                    valuesAccidentsSubtypes.put(AccidentSubtypeEntry.COLUMN_ACCIDENT_TYPE_ID, accidentSubtype.getAccidentTypeId());
                     cVVector.add(valuesAccidentsSubtypes);
                 }
                 if (cVVector.size() > 0) {
@@ -314,6 +315,10 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
             public void onResponse(Response<AccidentType[]> response, Retrofit retrofit) {
                 AccidentType[] accidentTypes = response.body();
                 Vector<ContentValues> cVVector = new Vector<>(accidentTypes.length);
+                ContentValues values = new ContentValues();
+                values.put(AccidentTypeEntry._ID, -1);
+                values.put(AccidentTypeEntry.COLUMN_TITLE, " Усі порушення");
+                cVVector.add(values);
                 for (AccidentType accidentType : accidentTypes) {
                     ContentValues valuesAccidentsTypes = new ContentValues();
                     valuesAccidentsTypes.put(AccidentTypeEntry._ID, accidentType.getId());
@@ -436,6 +441,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
         accidentValues.put(AccidentEntry.COLUMN_LOCALITY_ID, accident.getLocalityId());
         accidentValues.put(AccidentEntry.COLUMN_ELECTIONS_ID, accident.getElectionsId());
         accidentValues.put(AccidentEntry.COLUMN_OFFENDER_PARTY_ID, accident.getOffenderPartyId());
+        accidentValues.put(AccidentEntry.COLUMN_ACCIDENT_SUBTYPE, accident.getAccidentSubtypeId());
 
         return accidentValues;
     }

@@ -34,14 +34,7 @@ public class TvkMemberAdapter extends RecyclerView.Adapter<TvkMemberAdapter.TvkM
     @Override
     public void onBindViewHolder(TvkMemberViewHolder holder, final int position) {
         final TvkMember member = mTvkMembers.get(position);
-        holder.root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                mContext.startActivity(WebViewActivity.getCallingIntent(mContext, blank.getUri(), true));
-            }
-        });
         holder.name.setText(member.getName());
-
     }
 
     @Override
@@ -64,7 +57,11 @@ public class TvkMemberAdapter extends RecyclerView.Adapter<TvkMemberAdapter.TvkM
     }
 
     public void swapData(List<TvkMember> members) {
-        mTvkMembers = members;
+        if (members != null) {
+            mTvkMembers = members;
+        } else {
+            mTvkMembers = new ArrayList<>();
+        }
         notifyDataSetChanged();
     }
 
@@ -72,4 +69,5 @@ public class TvkMemberAdapter extends RecyclerView.Adapter<TvkMemberAdapter.TvkM
         mTvkMembers = new ArrayList<>();
         notifyDataSetChanged();
     }
+
 }
