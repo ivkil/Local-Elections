@@ -16,9 +16,7 @@ public class AccidentIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent.getAction().equals(MyGcmListenerService.ACTION_DELETE_ACCIDENT)) {
             long id = intent.getLongExtra(AccidentDetailsActivity.ARG_ACCIDENT_ID, -1);
-            getContentResolver().delete(
-                    AccidentEntry.CONTENT_URI,
-                    AccidentEntry._ID + " = ? ",
+            getContentResolver().delete(AccidentEntry.CONTENT_URI, AccidentEntry._ID + " = ? ",
                     new String[]{String.valueOf(id)}
             );
         }

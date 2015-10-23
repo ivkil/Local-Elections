@@ -22,9 +22,9 @@ import org.oporaua.localelections.sync.OporaSyncAdapter;
 import org.oporaua.localelections.tvk.TvkMembersFragment;
 import org.oporaua.localelections.ui.fragment.ContactsFragment;
 import org.oporaua.localelections.ui.fragment.WebViewFragment;
-import org.oporaua.localelections.util.PrefUtil;
 import org.oporaua.localelections.util.Constants;
 import org.oporaua.localelections.util.GeneralUtil;
+import org.oporaua.localelections.util.PrefUtil;
 import org.oporaua.localelections.violations.ViolationsFragment;
 
 import java.lang.annotation.Retention;
@@ -36,8 +36,6 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, SetToolbarListener {
 
     private static final String PREV_MENU_ID_TAG = "prev_menu_id";
-
-//    private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
     private final static int DRAWER_ID_LAW = 10;
     private final static int DRAWER_ID_MANUAL = 20;
@@ -91,27 +89,18 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         loadData();
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.menu_settings, menu);
-//        return true;
-//    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
-//            case R.id.settings:
-//                startActivity(new Intent(this, ElectionsPreferenceActivity.class));
-//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
 
@@ -135,9 +124,35 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         mCurrentDrawerId = getDrawerIdByMenuItem(menuItem);
         replaceFragment(getFragmentByDrawerId(mCurrentDrawerId));
+//        boolean isTitleEnabled = getTitleShownByFragmentId(mCurrentDrawerId);
+//        getSupportActionBar().setDisplayShowTitleEnabled(isTitleEnabled);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         closeDrawer();
         return true;
     }
+
+//    private boolean getTitleShownByFragmentId(@DrawerId int drawerId) {
+//        switch (drawerId) {
+//            case DRAWER_ID_LAW:
+//                return true;
+//            case DRAWER_ID_MANUAL:
+//                return true;
+//            case DRAWER_ID_VIOLATIONS:
+//                return true;
+//            case DRAWER_ID_BLANKS:
+//                return true;
+//            case DRAWER_ID_TVK_MEMBERS:
+//                return false;
+//            case DRAWER_ID_ACCIDENTS_MAP:
+//                return false;
+//            case DRAWER_ID_ACCIDENTS_LIST:
+//                return false;
+//            case DRAWER_ID_CONTACTS:
+//                return true;
+//            default:
+//                return true;
+//        }
+//    }
 
     private void closeDrawer() {
         mDrawerLayout.closeDrawer(GravityCompat.START);

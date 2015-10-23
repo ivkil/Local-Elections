@@ -11,4 +11,5 @@ public class MyInstanceIDListenerService extends InstanceIDListenerService {
         Intent intent = new Intent(this, RegistrationIntentService.class);
         startService(intent);
     }
+
 }

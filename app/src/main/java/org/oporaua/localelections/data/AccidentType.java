@@ -13,7 +13,6 @@ public class AccidentType {
     public final static int FALSIFICATIONS = 7;
     public final static int CRIMINAL_INFLUENCE = 8;
 
-
     @SerializedName("id")
     private long id;
 
