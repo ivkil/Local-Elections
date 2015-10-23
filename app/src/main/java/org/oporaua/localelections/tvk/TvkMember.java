@@ -1,32 +1,37 @@
 package org.oporaua.localelections.tvk;
 
-import com.google.gson.annotations.SerializedName;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class TvkMember {
+import com.google.gson.annotations.SerializedName;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+
+@ParcelablePlease
+public class TvkMember implements Parcelable {
 
     @SerializedName("id")
-    private long id;
+    long id;
 
     @SerializedName("fio")
-    private String name;
+    String name;
 
     @SerializedName("year")
-    private int year;
+    int year;
 
     @SerializedName("el")
-    private String elections;
+    String elections;
 
     @SerializedName("region")
-    private String region;
+    String region;
 
     @SerializedName("komisia")
-    private String commission;
+    String commission;
 
     @SerializedName("posada_com")
-    private String position;
+    String position;
 
     @SerializedName("partiya")
-    private String party;
+    String party;
 
     public long getId() {
         return id;
@@ -59,4 +64,26 @@ public class TvkMember {
     public String getParty() {
         return party;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        TvkMemberParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<TvkMember> CREATOR = new Creator<TvkMember>() {
+        public TvkMember createFromParcel(Parcel source) {
+            TvkMember target = new TvkMember();
+            TvkMemberParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public TvkMember[] newArray(int size) {
+            return new TvkMember[size];
+        }
+    };
 }

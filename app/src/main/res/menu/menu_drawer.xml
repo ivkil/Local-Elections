@@ -23,7 +23,7 @@
         <item
             android:id="@+id/tvkmembers"
             android:icon="@mipmap/ic_launcher"
-            android:title="@string/drawer_tvkmembers_title" />
+            android:title="@string/drawer_tvk_members_title" />
 
         <item
             android:id="@+id/accidents_map"
@@ -39,12 +39,17 @@
     <group>
         <item
             android:id="@+id/navigation_subheader"
-            android:title="@string/nav_subheader">
+            android:title="@string/nav_sub_header">
             <menu>
                 <item
                     android:id="@+id/contacts"
                     android:icon="@mipmap/ic_launcher"
                     android:title="@string/drawer_contacts_title" />
+
+                <item
+                    android:id="@+id/settings"
+                    android:icon="@mipmap/ic_launcher"
+                    android:title="@string/settings_title" />
             </menu>
         </item>
     </group>

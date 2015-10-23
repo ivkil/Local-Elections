@@ -1,15 +1,16 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="Сповіщення">
 
         <MultiSelectListPreference
-            android:dialogTitle="Діалог"
-            android:key="list_preference"
-            android:summary="самарі"
+            android:defaultValue="@array/empty_array"
+            android:dialogTitle="Підписки на"
             android:entries="@array/entries_list_preference"
-            android:entryValues="@array/entryvalues_list_preference"
-            android:title="титл" />
-
+            android:entryValues="@array/entries_ids_list_preference"
+            android:key="list_key"
+            android:summary="не знаю що тут написати"
+            android:title="Оберіть на що підписатись"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

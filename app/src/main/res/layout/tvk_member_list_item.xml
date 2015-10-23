@@ -1,20 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/root"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="?listPreferredItemHeight"
+    android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
+    android:minHeight="?listPreferredItemHeight"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/tv_name"
-        style="@style/Base.TextAppearance.AppCompat.Body2"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        tools:text="Text"/>
+    <android.support.v7.widget.GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:alignmentMode="alignBounds"
+        app:columnCount="2"
+        app:columnOrderPreserved="false"
+        app:useDefaultMargins="true">
+
+        <TextView
+            android:id="@+id/tv_name"
+            style="@style/Base.TextAppearance.AppCompat.Body2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            app:layout_columnSpan="2"
+            tools:text="Text"/>
+
+        <TextView
+            android:id="@+id/tv_yeah"
+            style="@style/Base.TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            tools:text="Text"/>
+
+        <TextView
+            android:id="@+id/tv_elections"
+            style="@style/Base.TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            tools:text="Text"/>
+
+        <TextView
+            android:id="@+id/tv_region"
+            style="@style/Base.TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            app:layout_columnSpan="2"
+            tools:text="Text"/>
+
+        <TextView
+            android:id="@+id/tv_commission"
+            style="@style/Base.TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            app:layout_columnSpan="2"
+            tools:text="Text"/>
+
+        <TextView
+            android:id="@+id/tv_position"
+            style="@style/Base.TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            app:layout_columnSpan="2"
+            tools:text="Text"/>
+
+        <TextView
+            android:id="@+id/tv_party"
+            style="@style/Base.TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            app:layout_columnSpan="2"
+            tools:text="Text"/>
+
+    </android.support.v7.widget.GridLayout>
 
 </LinearLayout>

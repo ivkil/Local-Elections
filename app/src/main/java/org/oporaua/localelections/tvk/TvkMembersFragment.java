@@ -21,8 +21,10 @@ import com.squareup.okhttp.OkHttpClient;
 
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
+import org.oporaua.localelections.util.DividerItemDecoration;
 import org.oporaua.localelections.util.GeneralUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -39,6 +41,7 @@ public class TvkMembersFragment extends Fragment implements SearchView.OnQueryTe
         SearchView.OnCloseListener {
 
     private static final String TVK_OPORA_BASE_URL = "http://tvk.oporaua.org/";
+    private static final String MEMBERS_TAG = "members_tag";
 
     @Bind(R.id.rv_tvk_members)
     RecyclerView mTvkMembersRecyclerView;
@@ -68,6 +71,8 @@ public class TvkMembersFragment extends Fragment implements SearchView.OnQueryTe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tvk_members, container, false);
         ButterKnife.bind(this, view);
+
+
         if (getActivity() instanceof SetToolbarListener) {
             Toolbar toolbar = ButterKnife.findById(view, R.id.app_toolbar);
             ((SetToolbarListener) getActivity()).onSetToolbar(toolbar);
@@ -84,9 +89,15 @@ public class TvkMembersFragment extends Fragment implements SearchView.OnQueryTe
 
         mTvkMembersRecyclerView.setHasFixedSize(true);
         mTvkMembersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        mTvkMembersRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
+                DividerItemDecoration.VERTICAL_LIST));
         mTvkMemberAdapter = new TvkMemberAdapter(getActivity());
         mTvkMembersRecyclerView.setAdapter(mTvkMemberAdapter);
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(MEMBERS_TAG)) {
+            List<TvkMember> members = savedInstanceState.getParcelableArrayList(MEMBERS_TAG);
+            mTvkMemberAdapter.swapData(members);
+        }
 
         return view;
     }
@@ -103,7 +114,8 @@ public class TvkMembersFragment extends Fragment implements SearchView.OnQueryTe
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        return false;
+        loadMembers(query);
+        return true;
     }
 
     @Override
@@ -164,6 +176,12 @@ public class TvkMembersFragment extends Fragment implements SearchView.OnQueryTe
     public void onDestroy() {
         super.onDestroy();
         GeneralUtil.unsubscribeSubscription(mMembersSubscription);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(MEMBERS_TAG, new ArrayList<>(mTvkMemberAdapter.getData()));
     }
 
 }

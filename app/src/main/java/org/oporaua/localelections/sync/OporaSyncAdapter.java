@@ -99,7 +99,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                     syncElectionsTypes();
                     break;
                 case SYNC_ACCIDENTS:
-                    syncAccidents();
+//                    syncAccidents();
                     break;
                 case SYNC_ACCIDENT:
                     long id = extras.getLong(AccidentDetailsActivity.ARG_ACCIDENT_ID);
