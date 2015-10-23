@@ -1,5 +1,6 @@
 package org.oporaua.localelections.ui.fragment;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -10,11 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.oporaua.localelections.NewAccidentActivity;
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.accidents.AccidentsAdapter;
 import org.oporaua.localelections.data.OporaContract.AccidentEntry;
+import org.oporaua.localelections.data.OporaContract.PartyEntry;
 
-public class AccidentsListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class AccidentsListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
 
     private AccidentsAdapter mAccidentsAdapter;
 
@@ -39,37 +42,70 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_accidents_list, container, false);
         mAccidentsAdapter = new AccidentsAdapter(getActivity(), null, 0);
+        view.findViewById(R.id.fab).setOnClickListener(this);
         setListAdapter(mAccidentsAdapter);
-        return inflater.inflate(R.layout.fragment_accidents_list, container, false);
+        return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(1, null, this);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String sortOrder = "date (" + AccidentEntry.COLUMN_DATE_TEXT + ") DESC";
-        return new CursorLoader(
-                getActivity(),
-                AccidentEntry.CONTENT_URI,
-                ACCIDENTS_COLUMNS,
-                null,
-                null,
-                sortOrder
-        );
+        switch (id) {
+            case 0:
+                String sortOrder = "date (" + AccidentEntry.COLUMN_DATE_TEXT + ") DESC";
+                return new CursorLoader(
+                        getActivity(),
+                        AccidentEntry.CONTENT_URI,
+                        ACCIDENTS_COLUMNS,
+                        null,
+                        null,
+                        sortOrder
+                );
+            case 1:
+                return new CursorLoader(
+                        getActivity(),
+                        PartyEntry.CONTENT_URI,
+                        null,
+                        null,
+                        null,
+                        null
+                );
+            default:
+                throw new UnsupportedOperationException("Unknown loader");
+        }
+
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mAccidentsAdapter.swapCursor(data);
+        int id = loader.getId();
+        switch (id) {
+            case 0:
+                mAccidentsAdapter.swapCursor(data);
+                break;
+            case 1:
+                break;
+        }
+
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mAccidentsAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.fab) {
+            startActivity(new Intent(getActivity(), NewAccidentActivity.class));
+        }
     }
 }

@@ -146,4 +146,14 @@
         <item>file:///android_asset/blanks/criminal.htm</item>
     </string-array>
 
+    <string-array name="entries_list_preference">
+        <item>Львівська область</item>
+        <item>Волинська область</item>
+    </string-array>
+
+    <array name="entryvalues_list_preference">
+        <item>0</item>
+        <item>1</item>
+    </array>
+
 </resources>

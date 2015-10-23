@@ -1,0 +1,15 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Сповіщення">
+
+        <MultiSelectListPreference
+            android:dialogTitle="Діалог"
+            android:key="list_preference"
+            android:summary="самарі"
+            android:entries="@array/entries_list_preference"
+            android:entryValues="@array/entryvalues_list_preference"
+            android:title="титл" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

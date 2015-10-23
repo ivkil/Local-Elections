@@ -11,20 +11,23 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import org.oporaua.localelections.PrefsActivity;
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.blanks.BlanksFragment;
 import org.oporaua.localelections.gcm.RegistrationIntentService;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
 import org.oporaua.localelections.sync.OporaSyncAdapter;
+import org.oporaua.localelections.tvk.TvkMembersFragment;
 import org.oporaua.localelections.ui.fragment.AccidentsListFragment;
 import org.oporaua.localelections.ui.fragment.AccidentsMapFragment;
 import org.oporaua.localelections.ui.fragment.ContactsFragment;
-import org.oporaua.localelections.tvk.TvkMembersFragment;
 import org.oporaua.localelections.ui.fragment.WebViewFragment;
 import org.oporaua.localelections.util.AppPrefs;
 import org.oporaua.localelections.util.Constants;
@@ -94,10 +97,21 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_settings, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.settings:
+                startActivity(new Intent(this, PrefsActivity.class));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -240,4 +254,5 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_ELECTIONS_TYPES);
         }
     }
+
 }
