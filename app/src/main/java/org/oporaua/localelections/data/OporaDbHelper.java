@@ -26,7 +26,10 @@ public class OporaDbHelper extends SQLiteOpenHelper {
 
         final String SQL_CREATE_ACCIDENTS_SUBTYPES_TABLE = "CREATE TABLE " + AccidentSubtypeEntry.TABLE_NAME + " (" +
                 AccidentSubtypeEntry._ID + " INTEGER PRIMARY KEY, " +
-                AccidentSubtypeEntry.COLUMN_TITLE + " TEXT NOT NULL);";
+                AccidentSubtypeEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
+                AccidentSubtypeEntry.COLUMN_ACCIDENT_TYPE_ID + " INTEGER NOT NULL, " +
+                "FOREIGN KEY (" + AccidentSubtypeEntry.COLUMN_ACCIDENT_TYPE_ID + ") REFERENCES " +
+                AccidentTypeEntry.TABLE_NAME + " (" + AccidentTypeEntry._ID + "));";
 
         final String SQL_CREATE_REGIONS_TABLE = "CREATE TABLE " + RegionEntry.TABLE_NAME + " (" +
                 RegionEntry._ID + " INTEGER PRIMARY KEY, " +
@@ -60,6 +63,7 @@ public class OporaDbHelper extends SQLiteOpenHelper {
                 AccidentEntry.COLUMN_LOCALITY_ID + " INTEGER NOT NULL, " +
                 AccidentEntry.COLUMN_ELECTIONS_ID + " INTEGER NOT NULL, " +
                 AccidentEntry.COLUMN_OFFENDER_PARTY_ID + " INTEGER NOT NULL, " +
+                AccidentEntry.COLUMN_ACCIDENT_SUBTYPE + " INTEGER NOT NULL, " +
                 "FOREIGN KEY (" + AccidentEntry.COLUMN_REGION_ID + ") REFERENCES " +
                 RegionEntry.TABLE_NAME + " (" + RegionEntry._ID + "), " +
                 "FOREIGN KEY (" + AccidentEntry.COLUMN_LOCALITY_ID + ") REFERENCES " +
@@ -67,7 +71,9 @@ public class OporaDbHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY (" + AccidentEntry.COLUMN_ELECTIONS_ID + ") REFERENCES " +
                 ElectionTypeEntry.TABLE_NAME + " (" + ElectionTypeEntry._ID + "), " +
                 "FOREIGN KEY (" + AccidentEntry.COLUMN_OFFENDER_PARTY_ID + ") REFERENCES " +
-                PartyEntry.TABLE_NAME + " (" + PartyEntry._ID + "));";
+                PartyEntry.TABLE_NAME + " (" + PartyEntry._ID + "), " +
+                "FOREIGN KEY (" + AccidentEntry.COLUMN_ACCIDENT_SUBTYPE + ") REFERENCES " +
+                AccidentSubtypeEntry.TABLE_NAME + " (" + AccidentSubtypeEntry._ID + "));";
 
         sqLiteDatabase.execSQL(SQL_CREATE_ACCIDENTS_TYPES_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_ACCIDENTS_SUBTYPES_TABLE);

@@ -18,7 +18,7 @@
         android:imeOptions="actionSearch"
         android:singleLine="true"
         android:textColor="@android:color/white"
-        android:textColorHint="@color/gray_light"></EditText>
+        android:textColorHint="@color/gray_light"/>
 
     <TextView
         android:id="@+id/tv_indicator"

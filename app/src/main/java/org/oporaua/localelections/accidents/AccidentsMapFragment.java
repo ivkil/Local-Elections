@@ -3,6 +3,7 @@ package org.oporaua.localelections.accidents;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -12,11 +13,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -36,7 +41,11 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.ui.SquareTextView;
 
+import org.oporaua.localelections.MySpinnerAdapter;
 import org.oporaua.localelections.R;
+import org.oporaua.localelections.data.OporaContract.AccidentEntry;
+import org.oporaua.localelections.data.OporaContract.AccidentTypeEntry;
+import org.oporaua.localelections.interfaces.SetToolbarListener;
 import org.oporaua.localelections.util.GeneralUtil;
 
 import java.util.List;
@@ -49,20 +58,27 @@ import static com.google.android.gms.common.api.GoogleApiClient.ConnectionCallba
 import static com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
 
-public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<List<Accident>>,
-        OnMapReadyCallback, ConnectionCallbacks, OnConnectionFailedListener, ClusterManager.OnClusterItemInfoWindowClickListener<Accident> {
+public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<List<AccidentMap>>,
+        OnMapReadyCallback, ConnectionCallbacks, OnConnectionFailedListener,
+        ClusterManager.OnClusterItemInfoWindowClickListener<AccidentMap>, AdapterView.OnItemSelectedListener {
 
     private static final String ALREADY_CONNECTED_TAG = "already_connected";
 
-    private static final int ACCIDENTS_LOADER_ID = 35;
+    private static final int ACCIDENTS_LOADER_ID = 31;
+    private static final int ACCIDENTS_TYPES_LOADER_ID = 32;
 
     private static final float DEFAULT_ZOOM = 13;
 
-    private ClusterManager<Accident> mClusterManager;
+    private ClusterManager<AccidentMap> mClusterManager;
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
 
     private boolean mAlreadyConnected;
+
+    private Spinner mSpinner;
+    private MySpinnerAdapter mSpinnerAdapter;
+
+    private long mAccidentTypeId;
 
     public static AccidentsMapFragment newInstance() {
         return new AccidentsMapFragment();
@@ -72,6 +88,18 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_accidents_map, container, false);
         ButterKnife.bind(this, view);
+        if (getActivity() instanceof SetToolbarListener) {
+            Toolbar toolbar = ButterKnife.findById(view, R.id.filter_toolbar);
+            ((SetToolbarListener) getActivity()).onSetToolbar(toolbar);
+            mSpinner = ButterKnife.findById(toolbar, R.id.spinner_filter);
+            mSpinnerAdapter = new MySpinnerAdapter(getActivity(), R.layout.spinner_dropdown_item, null,
+                    new String[]{AccidentEntry.COLUMN_TITLE},
+                    new int[]{android.R.id.text1},
+                    0);
+            mSpinner.setAdapter(mSpinnerAdapter);
+            mSpinner.setOnItemSelectedListener(this);
+            mSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        }
         if (savedInstanceState != null && savedInstanceState.containsKey(ALREADY_CONNECTED_TAG)) {
             mAlreadyConnected = savedInstanceState.getBoolean(ALREADY_CONNECTED_TAG);
         }
@@ -139,26 +167,27 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
 
         mClusterManager.setOnClusterItemInfoWindowClickListener(this);
         getLoaderManager().initLoader(ACCIDENTS_LOADER_ID, null, this);
+        getLoaderManager().initLoader(ACCIDENTS_TYPES_LOADER_ID, null, new AccidentsTypesLoader());
     }
 
     @Override
-    public Loader<List<Accident>> onCreateLoader(int id, Bundle args) {
+    public Loader<List<AccidentMap>> onCreateLoader(int id, Bundle args) {
         return new AccidentsLoader(getActivity());
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Accident>> loader, List<Accident> data) {
+    public void onLoadFinished(Loader<List<AccidentMap>> loader, List<AccidentMap> data) {
         mClusterManager.clearItems();
         mClusterManager.addItems(data);
         mClusterManager.cluster();
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Accident>> loader) {
+    public void onLoaderReset(Loader<List<AccidentMap>> loader) {
     }
 
     @Override
-    public void onClusterItemInfoWindowClick(Accident accident) {
+    public void onClusterItemInfoWindowClick(AccidentMap accident) {
         Intent intent = new Intent(getActivity(), AccidentDetailsActivity.class);
         intent.putExtra(AccidentDetailsActivity.ARG_ACCIDENT_ID, accident.getId());
         startActivity(intent);
@@ -169,7 +198,19 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
         Toast.makeText(getActivity(), "New One", Toast.LENGTH_SHORT).show();
     }
 
-    private static class AccidentsClusterRenderer extends DefaultClusterRenderer<Accident> {
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Cursor cursor = (Cursor) parent.getSelectedItem();
+        mAccidentTypeId = cursor.getLong(0);
+        getLoaderManager().restartLoader(ACCIDENTS_LOADER_ID, null, this);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    private static class AccidentsClusterRenderer extends DefaultClusterRenderer<AccidentMap> {
 
         private final Context mContext;
         private SparseArray<BitmapDescriptor> mIcons = new SparseArray<>();
@@ -177,7 +218,7 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
         private final IconGenerator mIconGenerator;
         private final float mDensity;
 
-        public AccidentsClusterRenderer(Context context, GoogleMap map, ClusterManager<Accident> manager) {
+        public AccidentsClusterRenderer(Context context, GoogleMap map, ClusterManager<AccidentMap> manager) {
             super(context.getApplicationContext(), map, manager);
             mContext = context.getApplicationContext();
             mDensity = mContext.getResources().getDisplayMetrics().density;
@@ -189,7 +230,7 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
         }
 
         @Override
-        protected void onBeforeClusterItemRendered(Accident item, MarkerOptions markerOptions) {
+        protected void onBeforeClusterItemRendered(AccidentMap item, MarkerOptions markerOptions) {
 
 
 //            final String dateValue = GeneralUtil.getInstance().getFriendlyDayString(item.getDate());
@@ -204,7 +245,7 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
 
 
         @Override
-        protected void onBeforeClusterRendered(Cluster<Accident> cluster, MarkerOptions markerOptions) {
+        protected void onBeforeClusterRendered(Cluster<AccidentMap> cluster, MarkerOptions markerOptions) {
             int bucket = getBucket(cluster);
             BitmapDescriptor descriptor = mIcons.get(bucket);
             if (descriptor == null) {
@@ -240,6 +281,30 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(ALREADY_CONNECTED_TAG, mAlreadyConnected);
+    }
+
+    private class AccidentsTypesLoader implements LoaderCallbacks<Cursor> {
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            return new CursorLoader(getActivity(),
+                    AccidentTypeEntry.CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            mSpinnerAdapter.swapCursor(data);
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+
+        }
     }
 
 }

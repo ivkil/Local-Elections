@@ -10,8 +10,11 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import org.oporaua.localelections.PrefsActivity;
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.accidents.AccidentsListFragment;
 import org.oporaua.localelections.accidents.AccidentsMapFragment;
@@ -92,10 +95,21 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_settings, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.settings:
+                startActivity(new Intent(this, PrefsActivity.class));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -230,4 +244,5 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_ELECTIONS_TYPES);
         }
     }
+
 }

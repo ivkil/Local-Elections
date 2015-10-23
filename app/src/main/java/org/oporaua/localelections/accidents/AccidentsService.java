@@ -9,7 +9,9 @@ import org.oporaua.localelections.data.Party;
 import org.oporaua.localelections.data.Region;
 
 import retrofit.Call;
+import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.POST;
 import retrofit.http.Query;
 
 public interface AccidentsService {
@@ -37,5 +39,8 @@ public interface AccidentsService {
 
     @GET("/violations/elections_type")
     Call<ElectionsType[]> getElectionsTypes();
+
+    @POST("/violations/add.json")
+    Call<Accident> loadAccident(@Body Accident accident);
 
 }
