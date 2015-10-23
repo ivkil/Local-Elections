@@ -3,6 +3,9 @@
     <style name="AppTheme" parent="AppTheme.Base.NoActionBar">
     </style>
 
+    <style name="AppTheme.DarkActionBar" parent="AppTheme.Base.DarkActionBar">
+    </style>
+
     <style name="AppTheme.Base.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>

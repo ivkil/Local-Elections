@@ -68,7 +68,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                 .setDateFormat("yyyy-MM-dd")
                 .create();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.TEST_URL)
+                .baseUrl(Constants.ACCIDENTS_ENDPOINT)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         mAccidentsService = retrofit.create(AccidentsService.class);

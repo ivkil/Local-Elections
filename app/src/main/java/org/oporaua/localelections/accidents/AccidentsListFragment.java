@@ -10,12 +10,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.data.OporaContract.AccidentEntry;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class AccidentsListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -43,6 +45,7 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_accidents_list, container, false);
+        ButterKnife.bind(this, view);
         mAccidentsAdapter = new AccidentsAdapter(getActivity());
         setListAdapter(mAccidentsAdapter);
         if (getActivity() instanceof SetToolbarListener) {
@@ -80,4 +83,10 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
     public void onLoaderReset(Loader<Cursor> loader) {
         mAccidentsAdapter.swapCursor(null);
     }
+
+    @OnClick(R.id.fab)
+    void addNewAccident() {
+        Toast.makeText(getActivity(), "New One", Toast.LENGTH_SHORT).show();
+    }
+
 }

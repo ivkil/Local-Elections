@@ -14,6 +14,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.squareup.okhttp.OkHttpClient;
 
@@ -40,6 +42,12 @@ public class TvkMembersFragment extends Fragment implements SearchView.OnQueryTe
 
     @Bind(R.id.rv_tvk_members)
     RecyclerView mTvkMembersRecyclerView;
+
+    @Bind(R.id.empty)
+    TextView mEmptyTextView;
+
+    @Bind(R.id.pb_progress)
+    ProgressBar mProgressBar;
 
     private TvkService mTvkService;
     private TvkMemberAdapter mTvkMemberAdapter;
@@ -84,6 +92,8 @@ public class TvkMembersFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     private void loadMembers(String query) {
+        mEmptyTextView.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
         GeneralUtil.unsubscribeSubscription(mMembersSubscription);
         mMembersSubscription = mTvkService.loadTvkMembers(query)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -97,14 +107,15 @@ public class TvkMembersFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) {
-        if (newText.length() < 3) {
-            loadMembers(newText);
-            return true;
+    public boolean onQueryTextChange(String query) {
+        if (query.length() > 3) {
+            loadMembers(query);
         } else {
+            mProgressBar.setVisibility(View.GONE);
+            mEmptyTextView.setVisibility(View.GONE);
             mTvkMemberAdapter.clearAll();
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -120,11 +131,16 @@ public class TvkMembersFragment extends Fragment implements SearchView.OnQueryTe
         @Override
         public void onError(Throwable e) {
             e.printStackTrace();
+            mProgressBar.setVisibility(View.GONE);
         }
 
         @Override
         public void onNext(List<TvkMember> tvkMembers) {
+            mProgressBar.setVisibility(View.GONE);
             mTvkMemberAdapter.swapData(tvkMembers);
+            if (tvkMembers.isEmpty()) {
+                mEmptyTextView.setVisibility(View.VISIBLE);
+            }
         }
 
     }

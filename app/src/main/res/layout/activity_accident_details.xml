@@ -1,48 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="org.oporaua.localelections.accidents.AccidentDetailsActivity">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/accident_title_textview"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="org.oporaua.localelections.accidents.AccidentDetailsActivity">
 
-    <TextView
-        android:id="@+id/accident_date_textview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/accident_title_textview"
+            style="@style/Base.TextAppearance.AppCompat.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:textSize="18sp"
+            tools:text="Text"/>
 
-    <TextView
-        android:id="@+id/accident_region_textview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/accident_date_textview"
+            style="@style/Base.TextAppearance.AppCompat.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:textSize="15sp"
+            tools:text="Text"/>
 
-    <TextView
-        android:id="@+id/accident_locality_textview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tags_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/primary"
+            android:textStyle="italic"
+            tools:text="Text"/>
 
-    <TextView
-        android:id="@+id/accident_elections_type_textview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <!--<TextView-->
+        <!--android:id="@+id/accident_region_textview"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--tools:text="Text"/>-->
 
-    <TextView
-        android:id="@+id/accident_party_offender_textview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <!--<TextView-->
+        <!--android:id="@+id/accident_locality_textview"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--tools:text="Text"/>-->
 
-    <TextView
-        android:id="@+id/accident_source_textview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <!--<TextView-->
+        <!--android:id="@+id/accident_elections_type_textview"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--tools:text="Text"/>-->
 
-</LinearLayout>
+        <!--<TextView-->
+        <!--android:id="@+id/accident_party_offender_textview"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--tools:text="Text"-->
+        <!--android:layout_marginBottom="8dp"/>-->
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="8dp"
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription"/>
+
+        <TextView
+            android:id="@+id/accident_source_textview"
+            style="@style/Base.TextAppearance.AppCompat.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Text"/>
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            app:cameraZoom="12"
+            app:mapType="normal"
+            app:uiCompass="false"
+            app:uiRotateGestures="false"
+            app:uiScrollGestures="false"
+            app:uiTiltGestures="false"
+            app:uiZoomControls="false"
+            app:uiZoomGestures="false"
+            tools:ignore="MissingPrefix"/>
+
+    </LinearLayout>
+</ScrollView>
