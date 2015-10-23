@@ -19,6 +19,8 @@ public class AccidentsLoader extends AsyncTaskLoader<List<AccidentMap>> {
     private List<AccidentMap> mAccidents;
     private AccidentsContentObserver mContentObserver;
 
+    private long mAccidentTypeId;
+
     private static final String ACCIDENTS_COLUMNS[] = {
             AccidentEntry.TABLE_NAME + "." + AccidentEntry._ID,
             AccidentEntry.TABLE_NAME + "." + AccidentEntry.COLUMN_TITLE,
@@ -33,18 +35,25 @@ public class AccidentsLoader extends AsyncTaskLoader<List<AccidentMap>> {
     private final static int COL_ACCIDENT_LNG = 3;
     private final static int COL_ACCIDENT_TYPE = 4;
 
-    public AccidentsLoader(Context context) {
+    public AccidentsLoader(Context context, long accidentTypeId) {
         super(context);
+        mAccidentTypeId = accidentTypeId;
     }
 
     @Override
     public List<AccidentMap> loadInBackground() {
         Uri uri = AccidentEntry.buildAccidentWithTypeUri();
+        String selection = null;
+        String[] selectionArgs = null;
+        if (mAccidentTypeId != -1) {
+            selection = AccidentSubtypeEntry.COLUMN_ACCIDENT_TYPE_ID + " = ?";
+            selectionArgs = new String[]{Long.toString(mAccidentTypeId)};
+        }
         Cursor data = getContext().getContentResolver().query(
                 uri,
                 ACCIDENTS_COLUMNS,
-                null,
-                null,
+                selection,
+                selectionArgs,
                 null
         );
         List<AccidentMap> accidents = new ArrayList<>(data.getCount());

@@ -78,7 +78,7 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
     private Spinner mSpinner;
     private MySpinnerAdapter mSpinnerAdapter;
 
-    private long mAccidentTypeId;
+    private long mAccidentTypeId = -1;
 
     public static AccidentsMapFragment newInstance() {
         return new AccidentsMapFragment();
@@ -172,7 +172,7 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
 
     @Override
     public Loader<List<AccidentMap>> onCreateLoader(int id, Bundle args) {
-        return new AccidentsLoader(getActivity());
+        return new AccidentsLoader(getActivity(), mAccidentTypeId);
     }
 
     @Override
