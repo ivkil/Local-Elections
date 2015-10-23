@@ -1,4 +1,4 @@
-package org.oporaua.localelections.model;
+package org.oporaua.localelections.accidents;
 
 
 import com.google.android.gms.maps.model.LatLng;
@@ -71,7 +71,6 @@ public class Accident implements ClusterItem {
 
     @SerializedName("lang")
     private double longitude;
-
 
     public long getId() {
         return id;

@@ -1,4 +1,4 @@
-package org.oporaua.localelections.interfaces;
+package org.oporaua.localelections.tvk;
 
 import org.oporaua.localelections.tvk.TvkMember;
 

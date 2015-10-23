@@ -1,4 +1,4 @@
-package org.oporaua.localelections.ui.fragment;
+package org.oporaua.localelections.accidents;
 
 
 import android.os.Bundle;
@@ -15,42 +15,34 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.maps.android.clustering.ClusterManager;
 
 import org.oporaua.localelections.R;
-import org.oporaua.localelections.content.AccidentsLoader;
-import org.oporaua.localelections.model.Accident;
 
 import java.util.List;
 
 
 public class AccidentsMapFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Accident>>, OnMapReadyCallback {
 
-    private ClusterManager<Accident> mClusterManager;
+    private static final int ACCIDENTS_LOADER_ID = 35;
 
+    private ClusterManager<Accident> mClusterManager;
 
     public static AccidentsMapFragment newInstance() {
         return new AccidentsMapFragment();
     }
 
-    public AccidentsMapFragment() {
-        // Required empty public constructor
-    }
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_accidents_map, container, false);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         return view;
     }
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mClusterManager = new ClusterManager<>(getActivity(), googleMap);
         googleMap.setOnCameraChangeListener(mClusterManager);
         googleMap.setOnMarkerClickListener(mClusterManager);
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(ACCIDENTS_LOADER_ID, null, this);
     }
 
     @Override

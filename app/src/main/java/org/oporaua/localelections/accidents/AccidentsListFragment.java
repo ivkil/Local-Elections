@@ -1,4 +1,4 @@
-package org.oporaua.localelections.ui.fragment;
+package org.oporaua.localelections.accidents;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -6,17 +6,20 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.oporaua.localelections.R;
-import org.oporaua.localelections.adapter.AccidentsAdapter;
-import org.oporaua.localelections.data.OporaProvider;
 import org.oporaua.localelections.data.OporaContract.AccidentEntry;
+import org.oporaua.localelections.interfaces.SetToolbarListener;
+
+import butterknife.ButterKnife;
 
 public class AccidentsListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    public static final int ACCIDENTS_LOADER_ID = 100;
     private AccidentsAdapter mAccidentsAdapter;
 
     private static final String[] ACCIDENTS_COLUMNS = {
@@ -33,33 +36,38 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
     public final static int COL_ACCIDENT_SOURCE = 3;
     public final static int COL_ACCIDENT_EVIDENCE_URL = 4;
 
-
     public static AccidentsListFragment newInstance() {
         return new AccidentsListFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mAccidentsAdapter = new AccidentsAdapter(getActivity(), null, 0);
+        View view = inflater.inflate(R.layout.fragment_accidents_list, container, false);
+        mAccidentsAdapter = new AccidentsAdapter(getActivity());
         setListAdapter(mAccidentsAdapter);
-        return inflater.inflate(R.layout.fragment_accidents_list, container, false);
+        if (getActivity() instanceof SetToolbarListener) {
+            Toolbar toolbar = ButterKnife.findById(view, R.id.app_toolbar);
+            ((SetToolbarListener) getActivity()).onSetToolbar(toolbar);
+        }
+        return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(ACCIDENTS_LOADER_ID, null, this);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String sortOrder = "date (" + AccidentEntry.COLUMN_DATE_TEXT + ") DESC";
         return new CursorLoader(
                 getActivity(),
                 AccidentEntry.CONTENT_URI,
                 ACCIDENTS_COLUMNS,
                 null,
                 null,
-                OporaProvider.sSortByDate
+                sortOrder
         );
     }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,29 +9,39 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    <TextView
         android:id="@+id/list_item_title_textview"
+        style="@style/Base.TextAppearance.AppCompat.Title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textSize="18sp"
+        tools:text="Text"/>
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    <TextView
         android:id="@+id/list_item_date_textview"
+        style="@style/Base.TextAppearance.AppCompat.Caption"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textSize="15sp"
+        tools:text="Text"/>
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    <TextView
         android:id="@+id/list_item_source_textview"
+        style="@style/Base.TextAppearance.AppCompat.Body1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:maxLines="5" />
+        android:maxLines="5"
+        tools:text="Text"
+        android:layout_marginBottom="4dp"/>
 
     <ImageView
         android:id="@+id/list_item_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:maxHeight="180dp"
+        android:layout_height="200dp"
         android:scaleType="centerCrop"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"/>
 
 </LinearLayout>
