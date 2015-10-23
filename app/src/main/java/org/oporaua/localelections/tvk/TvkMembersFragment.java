@@ -72,9 +72,8 @@ public class TvkMembersFragment extends Fragment implements SearchView.OnQueryTe
         View view = inflater.inflate(R.layout.fragment_tvk_members, container, false);
         ButterKnife.bind(this, view);
 
-
+        Toolbar toolbar = ButterKnife.findById(view, R.id.app_toolbar);
         if (getActivity() instanceof SetToolbarListener) {
-            Toolbar toolbar = ButterKnife.findById(view, R.id.app_toolbar);
             ((SetToolbarListener) getActivity()).onSetToolbar(toolbar);
         }
 
@@ -115,7 +114,7 @@ public class TvkMembersFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public boolean onQueryTextSubmit(String query) {
         loadMembers(query);
-        return true;
+        return false;
     }
 
     @Override

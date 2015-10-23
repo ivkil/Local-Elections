@@ -24,7 +24,6 @@ import rx.Subscription;
 
 public final class GeneralUtil {
 
-
     @NonNull
     public static List<ParentListItem> getItemList(Context context) {
         Resources res = context.getResources();

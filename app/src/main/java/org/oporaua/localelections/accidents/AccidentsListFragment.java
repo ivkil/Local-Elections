@@ -1,23 +1,26 @@
 package org.oporaua.localelections.accidents;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import org.oporaua.localelections.MySpinnerAdapter;
-import org.oporaua.localelections.NewAccidentActivity;
+import org.oporaua.localelections.FilterSpinnerAdapter;
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.data.OporaContract.AccidentEntry;
 import org.oporaua.localelections.data.OporaContract.RegionEntry;
@@ -26,16 +29,19 @@ import org.oporaua.localelections.interfaces.SetToolbarListener;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AccidentsListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class AccidentsListFragment extends ListFragment implements LoaderCallbacks<Cursor>,
+        OnItemSelectedListener, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
-    public static final int ACCIDENTS_LOADER_ID = 0;
+    private static final int ACCIDENTS_LOADER_ID = 0;
     private static final int REGIONS_LOADER_ID = 1;
+
+    private static final String QUERY_TAG = "query";
+
     private AccidentsAdapter mAccidentsAdapter;
-    private MySpinnerAdapter mSpinnerAdapter;
+    private FilterSpinnerAdapter mSpinnerAdapter;
 
-    private Spinner mSpinner;
     private long mRegionId;
-
+    private String mQuery = "";
 
     private static final String[] ACCIDENTS_COLUMNS = {
             AccidentEntry._ID,
@@ -51,21 +57,37 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
     public final static int COL_ACCIDENT_SOURCE = 3;
     public final static int COL_ACCIDENT_EVIDENCE_URL = 4;
 
+    private SearchView mSearchView;
+
     public static AccidentsListFragment newInstance() {
         return new AccidentsListFragment();
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        if (savedInstanceState != null && savedInstanceState.containsKey(QUERY_TAG)) {
+            mQuery = savedInstanceState.getString(QUERY_TAG);
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_accidents_list, container, false);
         ButterKnife.bind(this, view);
+
+        Toolbar toolbar = ButterKnife.findById(view, R.id.filter_toolbar);
         if (getActivity() instanceof SetToolbarListener) {
-            Toolbar toolbar = ButterKnife.findById(view, R.id.filter_toolbar);
             ((SetToolbarListener) getActivity()).onSetToolbar(toolbar);
-            mSpinner = ButterKnife.findById(toolbar, R.id.spinner_filter);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+
+        Spinner mSpinner = ButterKnife.findById(toolbar, R.id.spinner_filter);
+
         mAccidentsAdapter = new AccidentsAdapter(getActivity());
-        mSpinnerAdapter = new MySpinnerAdapter(getActivity(), R.layout.spinner_dropdown_item, null,
+        mSpinnerAdapter = new FilterSpinnerAdapter(getActivity(), R.layout.spinner_dropdown_item, null,
                 new String[]{RegionEntry.COLUMN_TITLE},
                 new int[]{android.R.id.text1},
                 0);
@@ -88,23 +110,21 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String sortOrder;
         switch (id) {
-            case 0:
+            case ACCIDENTS_LOADER_ID:
                 sortOrder = "date (" + AccidentEntry.COLUMN_DATE_TEXT + ") DESC";
-                String selection = null;
-                String[] selectionArgs = null;
+                String selection = AccidentEntry.COLUMN_SOURCE + " LIKE '%" + mQuery + "%'";
                 if (mRegionId != -1) {
-                    selection = AccidentEntry.COLUMN_REGION_ID + " = ?";
-                    selectionArgs = new String[]{Long.toString(mRegionId)};
+                    selection += " AND " + AccidentEntry.COLUMN_REGION_ID + " = '" + Long.toString(mRegionId) + "'";
                 }
                 return new CursorLoader(
                         getActivity(),
                         AccidentEntry.CONTENT_URI,
                         ACCIDENTS_COLUMNS,
                         selection,
-                        selectionArgs,
+                        null,
                         sortOrder
                 );
-            case 1:
+            case REGIONS_LOADER_ID:
                 sortOrder = RegionEntry.COLUMN_TITLE + " COLLATE LOCALIZED ASC";
                 return new CursorLoader(
                         getActivity(),
@@ -131,7 +151,6 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
                 mSpinnerAdapter.swapCursor(data);
                 break;
         }
-
     }
 
     @Override
@@ -139,31 +158,58 @@ public class AccidentsListFragment extends ListFragment implements LoaderManager
         mAccidentsAdapter.swapCursor(null);
     }
 
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.fab) {
-            startActivity(new Intent(getActivity(), NewAccidentActivity.class));
-        }
-    }
-
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Cursor cursor = (Cursor) parent.getSelectedItem();
         mRegionId = cursor.getLong(0);
         getLoaderManager().restartLoader(ACCIDENTS_LOADER_ID, null, this);
-        Log.d("log", Long.toString(cursor.getLong(0)));
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
-
 
     @OnClick(R.id.fab)
     void addNewAccident() {
-        Toast.makeText(getActivity(), "New One", Toast.LENGTH_SHORT).show();
+//        startActivity(new Intent(getActivity(), NewAccidentActivity.class));
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_settings, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        mSearchView.setQuery(mQuery, false);
+        mSearchView.clearFocus();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setOnCloseListener(this);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String query) {
+        mQuery = query;
+        getLoaderManager().restartLoader(ACCIDENTS_LOADER_ID, null, this);
+        return false;
+    }
+
+    @Override
+    public boolean onClose() {
+        return false;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(QUERY_TAG, mQuery);
+        super.onSaveInstanceState(outState);
+    }
 }

@@ -45,4 +45,5 @@ public class AccidentMap implements ClusterItem {
         latitude = position.latitude;
         longitude = position.longitude;
     }
+
 }

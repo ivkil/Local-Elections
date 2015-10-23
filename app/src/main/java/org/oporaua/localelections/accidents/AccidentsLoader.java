@@ -56,6 +56,7 @@ public class AccidentsLoader extends AsyncTaskLoader<List<AccidentMap>> {
                 selectionArgs,
                 null
         );
+        if (data == null) return new ArrayList<>();
         List<AccidentMap> accidents = new ArrayList<>(data.getCount());
         try {
             if (data.moveToFirst()) {

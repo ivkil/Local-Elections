@@ -15,14 +15,15 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -37,14 +38,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.ClusterManager.OnClusterItemInfoWindowClickListener;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.ui.SquareTextView;
 
-import org.oporaua.localelections.MySpinnerAdapter;
+import org.oporaua.localelections.FilterSpinnerAdapter;
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.data.AccidentType;
-import org.oporaua.localelections.data.OporaContract.AccidentEntry;
+import org.oporaua.localelections.data.OporaContract;
 import org.oporaua.localelections.data.OporaContract.AccidentTypeEntry;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
 import org.oporaua.localelections.util.GeneralUtil;
@@ -61,7 +63,7 @@ import static com.google.android.gms.common.api.GoogleApiClient.OnConnectionFail
 
 public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<List<AccidentMap>>,
         OnMapReadyCallback, ConnectionCallbacks, OnConnectionFailedListener,
-        ClusterManager.OnClusterItemInfoWindowClickListener<AccidentMap>, AdapterView.OnItemSelectedListener {
+        OnClusterItemInfoWindowClickListener<AccidentMap>, OnItemSelectedListener {
 
     private static final String ALREADY_CONNECTED_TAG = "already_connected";
 
@@ -76,7 +78,7 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
 
     private boolean mAlreadyConnected;
 
-    private MySpinnerAdapter mSpinnerAdapter;
+    private FilterSpinnerAdapter mSpinnerAdapter;
 
     private long mAccidentTypeId = -1;
 
@@ -84,22 +86,27 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
         return new AccidentsMapFragment();
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_accidents_map, container, false);
         ButterKnife.bind(this, view);
+        Toolbar toolbar = ButterKnife.findById(view, R.id.filter_toolbar);
+
         if (getActivity() instanceof SetToolbarListener) {
-            Toolbar toolbar = ButterKnife.findById(view, R.id.filter_toolbar);
             ((SetToolbarListener) getActivity()).onSetToolbar(toolbar);
-            Spinner mSpinner = ButterKnife.findById(toolbar, R.id.spinner_filter);
-            mSpinnerAdapter = new MySpinnerAdapter(getActivity(), R.layout.spinner_dropdown_item, null,
-                    new String[]{AccidentEntry.COLUMN_TITLE},
-                    new int[]{android.R.id.text1},
-                    0);
-            mSpinner.setAdapter(mSpinnerAdapter);
-            mSpinner.setOnItemSelectedListener(this);
-            mSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+
+        Spinner mSpinner = ButterKnife.findById(toolbar, R.id.spinner_filter);
+        mSpinnerAdapter = new FilterSpinnerAdapter(getActivity(), R.layout.spinner_dropdown_item, null,
+                new String[]{OporaContract.AccidentEntry.COLUMN_TITLE},
+                new int[]{android.R.id.text1},
+                0);
+        mSpinner.setAdapter(mSpinnerAdapter);
+        mSpinner.setOnItemSelectedListener(this);
+        mSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         if (savedInstanceState != null && savedInstanceState.containsKey(ALREADY_CONNECTED_TAG)) {
             mAlreadyConnected = savedInstanceState.getBoolean(ALREADY_CONNECTED_TAG);
         }
@@ -195,7 +202,7 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
 
     @OnClick(R.id.fab)
     void addNewAccident() {
-        Toast.makeText(getActivity(), "New One", Toast.LENGTH_SHORT).show();
+//        startActivity(new Intent(getActivity(), NewAccidentActivity.class));
     }
 
     @Override
@@ -207,7 +214,6 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     private static class AccidentsClusterRenderer extends DefaultClusterRenderer<AccidentMap> {
@@ -258,7 +264,6 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
             }
 
         }
-
 
         @Override
         protected void onBeforeClusterRendered(Cluster<AccidentMap> cluster, MarkerOptions markerOptions) {

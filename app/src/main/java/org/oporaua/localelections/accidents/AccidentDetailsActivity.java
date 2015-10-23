@@ -3,7 +3,7 @@ package org.oporaua.localelections.accidents;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -36,12 +36,12 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class AccidentDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, OnMapReadyCallback {
+public class AccidentDetailsActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>,
+        OnMapReadyCallback {
 
     public final static String ARG_ACCIDENT_ID = "accident_id";
 
     private static final int ACCIDENT_LOADER_ID = 15;
-
 
     private static final String OPORAUA_ORG = "https://dts2015.oporaua.org/";
     private long mId;
@@ -99,7 +99,7 @@ public class AccidentDetailsActivity extends AppCompatActivity implements Loader
     private static final int COL_ACCIDENT_ELECTIONS_TYPE = 9;
     private static final int COL_ACCIDENT_OFFENDER_PARTY = 10;
 
-    private GoogleMap mMap;
+    private GoogleMap mGoogleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,9 +173,9 @@ public class AccidentDetailsActivity extends AppCompatActivity implements Loader
             double lng = data.getDouble(COL_ACCIDENT_LNG);
             LatLng location = new LatLng(lat, lng);
 
-            mMap.clear();
-            mMap.addMarker(new MarkerOptions().position(location));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+            mGoogleMap.clear();
+            mGoogleMap.addMarker(new MarkerOptions().position(location));
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(location));
 
         }
 
@@ -197,7 +197,7 @@ public class AccidentDetailsActivity extends AppCompatActivity implements Loader
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        mGoogleMap = googleMap;
         getSupportLoaderManager().initLoader(ACCIDENT_LOADER_ID, null, this);
     }
 
