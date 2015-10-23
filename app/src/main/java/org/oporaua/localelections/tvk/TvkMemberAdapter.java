@@ -35,6 +35,12 @@ public class TvkMemberAdapter extends RecyclerView.Adapter<TvkMemberAdapter.TvkM
     public void onBindViewHolder(TvkMemberViewHolder holder, final int position) {
         final TvkMember member = mTvkMembers.get(position);
         holder.name.setText(member.getName());
+        holder.yeah.setText(String.valueOf(member.getYear()));
+        holder.election.setText(member.getElections());
+        holder.region.setText(member.getRegion());
+        holder.commission.setText(member.getCommission());
+        holder.position.setText(member.getPosition());
+        holder.party.setText(member.getParty());
     }
 
     @Override
@@ -47,8 +53,23 @@ public class TvkMemberAdapter extends RecyclerView.Adapter<TvkMemberAdapter.TvkM
         @Bind(R.id.tv_name)
         TextView name;
 
-        @Bind(R.id.root)
-        View root;
+        @Bind(R.id.tv_yeah)
+        TextView yeah;
+
+        @Bind(R.id.tv_elections)
+        TextView election;
+
+        @Bind(R.id.tv_region)
+        TextView region;
+
+        @Bind(R.id.tv_commission)
+        TextView commission;
+
+        @Bind(R.id.tv_position)
+        TextView position;
+
+        @Bind(R.id.tv_party)
+        TextView party;
 
         public TvkMemberViewHolder(View itemView) {
             super(itemView);
@@ -68,6 +89,10 @@ public class TvkMemberAdapter extends RecyclerView.Adapter<TvkMemberAdapter.TvkM
     public void clearAll() {
         mTvkMembers = new ArrayList<>();
         notifyDataSetChanged();
+    }
+
+    public List<TvkMember> getData() {
+        return mTvkMembers;
     }
 
 }

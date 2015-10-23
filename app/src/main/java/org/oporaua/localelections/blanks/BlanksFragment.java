@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
+import org.oporaua.localelections.util.DividerItemDecoration;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,7 +33,8 @@ public class BlanksFragment extends Fragment {
 
         mBlanksRecyclerView.setHasFixedSize(true);
         mBlanksRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        mBlanksRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
+                DividerItemDecoration.VERTICAL_LIST));
         BlankAdapter blankAdapter = new BlankAdapter(getActivity());
         mBlanksRecyclerView.setAdapter(blankAdapter);
 

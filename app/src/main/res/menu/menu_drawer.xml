@@ -45,6 +45,11 @@
                     android:id="@+id/contacts"
                     android:icon="@mipmap/ic_launcher"
                     android:title="@string/drawer_contacts_title" />
+
+                <item
+                    android:id="@+id/settings"
+                    android:icon="@mipmap/ic_launcher"
+                    android:title="@string/settings_title" />
             </menu>
         </item>
     </group>

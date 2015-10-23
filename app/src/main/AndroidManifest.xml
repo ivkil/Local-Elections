@@ -106,7 +106,18 @@
 
         <service android:name=".accidents.AccidentIntentService" />
 
-        <activity android:name=".PrefsActivity" />
+        <!--<activity android:name=".PrefsActivity" />-->
+        <!--android:label="@string/title_activity_custom_preference"-->
+
+        <activity
+            android:name=".ui.activity.ElectionsPreferenceActivity"
+            android:parentActivityName=".ui.activity.MainActivity"
+            android:theme="@style/SettingsTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activity.MainActivity" />
+        </activity>
+
         <!--<activity-->
             <!--android:name=".SettingsActivity"-->
             <!--android:label="@string/title_activity_settings" >-->

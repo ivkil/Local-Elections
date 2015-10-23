@@ -13,14 +13,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import org.oporaua.localelections.R;
+import org.oporaua.localelections.accidents.AccidentsListFragment;
+import org.oporaua.localelections.accidents.AccidentsMapFragment;
 import org.oporaua.localelections.blanks.BlanksFragment;
 import org.oporaua.localelections.gcm.RegistrationIntentService;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
 import org.oporaua.localelections.sync.OporaSyncAdapter;
-import org.oporaua.localelections.accidents.AccidentsListFragment;
-import org.oporaua.localelections.accidents.AccidentsMapFragment;
-import org.oporaua.localelections.ui.fragment.ContactsFragment;
 import org.oporaua.localelections.tvk.TvkMembersFragment;
+import org.oporaua.localelections.ui.fragment.ContactsFragment;
 import org.oporaua.localelections.ui.fragment.WebViewFragment;
 import org.oporaua.localelections.util.AppPrefs;
 import org.oporaua.localelections.util.Constants;
@@ -36,6 +36,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, SetToolbarListener {
 
     private static final String PREV_MENU_ID_TAG = "prev_menu_id";
+
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
     private final static int DRAWER_ID_LAW = 10;
@@ -46,11 +47,13 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private final static int DRAWER_ID_ACCIDENTS_MAP = 60;
     private final static int DRAWER_ID_ACCIDENTS_LIST = 70;
     private final static int DRAWER_ID_CONTACTS = 80;
+    private final static int DRAWER_ID_SETTING = 90;
 
     private int mPreviousMenuItem = -1;
 
     @IntDef({DRAWER_ID_LAW, DRAWER_ID_MANUAL, DRAWER_ID_VIOLATIONS, DRAWER_ID_BLANKS,
-            DRAWER_ID_TVK_MEMBERS, DRAWER_ID_ACCIDENTS_MAP, DRAWER_ID_ACCIDENTS_LIST, DRAWER_ID_CONTACTS})
+            DRAWER_ID_TVK_MEMBERS, DRAWER_ID_ACCIDENTS_MAP, DRAWER_ID_ACCIDENTS_LIST, DRAWER_ID_CONTACTS,
+            DRAWER_ID_SETTING})
     @Retention(RetentionPolicy.SOURCE)
     private @interface DrawerId {
     }
@@ -101,7 +104,13 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-        if (mCurrentDrawerId == getDrawerIdByMenuItem(menuItem)) {
+        if (getDrawerIdByMenuItem(menuItem) == DRAWER_ID_SETTING) {
+            startActivity(new Intent(this, ElectionsPreferenceActivity.class));
+            closeDrawer();
+            return true;
+        }
+
+        if (getDrawerIdByMenuItem(menuItem) == mCurrentDrawerId) {
             closeDrawer();
             return false;
         }
@@ -179,6 +188,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 return DRAWER_ID_ACCIDENTS_LIST;
             case R.id.contacts:
                 return DRAWER_ID_CONTACTS;
+            case R.id.settings:
+                return DRAWER_ID_SETTING;
             default:
                 return DRAWER_ID_LAW;
         }

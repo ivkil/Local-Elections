@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <MultiSelectListPreference
+        android:defaultValue="@array/empty_array"
+        android:dialogTitle="TITLE"
+        android:entries="@array/text2"
+        android:entryValues="@array/test1"
+        android:key="list_key"
+        android:summary="HUI"
+        android:title="HUI"/>
+
+</PreferenceScreen>

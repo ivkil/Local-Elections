@@ -146,4 +146,20 @@
         <item>file:///android_asset/blanks/criminal.htm</item>
     </string-array>
 
+    <string-array name="text2">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+    <string-array name="test1">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+    <string-array name="empty_array"/>
+
 </resources>
