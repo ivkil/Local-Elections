@@ -23,7 +23,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
         }
@@ -57,4 +57,5 @@ dependencies {
     compile('com.afollestad.material-dialogs:commons:0.8.4.2@aar') {
         transitive = true
     }
+    compile 'com.artemzin.rxjava:proguard-rules:1.0.14.2'
 }
