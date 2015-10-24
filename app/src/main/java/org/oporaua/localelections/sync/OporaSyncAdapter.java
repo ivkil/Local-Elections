@@ -162,7 +162,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                             cVArray
                     );
                     if (count > 0) {
-                        PrefUtil.getInstance().setElectionsTypes(true);
+                        PrefUtil.setElectionsTypes(true);
                     }
                     Log.d(LOG_TAG, count + " elections types inserted");
                 }
@@ -196,7 +196,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                             cVArray
                     );
                     if (count > 0) {
-                        PrefUtil.getInstance().setParties(true);
+                        PrefUtil.setParties(true);
                     }
                     Log.d(LOG_TAG, count + " parties inserted");
                 }
@@ -232,7 +232,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                             cVArray
                     );
                     if (count > 0) {
-                        PrefUtil.getInstance().setLocalities(true);
+                        PrefUtil.setLocalities(true);
                     }
                     Log.d(LOG_TAG, count + " localities inserted");
                 }
@@ -271,7 +271,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                     );
                     Log.d(LOG_TAG, count + " regions inserted");
                     if (count > 0) {
-                        PrefUtil.getInstance().setRegions(true);
+                        PrefUtil.setRegions(true);
                     }
                 }
 
@@ -307,7 +307,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                     );
                     Log.d(LOG_TAG, count + " accidents subtypes inserted");
                     if (count > 0) {
-                        PrefUtil.getInstance().setAccidentsSubtypes(true);
+                        PrefUtil.setAccidentsSubtypes(true);
                     }
                 }
             }
@@ -345,7 +345,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                     );
                     Log.d(LOG_TAG, count + " accidents types inserted");
                     if (count > 0) {
-                        PrefUtil.getInstance().setAccidentsTypes(true);
+                        PrefUtil.setAccidentsTypes(true);
                     }
                 }
             }
@@ -412,11 +412,8 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
         stackBuilder.addParentStack(AccidentDetailsActivity.class);
         stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
+                PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);
         mBuilder.setAutoCancel(true);
         NotificationManager mNotificationManager =
