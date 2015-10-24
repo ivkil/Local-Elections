@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.data.OporaContract;
+import org.oporaua.localelections.util.Constants;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,8 +25,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class AccidentsAdapter extends CursorAdapter {
-
-    private static final String OPORAUA_ORG = "https://dts2015.oporaua.org/";
 
     public AccidentsAdapter(Context context) {
         super(context, null, 0);
@@ -50,7 +49,6 @@ public class AccidentsAdapter extends CursorAdapter {
         Date date = OporaContract.getDateFromDb(cursor.getString(AccidentsListFragment.COL_ACCIDENT_DATE));
 
         if (date != null) {
-//            viewHolder.tvDate.setText(DateFormat.getDateInstance().format(date));
             SimpleDateFormat friendlyDateFormat = new SimpleDateFormat("dd MMM yyyy 'р.'", new Locale("uk"));
             viewHolder.tvDate.setText(friendlyDateFormat.format(date));
         }
@@ -61,7 +59,7 @@ public class AccidentsAdapter extends CursorAdapter {
         String source = cursor.getString(AccidentsListFragment.COL_ACCIDENT_SOURCE);
         viewHolder.tvSource.setText(Html.fromHtml(source));
 
-        String url = OPORAUA_ORG + cursor.getString(AccidentsListFragment.COL_ACCIDENT_EVIDENCE_URL);
+        String url = Constants.ACCIDENTS_BASE_URL + cursor.getString(AccidentsListFragment.COL_ACCIDENT_EVIDENCE_URL);
 
         boolean imageAvailable = url.contains(".jpg") || url.contains(".png");
 

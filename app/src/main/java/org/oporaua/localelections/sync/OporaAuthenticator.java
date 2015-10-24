@@ -80,4 +80,5 @@ public class OporaAuthenticator extends AbstractAccountAuthenticator {
             Account account, String[] strings) throws NetworkErrorException {
         throw new UnsupportedOperationException();
     }
+
 }

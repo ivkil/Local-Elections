@@ -25,21 +25,27 @@
             android:icon="@mipmap/ic_launcher"
             android:title="@string/drawer_tvk_members_title" />
 
-        <item
-            android:id="@+id/accidents_map"
-            android:icon="@mipmap/ic_launcher"
-            android:title="@string/drawer_accidents_map" />
-
-        <item
-            android:id="@+id/accidents_list"
-            android:icon="@mipmap/ic_launcher"
-            android:title="@string/drawer_accidents_list" />
-
     </group>
+
     <group>
-        <item
-            android:id="@+id/navigation_subheader"
-            android:title="@string/nav_sub_header">
+        <item android:title="@string/accidents">
+            <menu>
+                <item
+                    android:id="@+id/accidents_map"
+                    android:icon="@mipmap/ic_launcher"
+                    android:title="@string/drawer_accidents_map" />
+
+                <item
+                    android:id="@+id/accidents_list"
+                    android:icon="@mipmap/ic_launcher"
+                    android:title="@string/drawer_accidents_list" />
+            </menu>
+        </item>
+    </group>
+
+
+    <group>
+        <item android:title="@string/other">
             <menu>
                 <item
                     android:id="@+id/contacts"

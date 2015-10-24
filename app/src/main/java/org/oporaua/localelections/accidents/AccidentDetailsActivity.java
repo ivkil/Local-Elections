@@ -28,6 +28,7 @@ import org.oporaua.localelections.data.OporaContract.ElectionTypeEntry;
 import org.oporaua.localelections.data.OporaContract.LocalityEntry;
 import org.oporaua.localelections.data.OporaContract.PartyEntry;
 import org.oporaua.localelections.data.OporaContract.RegionEntry;
+import org.oporaua.localelections.util.Constants;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -41,9 +42,8 @@ public class AccidentDetailsActivity extends AppCompatActivity implements Loader
 
     public final static String ARG_ACCIDENT_ID = "accident_id";
 
-    private static final int ACCIDENT_LOADER_ID = 15;
+    private static final int ACCIDENT_LOADER_ID = 30;
 
-    private static final String OPORAUA_ORG = "https://dts2015.oporaua.org/";
     private long mId;
 
     @Bind(R.id.accident_date_textview)
@@ -87,7 +87,7 @@ public class AccidentDetailsActivity extends AppCompatActivity implements Loader
             PartyEntry.TABLE_NAME + "." + PartyEntry.COLUMN_TITLE
     };
 
-    private static final int COL_ACCIDENT_ID = 0;
+    //    private static final int COL_ACCIDENT_ID = 0;
     private static final int COL_ACCIDENT_DATE = 1;
     private static final int COL_ACCIDENT_TITLE = 2;
     private static final int COL_ACCIDENT_SOURCE = 3;
@@ -159,7 +159,7 @@ public class AccidentDetailsActivity extends AppCompatActivity implements Loader
             String source = data.getString(COL_ACCIDENT_SOURCE);
             mTextViewSource.setText(Html.fromHtml(source));
 
-            String url = OPORAUA_ORG + data.getString(AccidentsListFragment.COL_ACCIDENT_EVIDENCE_URL);
+            String url = Constants.ACCIDENTS_BASE_URL + data.getString(COL_ACCIDENT_EVIDENCE_URL);
 
             boolean imageAvailable = url.contains(".jpg") || url.contains(".png");
 

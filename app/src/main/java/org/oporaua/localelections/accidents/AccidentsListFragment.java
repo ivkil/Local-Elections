@@ -32,10 +32,11 @@ import butterknife.OnClick;
 public class AccidentsListFragment extends ListFragment implements LoaderCallbacks<Cursor>,
         OnItemSelectedListener, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
-    private static final int ACCIDENTS_LOADER_ID = 0;
-    private static final int REGIONS_LOADER_ID = 1;
+    private static final int ACCIDENTS_LOADER_ID = 21;
+    private static final int REGIONS_LOADER_ID = 22;
 
     private static final String QUERY_TAG = "query";
+    private static final long ALL_REGIONS_ID = -1;
 
     private AccidentsAdapter mAccidentsAdapter;
     private FilterSpinnerAdapter mSpinnerAdapter;
@@ -113,7 +114,7 @@ public class AccidentsListFragment extends ListFragment implements LoaderCallbac
             case ACCIDENTS_LOADER_ID:
                 sortOrder = "date (" + AccidentEntry.COLUMN_DATE_TEXT + ") DESC";
                 String selection = AccidentEntry.COLUMN_SOURCE + " LIKE '%" + mQuery + "%'";
-                if (mRegionId != -1) {
+                if (mRegionId != ALL_REGIONS_ID) {
                     selection += " AND " + AccidentEntry.COLUMN_REGION_ID + " = '" + Long.toString(mRegionId) + "'";
                 }
                 return new CursorLoader(

@@ -1,4 +1,4 @@
-package org.oporaua.localelections;
+package org.oporaua.localelections.ui.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,8 +9,9 @@ import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
+import org.oporaua.localelections.R;
 import org.oporaua.localelections.accidents.Accident;
-import org.oporaua.localelections.accidents.AccidentsService;
+import org.oporaua.localelections.accidents.AccidentsRestService;
 import org.oporaua.localelections.accidents.Evidence;
 import org.oporaua.localelections.util.Constants;
 
@@ -25,7 +26,7 @@ import retrofit.Retrofit;
 
 public class NewAccidentActivity extends AppCompatActivity {
 
-    private AccidentsService mAccidentsService;
+    private AccidentsRestService mAccidentsRestService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +43,11 @@ public class NewAccidentActivity extends AppCompatActivity {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         client.interceptors().add(interceptor);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.ACCIDENTS_ENDPOINT)
+                .baseUrl(Constants.ACCIDENTS_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(client)
                 .build();
-        mAccidentsService = retrofit.create(AccidentsService.class);
+        mAccidentsRestService = retrofit.create(AccidentsRestService.class);
 
         loadAccident();
     }
@@ -69,7 +70,7 @@ public class NewAccidentActivity extends AppCompatActivity {
         accident.setDate(new Date());
         accident.setLastIp("192.18.0.1");
         accident.setEvidence(new Evidence("/url"));
-        Call<Accident> call = mAccidentsService.loadAccident(accident);
+        Call<Accident> call = mAccidentsRestService.loadAccident(accident);
         call.enqueue(new Callback<Accident>() {
             @Override
             public void onResponse(Response<Accident> response, Retrofit retrofit) {
@@ -83,4 +84,5 @@ public class NewAccidentActivity extends AppCompatActivity {
         });
 
     }
+
 }

@@ -119,7 +119,7 @@
                 android:value=".ui.activity.MainActivity" />
         </activity>
 
-        <activity android:name=".NewAccidentActivity" />
+        <activity android:name=".ui.activity.NewAccidentActivity" />
 
     </application>
 

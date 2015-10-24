@@ -18,13 +18,11 @@ import org.oporaua.localelections.accidents.AccidentsMapFragment;
 import org.oporaua.localelections.blanks.BlanksFragment;
 import org.oporaua.localelections.gcm.RegistrationIntentService;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
-import org.oporaua.localelections.sync.OporaSyncAdapter;
 import org.oporaua.localelections.tvk.TvkMembersFragment;
 import org.oporaua.localelections.ui.fragment.ContactsFragment;
 import org.oporaua.localelections.ui.fragment.WebViewFragment;
 import org.oporaua.localelections.util.Constants;
 import org.oporaua.localelections.util.GeneralUtil;
-import org.oporaua.localelections.util.PrefUtil;
 import org.oporaua.localelections.violations.ViolationsFragment;
 
 import java.lang.annotation.Retention;
@@ -86,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }
-        loadData();
     }
 
     @Override
@@ -124,35 +121,10 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         mCurrentDrawerId = getDrawerIdByMenuItem(menuItem);
         replaceFragment(getFragmentByDrawerId(mCurrentDrawerId));
-//        boolean isTitleEnabled = getTitleShownByFragmentId(mCurrentDrawerId);
-//        getSupportActionBar().setDisplayShowTitleEnabled(isTitleEnabled);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         closeDrawer();
         return true;
     }
-
-//    private boolean getTitleShownByFragmentId(@DrawerId int drawerId) {
-//        switch (drawerId) {
-//            case DRAWER_ID_LAW:
-//                return true;
-//            case DRAWER_ID_MANUAL:
-//                return true;
-//            case DRAWER_ID_VIOLATIONS:
-//                return true;
-//            case DRAWER_ID_BLANKS:
-//                return true;
-//            case DRAWER_ID_TVK_MEMBERS:
-//                return false;
-//            case DRAWER_ID_ACCIDENTS_MAP:
-//                return false;
-//            case DRAWER_ID_ACCIDENTS_LIST:
-//                return false;
-//            case DRAWER_ID_CONTACTS:
-//                return true;
-//            default:
-//                return true;
-//        }
-//    }
 
     private void closeDrawer() {
         mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -233,28 +205,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(PREV_MENU_ID_TAG, mPreviousMenuItem);
-    }
-
-    private void loadData() {
-        OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_ACCIDENTS);
-        if (!PrefUtil.getInstance().isAccidentsTypes()) {
-            OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_ACCIDENT_TYPES);
-        }
-        if (!PrefUtil.getInstance().isAccidentsSubtypes()) {
-            OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_ACCIDENT_SUBTYPES);
-        }
-        if (!PrefUtil.getInstance().isRegions()) {
-            OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_REGIONS);
-        }
-        if (!PrefUtil.getInstance().isLocalities()) {
-            OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_LOCALITIES);
-        }
-        if (!PrefUtil.getInstance().isParties()) {
-            OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_PARTIES);
-        }
-        if (!PrefUtil.getInstance().isElectionsTypes()) {
-            OporaSyncAdapter.syncImmediately(this, OporaSyncAdapter.SYNC_ELECTIONS_TYPES);
-        }
     }
 
 }

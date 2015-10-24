@@ -67,8 +67,8 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
 
     private static final String ALREADY_CONNECTED_TAG = "already_connected";
 
-    private static final int ACCIDENTS_LOADER_ID = 31;
-    private static final int ACCIDENTS_TYPES_LOADER_ID = 32;
+    private static final int ACCIDENTS_LOADER_ID = 10;
+    private static final int ACCIDENTS_TYPES_LOADER_ID = 11;
 
     private static final float DEFAULT_ZOOM = 13;
 

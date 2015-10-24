@@ -13,6 +13,8 @@ public final class Constants {
     public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
 
-    //public static final String TEST_URL = "http://rails.oporaua.org:3000/";
-    public static final String ACCIDENTS_ENDPOINT = "http://androidproxy.oporaua.org/";
+    public static final String TVK_BASE_URL = "http://tvk.oporaua.org/";
+    public static final String ACCIDENTS_BASE_URL = "http://androidproxy.oporaua.org/";
+    public static final String TEST_URL = "http://rails.oporaua.org:3000/";
+
 }
