@@ -45,7 +45,7 @@ import com.google.maps.android.ui.SquareTextView;
 
 import org.oporaua.localelections.FilterSpinnerAdapter;
 import org.oporaua.localelections.R;
-import org.oporaua.localelections.data.AccidentType;
+import org.oporaua.localelections.data.model.AccidentType;
 import org.oporaua.localelections.data.OporaContract;
 import org.oporaua.localelections.data.OporaContract.AccidentTypeEntry;
 import org.oporaua.localelections.interfaces.SetToolbarListener;

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-public class Accident {
+public class AccidentPost {
 
     @SerializedName("id")
     private long id;
@@ -38,8 +38,8 @@ public class Accident {
 
     private long beneficiaryPartyId;
 
-    @SerializedName("evidence")
-    private Evidence evidence;
+//    @SerializedName("evidence")
+//    private byte[] evidence;
 
     @SerializedName("last_ip")
     private String lastIp;
@@ -125,13 +125,13 @@ public class Accident {
         this.beneficiaryPartyId = beneficiaryPartyId;
     }
 
-    public Evidence getEvidence() {
-        return evidence;
-    }
-
-    public void setEvidence(Evidence evidence) {
-        this.evidence = evidence;
-    }
+//    public byte[] getEvidence() {
+//        return evidence;
+//    }
+//
+//    public void setEvidence(byte[] evidence) {
+//        this.evidence = evidence;
+//    }
 
     public void setLastIp(String lastIp) {
         this.lastIp = lastIp;

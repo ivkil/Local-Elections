@@ -1,17 +1,14 @@
-package org.oporaua.localelections.data;
+package org.oporaua.localelections.data.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class AccidentSubtype {
+public class Region {
 
     @SerializedName("id")
     private long id;
 
     @SerializedName("name")
     private String title;
-
-    @SerializedName("accident_type_id")
-    private long accidentTypeId;
 
     public long getId() {
         return id;
@@ -21,7 +18,4 @@ public class AccidentSubtype {
         return title;
     }
 
-    public long getAccidentTypeId() {
-        return accidentTypeId;
-    }
 }

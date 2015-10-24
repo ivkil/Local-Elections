@@ -1,8 +1,8 @@
-package org.oporaua.localelections.data;
+package org.oporaua.localelections.data.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ElectionsType {
+public class Party {
 
     @SerializedName("id")
     private long id;
