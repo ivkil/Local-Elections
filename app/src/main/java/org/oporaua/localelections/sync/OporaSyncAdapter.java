@@ -133,7 +133,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
             }
             String region = Long.toString(accident.getRegionId());
             Set<String> regions = PrefUtil.getRegionSubscribeIds();
-            if (regions.contains(region)) {
+            if (regions != null && regions.contains(region)) {
                 notifyAccident(id, accident.getTitle());
             }
         } catch (IOException e) {
