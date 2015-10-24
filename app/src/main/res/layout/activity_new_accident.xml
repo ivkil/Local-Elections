@@ -1,10 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="org.oporaua.localelections.ui.activity.NewAccidentActivity">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        tools:context="org.oporaua.localelections.ui.activity.NewAccidentActivity">
+
+        <TextView
+            style="@style/Base.TextAppearance.AppCompat.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="@string/add_accident_title"/>
+
+        <EditText
+            android:id="@+id/et_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/title_hint"/>
+
+        <Spinner
+            android:id="@+id/sp_elections_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?listPreferredItemHeightSmall"/>
+
+        <Spinner
+            android:id="@+id/sp_region"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?listPreferredItemHeightSmall"/>
+
+        <Spinner
+            android:id="@+id/sp_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?listPreferredItemHeightSmall"/>
+
+        <EditText
+            android:id="@+id/et_district"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/district_hint"/>
+
+        <Spinner
+            android:id="@+id/sp_violation_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?listPreferredItemHeightSmall"/>
+
+        <Spinner
+            android:id="@+id/sp_violation_sub_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?listPreferredItemHeightSmall"/>
+
+        <EditText
+            android:id="@+id/et_offender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/offender_hint"/>
+
+        <Spinner
+            android:id="@+id/sp_offender_party"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?listPreferredItemHeightSmall"/>
+
+        <EditText
+            android:id="@+id/et_violation_against"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/violation_against_hint"/>
+
+        <Spinner
+            android:id="@+id/sp_violation_against_party"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?listPreferredItemHeightSmall"/>
+
+        <EditText
+            android:id="@+id/et_beneficiary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/beneficiary_hint"/>
+
+        <Spinner
+            android:id="@+id/sp_beneficiary_party"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?listPreferredItemHeightSmall"/>
+
+        <EditText
+            android:id="@+id/et_violation_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/violation_info_hint"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_date_24dp"
+                android:tint="@color/tint"/>
+
+            <TextView
+                android:id="@+id/new_violation_date_text_view"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                tools:text="26 трав. 2015 р."/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_location_24dp"
+                android:tint="@color/tint"/>
+
+            <AutoCompleteTextView
+                android:id="@+id/new_violation_place_complete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:hint="@string/location_hint"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

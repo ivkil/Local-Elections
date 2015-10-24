@@ -3,6 +3,9 @@ package org.oporaua.localelections.ui.activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,6 +21,8 @@ import org.oporaua.localelections.util.Constants;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.GsonConverterFactory;
@@ -28,11 +33,51 @@ public class NewAccidentActivity extends AppCompatActivity {
 
     private AccidentsRestService mAccidentsRestService;
 
+    @Bind(R.id.et_title)
+    EditText mTitleEditText;
+
+    @Bind(R.id.et_district)
+    EditText mDistrictEditText;
+
+    @Bind(R.id.et_offender)
+    EditText mOffenderEditText;
+
+    @Bind(R.id.et_violation_against)
+    EditText mViolationAgainstEditText;
+
+    @Bind(R.id.et_beneficiary)
+    EditText mBeneficiarEditText;
+
+    @Bind(R.id.sp_beneficiary_party)
+    Spinner mBeneficiarSpinner;
+
+    @Bind(R.id.sp_elections_type)
+    Spinner mElectionTypeSpinner;
+
+    @Bind(R.id.sp_region)
+    Spinner mRegionSpinner;
+
+    @Bind(R.id.sp_city)
+    Spinner mCitySpinner;
+
+    @Bind(R.id.sp_violation_type)
+    Spinner mViolationTypeSpinner;
+
+    @Bind(R.id.sp_violation_sub_type)
+    Spinner mViolationSubTypeSpinner;
+
+    @Bind(R.id.sp_offender_party)
+    Spinner mOffenderPertySpinner;
+
+    @Bind(R.id.sp_violation_against_party)
+    Spinner mAgainstPertySpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_accident);
-
+        ButterKnife.bind(this);
+        initToolbar();
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd")
                 .create();
@@ -82,7 +127,22 @@ public class NewAccidentActivity extends AppCompatActivity {
                 t.printStackTrace();
             }
         });
+    }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void initToolbar() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 }

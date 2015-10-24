@@ -1,5 +1,6 @@
 package org.oporaua.localelections.accidents;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -25,6 +26,7 @@ import org.oporaua.localelections.R;
 import org.oporaua.localelections.data.OporaContract.AccidentEntry;
 import org.oporaua.localelections.data.OporaContract.RegionEntry;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
+import org.oporaua.localelections.ui.activity.NewAccidentActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -172,7 +174,7 @@ public class AccidentsListFragment extends ListFragment implements LoaderCallbac
 
     @OnClick(R.id.fab)
     void addNewAccident() {
-//        startActivity(new Intent(getActivity(), NewAccidentActivity.class));
+        startActivity(new Intent(getActivity(), NewAccidentActivity.class));
     }
 
     @Override

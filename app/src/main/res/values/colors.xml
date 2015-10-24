@@ -11,4 +11,6 @@
     <color name="gray">#D3D3D3</color>
     <color name="black">#000000</color>
 
+    <color name="tint">#FF505050</color>
+
 </resources>

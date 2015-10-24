@@ -38,5 +38,13 @@
     <string name="settings_title">Налаштування</string>
     <string name="new_accident">Новий інцидент</string>
     <string name="accidents">Інциденти</string>
+    <string name="title_hint">Title hint</string>
+    <string name="district_hint">District hint</string>
+    <string name="offender_hint">Offender hint</string>
+    <string name="violation_against_hint">Violation against hint</string>
+    <string name="beneficiary_hint">Beneficiary hint</string>
+    <string name="violation_info_hint">Violation info hint</string>
+    <string name="add_accident_title">Повідомити про порушення</string>
+    <string name="location_hint">Місце порушення</string>
 
 </resources>

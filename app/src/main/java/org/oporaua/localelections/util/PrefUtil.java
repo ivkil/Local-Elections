@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import org.oporaua.localelections.R;
@@ -110,6 +111,7 @@ public final class PrefUtil {
         return getInstance().getPersistentObjectSet(getString(R.string.pref_regions_key));
     }
 
+    @Nullable
     private Set<String> getPersistentObjectSet(String key) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             return mSharedPreferences.getStringSet(key, null);

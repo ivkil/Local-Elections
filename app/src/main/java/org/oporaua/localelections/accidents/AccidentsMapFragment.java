@@ -49,6 +49,7 @@ import org.oporaua.localelections.data.AccidentType;
 import org.oporaua.localelections.data.OporaContract;
 import org.oporaua.localelections.data.OporaContract.AccidentTypeEntry;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
+import org.oporaua.localelections.ui.activity.NewAccidentActivity;
 import org.oporaua.localelections.util.GeneralUtil;
 
 import java.util.List;
@@ -202,7 +203,7 @@ public class AccidentsMapFragment extends Fragment implements LoaderCallbacks<Li
 
     @OnClick(R.id.fab)
     void addNewAccident() {
-//        startActivity(new Intent(getActivity(), NewAccidentActivity.class));
+        startActivity(new Intent(getActivity(), NewAccidentActivity.class));
     }
 
     @Override
