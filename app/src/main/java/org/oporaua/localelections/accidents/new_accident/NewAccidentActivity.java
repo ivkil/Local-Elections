@@ -2,12 +2,9 @@ package org.oporaua.localelections.accidents.new_accident;
 
 import android.content.Intent;
 import android.database.Cursor;
-<<<<<<< HEAD
-import android.net.wifi.WifiManager;
-=======
 import android.graphics.Bitmap;
 import android.net.Uri;
->>>>>>> d5ad05db48eb1d1722ea185ecb144bee3b068980
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
@@ -25,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -44,15 +42,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
 import org.oporaua.localelections.FilterSpinnerAdapter;
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.accidents.AccidentPost;
-import org.oporaua.localelections.accidents.AccidentsRestService;
 import org.oporaua.localelections.data.OporaContract.AccidentSubtypeEntry;
 import org.oporaua.localelections.data.OporaContract.AccidentTypeEntry;
 import org.oporaua.localelections.data.OporaContract.ElectionTypeEntry;
@@ -61,16 +54,13 @@ import org.oporaua.localelections.data.OporaContract.PartyEntry;
 import org.oporaua.localelections.data.OporaContract.RegionEntry;
 import org.oporaua.localelections.util.GeneralUtil;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -87,8 +77,9 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
     private static final String TAG = "NEW_ACCIDENT_TAG";
 
     private static final int PICK_IMAGE_ID = 50;
-
-    private AccidentsRestService mAccidentsRestService;
+    private static final String POSITION_TAG = "position";
+    private static final String DATE_TAG = "date";
+    private static final String BITMAP_TAG = "bitmap";
 
     private static final int LOADER_ACCIDENTS_TYPES = 41;
     private static final int LOADER_ACCIDENTS_SUBTYPES = 42;
@@ -114,6 +105,9 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
 
     @Bind(R.id.et_violation_info)
     EditText mSourceEditText;
+
+    @Bind(R.id.et_id)
+    EditText mUserIdEditText;
 
     @Bind(R.id.sp_beneficiary_party)
     Spinner mBeneficiarySpinner;
@@ -151,6 +145,9 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
     @Bind(R.id.iv_image_preview)
     ImageView mPreviewImageView;
 
+    @Bind(R.id.btn_add_photo)
+    Button mButtonImage;
+
     private FilterSpinnerAdapter mSpinnerAccidentTypesAdapter;
     private FilterSpinnerAdapter mSpinnerAccidentSubtypesAdapter;
     private FilterSpinnerAdapter mSpinnerRegionsAdapter;
@@ -162,11 +159,13 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
     private PlaceAutocompleteAdapter mAdapter;
     private GoogleMap mGoogleMap;
     private Bitmap mImageBitmap;
+    private Uri mImageUri;
 
     private long mCurrentAccidentId = -1;
     private long mCurrentRegionId = -1;
 
-    private Accident mAccident;
+    private AccidentPost mAccident;
+    private boolean mImage = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,25 +173,26 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
         setContentView(R.layout.activity_new_accident);
         ButterKnife.bind(this);
         initToolbar();
-        mAccident = new Accident();
+        mAccident = new AccidentPost();
 
         mGoogleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 
-        Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd")
-                .create();
-        OkHttpClient client = new OkHttpClient();
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        client.interceptors().add(interceptor);
-        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(Constants.ACCIDENTS_BASE_URL)
-                .baseUrl("https://dts2015.oporaua.org/")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .client(client)
-                .build();
-        mAccidentsRestService = retrofit.create(AccidentsRestService.class);
+        if (savedInstanceState != null && savedInstanceState.containsKey(POSITION_TAG)) {
+            LatLng latLng = savedInstanceState.getParcelable(POSITION_TAG);
+            if (latLng != null) {
+                mAccident.setLongitude(latLng.longitude);
+                mAccident.setLatitude(latLng.latitude);
+                showPlaceOnMap(latLng);
+            }
+            Long time = savedInstanceState.getLong(DATE_TAG);
+            mAccident.setDate(new Date(time));
+            if (savedInstanceState.containsKey(BITMAP_TAG)) {
+                mImageUri = Uri.parse(savedInstanceState.getString(BITMAP_TAG));
+                showImage(mImageUri);
+            }
+        } else {
+            mAccident.setDate(new Date());
+        }
 
         getSupportLoaderManager().initLoader(LOADER_ACCIDENTS_TYPES, null, this);
         getSupportLoaderManager().initLoader(LOADER_ACCIDENTS_SUBTYPES, null, this);
@@ -208,10 +208,9 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
         mTitleEditText.addTextChangedListener(new GeneralTextWatcher(mTitleEditText));
         mViolationAgainstEditText.addTextChangedListener(new GeneralTextWatcher(mViolationAgainstEditText));
         mSourceEditText.addTextChangedListener(new GeneralTextWatcher(mSourceEditText));
+        mUserIdEditText.addTextChangedListener(new GeneralTextWatcher(mUserIdEditText));
 
-        mDateTextView.setText(GeneralUtil.getFriendlyDayString(new Date()));
-
-        //loadAccident();
+        mDateTextView.setText(GeneralUtil.getFriendlyDayString(mAccident.getDate()));
 
         if (GeneralUtil.isPlayServicesAvailable(this)) {
             buildGoogleApiClient();
@@ -288,22 +287,10 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
                 places.release();
                 return;
             }
-
             final Place place = places.get(0);
-
-            final CharSequence placeAddress = place.getAddress();
-//            if (placeAddress == null) {
-//                mPlaceDetails.setVisibility(View.GONE);
-//            } else {
-//                mPlaceDetails.setVisibility(VISIBLE);
-//                mPlaceDetails.setText(placeAddress);
-//            }
-
             final LatLng placeLocation = place.getLatLng();
             mAccident.setLatitude(place.getLatLng().latitude);
             mAccident.setLongitude(place.getLatLng().longitude);
-//            mNewViolation.setLocation(new ParseGeoPoint(placeLocation.latitude, placeLocation.longitude));
-//            mNewViolation.setPlaceName(place.getName().toString());
             showPlaceOnMap(placeLocation);
             Log.i(TAG, "Place details received: " + place.getName());
             places.release();
@@ -355,15 +342,18 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
     }
 
 
-
+    private void loadAccident() {
         if (TextUtils.isEmpty(mAccident.getTitle())) {
-            return;// "Додайте заголовок інциденту";
+            Toast.makeText(this, "Необіхно додати заголовок", Toast.LENGTH_SHORT).show();
+            return;
         }
         if (mAccident.getLatitude() == 0 && mAccident.getLongitude() == 0) {
-            return;// "Виберіть місце інцинедту";
+            Toast.makeText(this, "Необхідно додати місце", Toast.LENGTH_SHORT).show();
+            return;
         }
         if (TextUtils.isEmpty(mAccident.getSource())) {
-            return;// "Додайте опис інциденту";
+            Toast.makeText(this, "Додайте опис інциденту", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         Cursor cursorAccidentType = (Cursor) mViolationSubTypeSpinner.getSelectedItem();
@@ -372,7 +362,8 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
         Cursor cursorRegion = (Cursor) mRegionSpinner.getSelectedItem();
         long regionId = cursorRegion.getLong(0);
         if (regionId == -1) {
-            return; // Оберіть регіон
+            Toast.makeText(this, "Необхідно вибрати регіон", Toast.LENGTH_SHORT).show();
+            return;
         }
         mAccident.setRegionId(regionId);
 
@@ -394,90 +385,29 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
         WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
         String ip = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
         mAccident.setLastIp(ip);
-        Log.d("loading", new Gson().toJson(mAccident));
 
-        /*final AccidentPost accident = new AccidentPost();
-        accident.setTitle("Android Test Final");
-        accident.setAccidentSubtypeId(1);
-        accident.setElectionsId(1);
-        accident.setRegionId(27);
-        accident.setLocalityId(12658);
-        accident.setOffender("offender");
-        accident.setOffenderPartyId(19);
-        accident.setBeneficiary("benef");
-        accident.setBeneficiaryPartyId(19);
-        accident.setVictim("victim");
-        accident.setVictimPartyId(19);
-        accident.setSource("Юрій Іванович");
-        //accident.setPosition(new LatLng(25, 34));
-        accident.setDate(new Date());
-        accident.setLastIp("192.18.0.1");
-//        accident.setEvidence(new Evidence("/url"));
-//        Call<Accident> call = mAccidentsRestService.loadAccident(accident);
-//        call.enqueue(new Callback<Accident>() {
-//            @Override
-//            public void onResponse(Response<Accident> response, Retrofit retrofit) {
-//                Log.d("log", "new id :" + Long.toString(response.body().getId()));
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable t) {
-//                t.printStackTrace();
-//            }
-//        });
+        Observable<String> observable = GeneralUtil.submitAccident(mAccident, mImageBitmap);
+        observable.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread()).subscribe(new Subscriber<String>() {
+            @Override
+            public void onCompleted() {
+                Toast.makeText(getApplicationContext(),
+                        "Дякуємо. Ваше повідомлення успішно додано",
+                        Toast.LENGTH_SHORT)
+                        .show();
+                finish();
+            }
 
-//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//        bitmaps.get(i).compress(Bitmap.CompressFormat.JPEG, 50, bos);
-//        InputStream in = new ByteArrayInputStream(bos.toByteArray());
-//        ContentBody photo = new InputStreamBody(in, "compressedFile");
-//        entity.addPart("file", photo);
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                finish();
+            }
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        mImageBitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos);
-//        RequestBody image = RequestBody.create(MediaType.parse("image/jpeg"), bos.toByteArray());
+            @Override
+            public void onNext(String accident) {
 
-//        accident.setEvidence(bos.toByteArray());
-
-//        mAccidentsRestService.loadAccidentRx(accident)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeOn(Schedulers.newThread())
-//                .subscribe(new Subscriber<Accident>() {
-//                    @Override
-//                    public void onCompleted() {
-//
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        Toast.makeText(NewAccidentActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                    @Override
-//                    public void onNext(Accident accident) {
-//                        Toast.makeText(NewAccidentActivity.this, "SUCCESS", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-
-        GeneralUtil.submitAccident(accident, mImageBitmap)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(new Subscriber<String>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Toast.makeText(NewAccidentActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onNext(String s) {
-                        Toast.makeText(NewAccidentActivity.this, s, Toast.LENGTH_SHORT).show();
-                    }
-                });
->>>>>>> d5ad05db48eb1d1722ea185ecb144bee3b068980*/
+            }
+        });
     }
 
     @Override
@@ -487,7 +417,6 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
                 finish();
                 return true;
             case R.id.action_submit_accident:
-                Toast.makeText(NewAccidentActivity.this, "ADD STH", Toast.LENGTH_SHORT).show();
                 loadAccident();
                 return true;
         }
@@ -536,15 +465,8 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
 
     @Override
     public void onDataSet(Date date) {
-        mDateTextView.setText(GeneralUtil.getFriendlyDayString(date));
         mAccident.setDate(date);
-        String error = checkAccident();
-        if (error == null) {
-            loadAccident();
-        } else {
-            Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
-            //Snackbar.make(NewAccidentActivity.this, error, Snackbar.LENGTH_SHORT).show();
-        }
+        mDateTextView.setText(GeneralUtil.getFriendlyDayString(date));
     }
 
     @Override
@@ -556,33 +478,42 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
     @OnClick(R.id.btn_add_photo)
     void pickNewProfileImage() {
         mImageBitmap = null;
-//        mPreviewImageView.setImageResource(0);
-        mPreviewImageView.setImageResource(android.R.color.transparent);
-        mPreviewImageView.setVisibility(View.GONE);
-
-        Intent imageIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        imageIntent.setType("image/*");
-        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickIntent.setType("image/*");
-        Intent chooserIntent = Intent.createChooser(imageIntent, getString(R.string.image_chooser_title));
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
-
-        startActivityForResult(chooserIntent, PICK_IMAGE_ID);
+        if (mImage) {
+            mPreviewImageView.setImageResource(android.R.color.transparent);
+            mPreviewImageView.setVisibility(View.GONE);
+            mImageUri = null;
+            mButtonImage.setText("Додати фото");
+            mImage = false;
+        } else {
+            Intent imageIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            imageIntent.setType("image/*");
+            Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            pickIntent.setType("image/*");
+            Intent chooserIntent = Intent.createChooser(imageIntent, getString(R.string.image_chooser_title));
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
+            startActivityForResult(chooserIntent, PICK_IMAGE_ID);
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_ID && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri uri = data.getData();
+            mImageUri = data.getData();
             try {
-                mImageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                mPreviewImageView.setVisibility(VISIBLE);
-                Glide.with(this).load(uri).placeholder(android.R.color.white).into(mPreviewImageView);
+                mImageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mImageUri);
+                showImage(mImageUri);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void showImage(Uri uri) {
+        mPreviewImageView.setVisibility(VISIBLE);
+        Glide.with(this).load(uri).placeholder(android.R.color.white).into(mPreviewImageView);
+        mButtonImage.setText("Видалити фото");
+        mImage = true;
     }
 
     @Override
@@ -692,7 +623,7 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
                     mAccident.setOffender(text);
                     break;
                 case R.id.et_beneficiary:
-                    mAccident.setOffender(text);
+                    mAccident.setBeneficiary(text);
                     break;
                 case R.id.et_violation_against:
                     mAccident.setVictim(text);
@@ -700,8 +631,21 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
                 case R.id.et_violation_info:
                     mAccident.setSource(text);
                     break;
+                case R.id.et_id:
+                    mAccident.setUserEmail(text);
+                    break;
             }
         }
+
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(POSITION_TAG, new LatLng(mAccident.getLatitude(), mAccident.getLongitude()));
+        outState.putLong(DATE_TAG, mAccident.getDate().getTime());
+        if (mImageUri != null) {
+            outState.putString(BITMAP_TAG, mImageUri.toString());
+        }
+        super.onSaveInstanceState(outState);
+    }
 }

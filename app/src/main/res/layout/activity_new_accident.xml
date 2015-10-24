@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,181 +13,284 @@
         android:padding="16dp"
         tools:context="org.oporaua.localelections.accidents.new_accident.NewAccidentActivity">
 
-        <TextView
-            style="@style/Base.TextAppearance.AppCompat.Title"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:text="@string/add_accident_title"/>
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/et_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/title_hint"/>
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:text="@string/add_accident_title" />
 
-        <Spinner
-            android:id="@+id/sp_elections_type"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="?listPreferredItemHeightSmall"/>
+            <EditText
+                android:id="@+id/et_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/title_hint" />
+        </LinearLayout>
 
-        <Spinner
-            android:id="@+id/sp_region"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="?listPreferredItemHeightSmall"/>
 
-        <Spinner
-            android:id="@+id/sp_city"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="?listPreferredItemHeightSmall"/>
+            android:layout_marginBottom="@dimen/opora_small_dimen"
+            android:layout_marginTop="@dimen/opora_small_dimen"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/et_district"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/district_hint"/>
+            <LinearLayout
+                android:id="@+id/pick_date_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-        <Spinner
-            android:id="@+id/sp_violation_type"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="?listPreferredItemHeightSmall"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_date_24dp"
+                    android:tint="@color/tint" />
 
-        <Spinner
-            android:id="@+id/sp_violation_sub_type"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="?listPreferredItemHeightSmall"/>
+                <TextView
+                    android:id="@+id/new_violation_date_text_view"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginStart="12dp"
+                    android:textSize="16sp"
+                    tools:text="26 трав. 2015 р." />
+            </LinearLayout>
+        </LinearLayout>
 
-        <EditText
-            android:id="@+id/et_offender"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/offender_hint"/>
 
-        <Spinner
-            android:id="@+id/sp_offender_party"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="?listPreferredItemHeightSmall"/>
+            android:layout_marginBottom="@dimen/opora_small_dimen"
+            android:layout_marginTop="@dimen/opora_small_dimen"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/et_violation_against"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/violation_against_hint"/>
+            <Spinner
+                android:id="@+id/sp_region"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?listPreferredItemHeightSmall" />
 
-        <Spinner
-            android:id="@+id/sp_violation_against_party"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="?listPreferredItemHeightSmall"/>
+            <Spinner
+                android:id="@+id/sp_city"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?listPreferredItemHeightSmall" />
 
-        <EditText
-            android:id="@+id/et_beneficiary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/beneficiary_hint"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/opora_small_dimen"
+                android:layout_marginTop="@dimen/opora_small_dimen"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-        <Spinner
-            android:id="@+id/sp_beneficiary_party"
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_location_24dp"
+                    android:tint="@color/tint" />
+
+                <AutoCompleteTextView
+                    android:id="@+id/new_violation_place_complete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:hint="@string/location_hint" />
+
+            </LinearLayout>
+
+
+            <FrameLayout
+                android:id="@+id/new_violation_map_view"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:clickable="false"
+                android:visibility="gone">
+
+                <fragment
+                    android:id="@+id/map"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:cameraZoom="12"
+                    app:mapType="normal"
+                    app:uiCompass="false"
+                    app:uiRotateGestures="false"
+                    app:uiScrollGestures="false"
+                    app:uiTiltGestures="false"
+                    app:uiZoomControls="false"
+                    app:uiZoomGestures="false"
+                    tools:ignore="MissingPrefix" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="?listPreferredItemHeightSmall"/>
+            android:layout_marginBottom="@dimen/opora_small_dimen"
+            android:layout_marginTop="@dimen/opora_small_dimen"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Тип виборів" />
+
+            <Spinner
+                android:id="@+id/sp_elections_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?listPreferredItemHeightSmall" />
+
+            <EditText
+                android:id="@+id/et_district"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/district_hint" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/opora_small_dimen"
+            android:layout_marginTop="@dimen/opora_small_dimen"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Має ознаки порушення" />
+
+            <Spinner
+                android:id="@+id/sp_violation_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?listPreferredItemHeightSmall" />
+
+            <Spinner
+                android:id="@+id/sp_violation_sub_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?listPreferredItemHeightSmall" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/opora_small_dimen"
+            android:layout_marginTop="@dimen/opora_small_dimen"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Хто вчинив" />
+
+            <EditText
+                android:id="@+id/et_offender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/offender_hint" />
+
+            <Spinner
+                android:id="@+id/sp_offender_party"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?listPreferredItemHeightSmall" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/opora_small_dimen"
+            android:layout_marginTop="@dimen/opora_small_dimen"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Проти кого" />
+
+            <EditText
+                android:id="@+id/et_violation_against"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/violation_against_hint" />
+
+            <Spinner
+                android:id="@+id/sp_violation_against_party"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?listPreferredItemHeightSmall" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/opora_small_dimen"
+            android:layout_marginTop="@dimen/opora_small_dimen"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="На чию користь" />
+
+            <EditText
+                android:id="@+id/et_beneficiary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/beneficiary_hint" />
+
+            <Spinner
+                android:id="@+id/sp_beneficiary_party"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?listPreferredItemHeightSmall" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/et_violation_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/violation_info_hint"/>
+            android:hint="@string/violation_info_hint" />
 
-
-        <LinearLayout
-            android:id="@+id/pick_date_view"
+        <EditText
+            android:id="@+id/et_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_date_24dp"
-                android:tint="@color/tint"/>
-
-            <TextView
-                android:id="@+id/new_violation_date_text_view"
-                style="@style/TextAppearance.AppCompat.Body1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_marginStart="12dp"
-                android:textSize="16sp"
-                tools:text="26 трав. 2015 р."/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_location_24dp"
-                android:tint="@color/tint"/>
-
-            <AutoCompleteTextView
-                android:id="@+id/new_violation_place_complete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp"
-                android:hint="@string/location_hint"/>
-
-        </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/new_violation_map_view"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:clickable="false"
-            android:visibility="gone">
-
-            <fragment
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:cameraZoom="12"
-                app:mapType="normal"
-                app:uiCompass="false"
-                app:uiRotateGestures="false"
-                app:uiScrollGestures="false"
-                app:uiTiltGestures="false"
-                app:uiZoomControls="false"
-                app:uiZoomGestures="false"
-                tools:ignore="MissingPrefix"/>
-        </FrameLayout>
+            android:layout_marginBottom="@dimen/opora_small_dimen"
+            android:layout_marginTop="@dimen/opora_small_dimen"
+            android:hint="@string/user_id" />
 
         <ImageView
             android:id="@+id/iv_image_preview"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:scaleType="centerInside"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btn_add_photo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/add_accident_phone"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
 
     </LinearLayout>
 

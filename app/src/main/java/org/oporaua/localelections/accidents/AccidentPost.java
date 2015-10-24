@@ -7,9 +7,6 @@ import java.util.Date;
 
 public class AccidentPost {
 
-    @SerializedName("id")
-    private long id;
-
     @SerializedName("date")
     private Date date;
 
@@ -38,8 +35,6 @@ public class AccidentPost {
 
     private long beneficiaryPartyId;
 
-//    @SerializedName("evidence")
-//    private byte[] evidence;
 
     @SerializedName("last_ip")
     private String lastIp;
@@ -69,8 +64,11 @@ public class AccidentPost {
     @SerializedName("lang")
     private double longitude;
 
-    public long getId() {
-        return id;
+    @SerializedName("email")
+    private String userEmail;
+
+    public String getLastIp() {
+        return lastIp;
     }
 
     public Date getDate() {
@@ -169,9 +167,6 @@ public class AccidentPost {
         this.title = title;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public double getLatitude() {
         return latitude;
@@ -187,5 +182,37 @@ public class AccidentPost {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getOffender() {
+        return offender;
+    }
+
+    public String getVictim() {
+        return victim;
+    }
+
+    public long getVictimPartyId() {
+        return victimPartyId;
+    }
+
+    public String getBeneficiary() {
+        return beneficiary;
+    }
+
+    public long getBeneficiaryPartyId() {
+        return beneficiaryPartyId;
+    }
+
+    public String getPollingStation() {
+        return pollingStation;
     }
 }

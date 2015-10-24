@@ -38,17 +38,18 @@
     <string name="settings_title">Налаштування</string>
     <string name="new_accident">Новий інцидент</string>
     <string name="accidents">Інциденти</string>
-    <string name="title_hint">Title hint</string>
-    <string name="district_hint">District hint</string>
-    <string name="offender_hint">Offender hint</string>
-    <string name="violation_against_hint">Violation against hint</string>
-    <string name="beneficiary_hint">Beneficiary hint</string>
-    <string name="violation_info_hint">Violation info hint</string>
-    <string name="add_accident_title">Повідомити про порушення</string>
-    <string name="location_hint">Місце порушення</string>
+    <string name="title_hint">Заголовок</string>
+    <string name="district_hint">Округ та ДВК</string>
+    <string name="offender_hint">ПІБ та посада</string>
+    <string name="violation_against_hint">ПІБ та посада </string>
+    <string name="beneficiary_hint">ПІБ та посада</string>
+    <string name="violation_info_hint">Опис інциденту</string>
+    <string name="add_accident_title">Повідомити про інцидент</string>
+    <string name="location_hint">Місце інциденту</string>
     <string name="submit_accident">Відправити інцидент</string>
     <string name="new_accident_title">Новий інцидент</string>
     <string name="add_accident_phone">Додати фото</string>
     <string name="image_chooser_title">Ваше фото</string>
+    <string name="user_id">Ідентифікатор</string>
 
 </resources>

@@ -14,14 +14,6 @@ import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.entity.mime.content.InputStreamBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.accidents.AccidentPost;
 import org.oporaua.localelections.violations.model.ViolationChild;
@@ -37,6 +29,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.methods.HttpPost;
+import cz.msebera.android.httpclient.entity.ContentType;
+import cz.msebera.android.httpclient.entity.mime.MIME;
+import cz.msebera.android.httpclient.entity.mime.MultipartEntityBuilder;
+import cz.msebera.android.httpclient.entity.mime.content.ContentBody;
+import cz.msebera.android.httpclient.entity.mime.content.InputStreamBody;
+import cz.msebera.android.httpclient.entity.mime.content.StringBody;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
+import cz.msebera.android.httpclient.protocol.BasicHttpContext;
+import cz.msebera.android.httpclient.protocol.HttpContext;
+import cz.msebera.android.httpclient.util.EntityUtils;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -124,33 +130,97 @@ public final class GeneralUtil {
         return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
-                DefaultHttpClient httpClient = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost("https://dts2015.oporaua.org/violations/add.json");
-                MultipartEntityBuilder entity = MultipartEntityBuilder.create();
 
-                entity.addTextBody("date","2015-10-18");
-                entity.addTextBody("accident_subtype_id","1");
-                entity.addTextBody("source","65465");
-                entity.addTextBody("last_ip","176.38.35.4");
-                entity.addTextBody("locality_id","12172");
-                entity.addTextBody("region_id","13");
-                entity.addTextBody("election_id","1");
-                entity.addTextBody("title","TITLE");
-                entity.addTextBody("lat","49.32512199104001");
-                entity.addTextBody("lang","32.607421875");
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpContext localContext = new BasicHttpContext();
+                HttpPost httpPost = new HttpPost(Constants.ACCIDENTS_BASE_URL + "/violations/add.json");
 
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos);
-                InputStream in = new ByteArrayInputStream(bos.toByteArray());
-                ContentBody photo = new InputStreamBody(in, "compressedFile");
-                entity.addPart("evidence", photo);
-                httpPost.setEntity(entity.build());
                 try {
-                    HttpResponse response = httpClient.execute(httpPost);
-                    HttpEntity httpEntity = response.getEntity();
-                    String output = EntityUtils.toString(httpEntity);
-//                    JSONObject jObj = new JSONObject(output);
-                    subscriber.onNext(output);
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", new Locale("ua"));
+
+                    StringBody date = new StringBody(format.format(accidentPost.getDate()), ContentType.create("text/plain", MIME.UTF8_CHARSET));
+
+                    String subtypeStr = Long.toString(accidentPost.getAccidentSubtypeId());
+                    StringBody subtype = new StringBody(subtypeStr, ContentType.create("text/plain", MIME.UTF8_CHARSET));
+
+                    String sourseStr = accidentPost.getSource();
+                    StringBody source = new StringBody(sourseStr, ContentType.create("text/plain", MIME.UTF8_CHARSET));
+
+                    String ipStr = accidentPost.getLastIp();
+                    StringBody ip = new StringBody(ipStr, ContentType.create("text/plain", MIME.UTF8_CHARSET));
+
+                    String localityStr = Long.toString(accidentPost.getLocalityId());
+                    StringBody locality = new StringBody(localityStr, ContentType.create("text/plain", MIME.UTF8_CHARSET));
+
+                    String regionStr = Long.toString(accidentPost.getRegionId());
+                    StringBody region = new StringBody(regionStr, ContentType.create("text/plain", MIME.UTF8_CHARSET));
+
+                    String electionsStr = Long.toString(accidentPost.getElectionsId());
+                    StringBody elections = new StringBody(electionsStr, ContentType.create("text/plain", MIME.UTF8_CHARSET));
+
+                    String titleStr = accidentPost.getTitle();
+                    StringBody title = new StringBody(titleStr, ContentType.create("text/plain", MIME.UTF8_CHARSET));
+
+                    String latStr = Double.toString(accidentPost.getLatitude());
+                    StringBody lat = new StringBody(latStr, ContentType.create("text/plain", MIME.UTF8_CHARSET));
+
+                    String lngStr = Double.toString(accidentPost.getLongitude());
+                    StringBody lng = new StringBody(lngStr, ContentType.create("text/plain", MIME.UTF8_CHARSET));
+
+                    String emailStr = accidentPost.getUserEmail() == null ? "" : accidentPost.getUserEmail();
+                    StringBody email = new StringBody(emailStr, ContentType.create("text/plain", MIME.UTF8_CHARSET));
+
+                    String offenderStr = accidentPost.getOffender() == null ? "" : accidentPost.getOffender();
+                    StringBody offender = new StringBody(offenderStr, ContentType.create("text/plain", MIME.UTF8_CHARSET));
+
+                    String offenderIdStr = Long.toString(accidentPost.getOffenderPartyId());
+                    StringBody offenderId = new StringBody(offenderIdStr, ContentType.create("text/plain", MIME.UTF8_CHARSET));
+
+                    String beneficiaryStr = accidentPost.getBeneficiary() == null ? "" : accidentPost.getBeneficiary();
+                    StringBody beneficiary = new StringBody(beneficiaryStr, ContentType.create("text/plain", MIME.UTF8_CHARSET));
+
+                    String beneficiaryIdStr = Long.toString(accidentPost.getBeneficiaryPartyId());
+                    StringBody beneficiaryId = new StringBody(beneficiaryIdStr, ContentType.create("text/plain", MIME.UTF8_CHARSET));
+
+                    String victimStr = accidentPost.getVictim() == null ? "" : accidentPost.getVictim();
+                    StringBody victim = new StringBody(victimStr, ContentType.create("text/plain", MIME.UTF8_CHARSET));
+
+                    String victimIdStr = Long.toString(accidentPost.getVictimPartyId());
+                    StringBody victimId = new StringBody(victimIdStr, ContentType.create("text/plain", MIME.UTF8_CHARSET));
+
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    if (bitmap != null) {
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+                    }
+                    InputStream in = new ByteArrayInputStream(bos.toByteArray());
+
+                    ContentBody mimePart = new InputStreamBody(in, "evidence");
+
+                    HttpEntity reqEntity = MultipartEntityBuilder.create()
+                            .addPart("email", email)
+                            .addPart("date", date)
+                            .addPart("accident_subtype_id", subtype)
+                            .addPart("offender", offender)
+                            .addPart("offender_party_id", offenderId)
+                            .addPart("victim", victim)
+                            .addPart("victim_party_id", victimId)
+                            .addPart("beneficiary", beneficiary)
+                            .addPart("beneficiary_party_id", beneficiaryId)
+                            .addPart("source", source)
+                            .addPart("evidence", mimePart)
+                            .addPart("last_ip", ip)
+                            .addPart("locality_id", locality)
+                            .addPart("region_id", region)
+                            .addPart("election_id", elections)
+                            .addPart("title", title)
+                            .addPart("lat", lat)
+                            .addPart("lang", lng)
+                            .build();
+
+                    httpPost.setEntity(reqEntity);
+                    HttpResponse response = httpClient.execute(httpPost, localContext);
+                    String result = EntityUtils.toString(response.getEntity());
+                    subscriber.onNext(result);
                     subscriber.onCompleted();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -159,5 +229,6 @@ public final class GeneralUtil {
             }
         });
     }
+
 
 }
