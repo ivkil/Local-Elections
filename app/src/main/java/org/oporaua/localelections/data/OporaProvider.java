@@ -144,9 +144,57 @@ public class OporaProvider extends ContentProvider {
                 );
                 break;
             }
+            case LOCALITIES: {
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        LocalityEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
             case ACCIDENTS_TYPES: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         AccidentTypeEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+            case ACCIDENTS_SUBTYPES: {
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        AccidentSubtypeEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+            case PARTIES: {
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        PartyEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+            case ELECTIONS_TYPES: {
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        ElectionTypeEntry.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
