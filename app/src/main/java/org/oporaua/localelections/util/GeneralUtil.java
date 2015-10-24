@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
@@ -13,24 +14,39 @@ import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.InputStreamBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.oporaua.localelections.R;
+import org.oporaua.localelections.accidents.AccidentPost;
 import org.oporaua.localelections.violations.model.ViolationChild;
 import org.oporaua.localelections.violations.model.ViolationParent;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 
 public final class GeneralUtil {
 
     @NonNull
     public static List<ParentListItem> getItemList(Context context) {
-        Resources res = context.getResources();
 
+        Resources res = context.getResources();
         TypedArray childViolationsNames = res
                 .obtainTypedArray(R.array.violation_child_names_arrays);
         TypedArray childViolationsSources = res
@@ -63,8 +79,7 @@ public final class GeneralUtil {
     }
 
     public static void hideKeyBoard(Context context, View view) {
-        if (view == null)
-            return;
+        if (view == null) return;
         InputMethodManager imm = (InputMethodManager) context
                 .getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -105,6 +120,44 @@ public final class GeneralUtil {
     }
 
 
+    public static Observable<String> submitAccident(final AccidentPost accidentPost, final Bitmap bitmap) {
+        return Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                DefaultHttpClient httpClient = new DefaultHttpClient();
+                HttpPost httpPost = new HttpPost("https://dts2015.oporaua.org/violations/add.json");
+                MultipartEntityBuilder entity = MultipartEntityBuilder.create();
 
+                entity.addTextBody("date","2015-10-18");
+                entity.addTextBody("accident_subtype_id","1");
+                entity.addTextBody("source","65465");
+                entity.addTextBody("last_ip","176.38.35.4");
+                entity.addTextBody("locality_id","12172");
+                entity.addTextBody("region_id","13");
+                entity.addTextBody("election_id","1");
+                entity.addTextBody("title","TITLE");
+                entity.addTextBody("lat","49.32512199104001");
+                entity.addTextBody("lang","32.607421875");
+
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+                InputStream in = new ByteArrayInputStream(bos.toByteArray());
+                ContentBody photo = new InputStreamBody(in, "compressedFile");
+                entity.addPart("evidence", photo);
+                httpPost.setEntity(entity.build());
+                try {
+                    HttpResponse response = httpClient.execute(httpPost);
+                    HttpEntity httpEntity = response.getEntity();
+                    String output = EntityUtils.toString(httpEntity);
+//                    JSONObject jObj = new JSONObject(output);
+                    subscriber.onNext(output);
+                    subscriber.onCompleted();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    subscriber.onError(e);
+                }
+            }
+        });
+    }
 
 }

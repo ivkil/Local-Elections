@@ -1,18 +1,19 @@
 package org.oporaua.localelections.accidents;
 
 
-import org.oporaua.localelections.data.AccidentSubtype;
-import org.oporaua.localelections.data.AccidentType;
-import org.oporaua.localelections.data.ElectionsType;
-import org.oporaua.localelections.data.Locality;
-import org.oporaua.localelections.data.Party;
-import org.oporaua.localelections.data.Region;
+import org.oporaua.localelections.data.model.AccidentSubtype;
+import org.oporaua.localelections.data.model.AccidentType;
+import org.oporaua.localelections.data.model.ElectionsType;
+import org.oporaua.localelections.data.model.Locality;
+import org.oporaua.localelections.data.model.Party;
+import org.oporaua.localelections.data.model.Region;
 
 import retrofit.Call;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Query;
+import rx.Observable;
 
 public interface AccidentsRestService {
 
@@ -42,5 +43,10 @@ public interface AccidentsRestService {
 
     @POST("/violations/add.json")
     Call<Accident> loadAccident(@Body Accident accident);
+
+    @POST("/violations/add.json")
+    Observable<Accident> loadAccidentRx(@Body AccidentPost accident);
+
+//                                        @Part("evidence") RequestBody typedFile);
 
 }

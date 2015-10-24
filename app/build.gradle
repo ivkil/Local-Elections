@@ -3,6 +3,7 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.neenbedankt.android-apt'
 
 android {
+
     signingConfigs {
         config {
             keyAlias 'local2015'
@@ -13,6 +14,9 @@ android {
     }
     compileSdkVersion 23
     buildToolsVersion '23.0.1'
+
+//    useLibrary 'org.apache.http.legacy'
+
     defaultConfig {
         applicationId "org.oporaua.localelections"
         minSdkVersion 10
@@ -49,13 +53,10 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'com.google.maps.android:android-maps-utils:0.4'
     compile 'com.github.bumptech.glide:glide:3.6.1'
-    compile 'com.android.support:preference-v7:23.1.0'
     compile 'com.squareup.okhttp:logging-interceptor:2.6.0-SNAPSHOT'
     compile 'com.android.support:gridlayout-v7:23.1.0'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.1'
     apt 'com.hannesdorfmann.parcelableplease:processor:1.0.1'
-    compile('com.afollestad.material-dialogs:commons:0.8.4.2@aar') {
-        transitive = true
-    }
     compile 'com.artemzin.rxjava:proguard-rules:1.0.14.2'
+    compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
 }
