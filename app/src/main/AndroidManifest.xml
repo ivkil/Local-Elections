@@ -123,7 +123,8 @@
         </activity>
 
         <activity android:name=".accidents.new_accident.NewAccidentActivity"
-                  android:theme="@style/AppTheme.DarkActionBar"/>
+                  android:theme="@style/AppTheme.DarkActionBar"
+                  android:label="@string/new_accident_title"/>
 
     </application>
 

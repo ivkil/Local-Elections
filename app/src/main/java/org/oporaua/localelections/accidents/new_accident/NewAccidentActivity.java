@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,6 +12,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -270,12 +272,15 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
             }
         });
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                return true;
+            case R.id.action_submit_accident:
+                Toast.makeText(NewAccidentActivity.this, "ADD STH", Toast.LENGTH_SHORT).show();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -284,6 +289,7 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
     @SuppressWarnings("ConstantConditions")
     private void initToolbar() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
     }
 
     @Override
@@ -291,4 +297,9 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
         mDateTextView.setText(GeneralUtil.getFriendlyDayString(date));
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_add_accident, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 }

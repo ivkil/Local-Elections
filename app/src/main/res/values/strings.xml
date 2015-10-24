@@ -46,5 +46,7 @@
     <string name="violation_info_hint">Violation info hint</string>
     <string name="add_accident_title">Повідомити про порушення</string>
     <string name="location_hint">Місце порушення</string>
+    <string name="submit_accident">Відправити інцидент</string>
+    <string name="new_accident_title">Новий інцидент</string>
 
 </resources>
