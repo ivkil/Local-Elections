@@ -1,12 +1,17 @@
 package org.oporaua.localelections.accidents.new_accident;
 
 import android.database.Cursor;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +20,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -37,7 +43,6 @@ import org.oporaua.localelections.FilterSpinnerAdapter;
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.accidents.Accident;
 import org.oporaua.localelections.accidents.AccidentsRestService;
-import org.oporaua.localelections.accidents.Evidence;
 import org.oporaua.localelections.data.OporaContract.AccidentSubtypeEntry;
 import org.oporaua.localelections.data.OporaContract.AccidentTypeEntry;
 import org.oporaua.localelections.data.OporaContract.ElectionTypeEntry;
@@ -48,15 +53,11 @@ import org.oporaua.localelections.util.Constants;
 import org.oporaua.localelections.util.GeneralUtil;
 
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit.Call;
-import retrofit.Callback;
 import retrofit.GsonConverterFactory;
-import retrofit.Response;
 import retrofit.Retrofit;
 
 import static android.view.View.VISIBLE;
@@ -90,6 +91,9 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
 
     @Bind(R.id.et_beneficiary)
     EditText mBeneficiaryEditText;
+
+    @Bind(R.id.et_violation_info)
+    EditText mSourceEditText;
 
     @Bind(R.id.sp_beneficiary_party)
     Spinner mBeneficiarySpinner;
@@ -138,12 +142,15 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
     private long mCurrentAccidentId = -1;
     private long mCurrentRegionId = -1;
 
+    private Accident mAccident;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_accident);
         ButterKnife.bind(this);
         initToolbar();
+        mAccident = new Accident();
 
         mGoogleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 
@@ -151,8 +158,6 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
                 .setDateFormat("yyyy-MM-dd")
                 .create();
         OkHttpClient client = new OkHttpClient();
-        client.setConnectTimeout(5, TimeUnit.MINUTES);
-        client.setReadTimeout(5, TimeUnit.MINUTES);
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         client.interceptors().add(interceptor);
@@ -171,6 +176,15 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
         getSupportLoaderManager().initLoader(LOADER_ELECTIONS_TYPES, null, this);
         initSpinners();
 
+        mBeneficiaryEditText.addTextChangedListener(new GeneralTextWatcher(mBeneficiaryEditText));
+        mDistrictEditText.addTextChangedListener(new GeneralTextWatcher(mDistrictEditText));
+        mOffenderEditText.addTextChangedListener(new GeneralTextWatcher(mOffenderEditText));
+        mTitleEditText.addTextChangedListener(new GeneralTextWatcher(mTitleEditText));
+        mViolationAgainstEditText.addTextChangedListener(new GeneralTextWatcher(mViolationAgainstEditText));
+        mSourceEditText.addTextChangedListener(new GeneralTextWatcher(mSourceEditText));
+
+        mDateTextView.setText(GeneralUtil.getFriendlyDayString(new Date()));
+
         //loadAccident();
 
         if (GeneralUtil.isPlayServicesAvailable(this)) {
@@ -180,7 +194,7 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
                 mGoogleApiClient, BOUNDS_UKRAINE, null);
 
         mAutoCompleteTextView.setOnItemClickListener(mAutocompleteClickListener);
-//        mAutoCompleteTextView.addTextChangedListener(new GeneralTextWatcher(mAutocompleteView));
+        mAutoCompleteTextView.addTextChangedListener(new GeneralTextWatcher(mAutoCompleteTextView));
         mAutoCompleteTextView.setAdapter(mAdapter);
     }
 
@@ -210,6 +224,7 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
                 new int[]{android.R.id.text1},
                 0);
         mViolationTypeSpinner.setAdapter(mSpinnerAccidentTypesAdapter);
+        mViolationTypeSpinner.setOnItemSelectedListener(this);
         mViolationTypeSpinner.setOnItemSelectedListener(this);
         mViolationSubTypeSpinner.setAdapter(mSpinnerAccidentSubtypesAdapter);
         mRegionSpinner.setAdapter(mSpinnerRegionsAdapter);
@@ -259,6 +274,8 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
 //            }
 
             final LatLng placeLocation = place.getLatLng();
+            mAccident.setLatitude(place.getLatLng().latitude);
+            mAccident.setLongitude(place.getLatLng().longitude);
 //            mNewViolation.setLocation(new ParseGeoPoint(placeLocation.latitude, placeLocation.longitude));
 //            mNewViolation.setPlaceName(place.getName().toString());
             showPlaceOnMap(placeLocation);
@@ -312,35 +329,46 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
     }
 
     private void loadAccident() {
-        final Accident accident = new Accident();
-        accident.setTitle("Android Test Final");
-        accident.setAccidentSubtypeId(6);
-        accident.setElectionsId(1);
-        accident.setRegionId(27);
-        accident.setLocalityId(12658);
-        accident.setOffender("offender");
-        accident.setOffenderPartyId(19);
-        accident.setBeneficiary("benef");
-        accident.setBeneficiaryPartyId(19);
-        accident.setVictim("victim");
-        accident.setVictimPartyId(19);
-        accident.setSource("Юрій Іванович");
-        //accident.setPosition(new LatLng(25, 34));
-        accident.setDate(new Date());
-        accident.setLastIp("192.18.0.1");
-        accident.setEvidence(new Evidence("/url"));
-        Call<Accident> call = mAccidentsRestService.loadAccident(accident);
-        call.enqueue(new Callback<Accident>() {
-            @Override
-            public void onResponse(Response<Accident> response, Retrofit retrofit) {
-                Log.d("log", "new id :" + Long.toString(response.body().getId()));
-            }
 
-            @Override
-            public void onFailure(Throwable t) {
-                t.printStackTrace();
-            }
-        });
+        if (TextUtils.isEmpty(mAccident.getTitle())) {
+            return;// "Додайте заголовок інциденту";
+        }
+        if (mAccident.getLatitude() == 0 && mAccident.getLongitude() == 0) {
+            return;// "Виберіть місце інцинедту";
+        }
+        if (TextUtils.isEmpty(mAccident.getSource())) {
+            return;// "Додайте опис інциденту";
+        }
+
+        Cursor cursorAccidentType = (Cursor) mViolationSubTypeSpinner.getSelectedItem();
+        mAccident.setAccidentSubtypeId(cursorAccidentType.getLong(0));
+
+        Cursor cursorRegion = (Cursor) mRegionSpinner.getSelectedItem();
+        long regionId = cursorRegion.getLong(0);
+        if (regionId == -1) {
+            return; // Оберіть регіон
+        }
+        mAccident.setRegionId(regionId);
+
+        Cursor cursorLocality = (Cursor) mCitySpinner.getSelectedItem();
+        mAccident.setLocalityId(cursorLocality.getLong(0));
+
+        Cursor cursorElectionsType = (Cursor) mElectionTypeSpinner.getSelectedItem();
+        mAccident.setElectionsId(cursorElectionsType.getLong(0));
+
+        Cursor cursorOffender = (Cursor) mOffenderPartySpinner.getSelectedItem();
+        mAccident.setOffenderPartyId(cursorOffender.getLong(0));
+
+        Cursor cursorBeneficiary = (Cursor) mBeneficiarySpinner.getSelectedItem();
+        mAccident.setBeneficiaryPartyId(cursorBeneficiary.getLong(0));
+
+        Cursor cursorVictim = (Cursor) mAgainstPartySpinner.getSelectedItem();
+        mAccident.setVictimPartyId(cursorVictim.getLong(0));
+
+        WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+        String ip = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
+        mAccident.setLastIp(ip);
+        Log.d("loading", new Gson().toJson(mAccident));
     }
 
 
@@ -396,6 +424,14 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
     @Override
     public void onDataSet(Date date) {
         mDateTextView.setText(GeneralUtil.getFriendlyDayString(date));
+        mAccident.setDate(date);
+        String error = checkAccident();
+        if (error == null) {
+            loadAccident();
+        } else {
+            Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+            //Snackbar.make(NewAccidentActivity.this, error, Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -450,14 +486,17 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Cursor cursor = (Cursor) parent.getSelectedItem();
+        long currentId = cursor.getLong(0);
         switch (parent.getId()) {
             case R.id.sp_violation_type:
-                mCurrentAccidentId = cursor.getLong(0);
+                mCurrentAccidentId = currentId;
                 getSupportLoaderManager().restartLoader(LOADER_ACCIDENTS_SUBTYPES, null, this);
                 break;
             case R.id.sp_region:
-                mCurrentRegionId = cursor.getLong(0);
+                mCurrentRegionId = currentId;
                 getSupportLoaderManager().restartLoader(LOADER_LOCALITIES, null, this);
+                break;
+
         }
     }
 
@@ -465,4 +504,54 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+    private class GeneralTextWatcher implements TextWatcher {
+
+        private View view;
+
+        private GeneralTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if (view.getId() == R.id.new_violation_place_complete) {
+                if (TextUtils.isEmpty(charSequence)) {
+                    mMapView.setVisibility(View.GONE);
+                    mAccident.setLatitude(0);
+                    mAccident.setLongitude(0);
+                    if (mGoogleMap != null) {
+                        mGoogleMap.clear();
+                    }
+                }
+            }
+        }
+
+        public void afterTextChanged(Editable editable) {
+            String text = editable.toString();
+            switch (view.getId()) {
+                case R.id.et_title:
+                    mAccident.setTitle(text);
+                    break;
+                case R.id.et_district:
+                    mAccident.setPollingStation(text);
+                    break;
+                case R.id.et_offender:
+                    mAccident.setOffender(text);
+                    break;
+                case R.id.et_beneficiary:
+                    mAccident.setOffender(text);
+                    break;
+                case R.id.et_violation_against:
+                    mAccident.setVictim(text);
+                    break;
+                case R.id.et_violation_info:
+                    mAccident.setSource(text);
+                    break;
+            }
+        }
+    }
+
 }
