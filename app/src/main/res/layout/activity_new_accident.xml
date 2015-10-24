@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true">
 
     <LinearLayout
@@ -11,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
-        tools:context="org.oporaua.localelections.ui.activity.NewAccidentActivity">
+        tools:context="org.oporaua.localelections.accidents.new_accident.NewAccidentActivity">
 
         <TextView
             style="@style/Base.TextAppearance.AppCompat.Title"
@@ -107,6 +108,7 @@
 
 
         <LinearLayout
+            android:id="@+id/pick_date_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -123,8 +125,9 @@
                 style="@style/TextAppearance.AppCompat.Body1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
+                android:textSize="16sp"
                 tools:text="26 трав. 2015 р."/>
         </LinearLayout>
 
@@ -149,6 +152,29 @@
                 android:hint="@string/location_hint"/>
 
         </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/new_violation_map_view"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:clickable="false"
+            android:visibility="gone">
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                app:cameraZoom="12"
+                app:mapType="normal"
+                app:uiCompass="false"
+                app:uiRotateGestures="false"
+                app:uiScrollGestures="false"
+                app:uiTiltGestures="false"
+                app:uiZoomControls="false"
+                app:uiZoomGestures="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:ignore="MissingPrefix"/>
+        </FrameLayout>
 
     </LinearLayout>
 

@@ -1,7 +1,8 @@
-package org.oporaua.localelections.ui.activity;
+package org.oporaua.localelections.accidents.new_accident;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -10,9 +11,23 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
@@ -30,19 +45,27 @@ import org.oporaua.localelections.data.OporaContract.LocalityEntry;
 import org.oporaua.localelections.data.OporaContract.PartyEntry;
 import org.oporaua.localelections.data.OporaContract.RegionEntry;
 import org.oporaua.localelections.util.Constants;
+import org.oporaua.localelections.util.GeneralUtil;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class NewAccidentActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemSelectedListener {
+import static android.view.View.VISIBLE;
+
+public class NewAccidentActivity extends AppCompatActivity implements DatePickerFragment.DataSetListener, LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemSelectedListener {
+
+    private static final LatLngBounds BOUNDS_UKRAINE = new LatLngBounds(
+            new LatLng(45.7597, 21.2300), new LatLng(52.7000, 39.1500));
+    private static final String TAG = "NEW_ACCIDENT_TAG";
 
     private AccidentsRestService mAccidentsRestService;
 
@@ -66,10 +89,10 @@ public class NewAccidentActivity extends AppCompatActivity implements LoaderMana
     EditText mViolationAgainstEditText;
 
     @Bind(R.id.et_beneficiary)
-    EditText mBeneficiarEditText;
+    EditText mBeneficiaryEditText;
 
     @Bind(R.id.sp_beneficiary_party)
-    Spinner mBeneficiarSpinner;
+    Spinner mBeneficiarySpinner;
 
     @Bind(R.id.sp_elections_type)
     Spinner mElectionTypeSpinner;
@@ -87,16 +110,30 @@ public class NewAccidentActivity extends AppCompatActivity implements LoaderMana
     Spinner mViolationSubTypeSpinner;
 
     @Bind(R.id.sp_offender_party)
-    Spinner mOffenderPertySpinner;
+    Spinner mOffenderPartySpinner;
 
     @Bind(R.id.sp_violation_against_party)
-    Spinner mAgainstPertySpinner;
+    Spinner mAgainstPartySpinner;
+
+    @Bind(R.id.new_violation_date_text_view)
+    TextView mDateTextView;
+
+    @Bind(R.id.new_violation_place_complete)
+    AutoCompleteTextView mAutoCompleteTextView;
+
+    @Bind(R.id.new_violation_map_view)
+    View mMapView;
+
     private FilterSpinnerAdapter mSpinnerAccidentTypesAdapter;
     private FilterSpinnerAdapter mSpinnerAccidentSubtypesAdapter;
     private FilterSpinnerAdapter mSpinnerRegionsAdapter;
     private FilterSpinnerAdapter mSpinnerLocalitiesAdapter;
     private FilterSpinnerAdapter mSpinnerPartiesAdapter;
     private FilterSpinnerAdapter mSpinnerElectionsTypesAdapter;
+
+    private GoogleApiClient mGoogleApiClient;
+    private PlaceAutocompleteAdapter mAdapter;
+    private GoogleMap mGoogleMap;
 
     private long mCurrentAccidentId = -1;
     private long mCurrentRegionId = -1;
@@ -107,6 +144,9 @@ public class NewAccidentActivity extends AppCompatActivity implements LoaderMana
         setContentView(R.layout.activity_new_accident);
         ButterKnife.bind(this);
         initToolbar();
+
+        mGoogleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd")
                 .create();
@@ -132,6 +172,16 @@ public class NewAccidentActivity extends AppCompatActivity implements LoaderMana
         initSpinners();
 
         //loadAccident();
+
+        if (GeneralUtil.isPlayServicesAvailable(this)) {
+            buildGoogleApiClient();
+        }
+        mAdapter = new PlaceAutocompleteAdapter(this, android.R.layout.simple_list_item_1,
+                mGoogleApiClient, BOUNDS_UKRAINE, null);
+
+        mAutoCompleteTextView.setOnItemClickListener(mAutocompleteClickListener);
+//        mAutoCompleteTextView.addTextChangedListener(new GeneralTextWatcher(mAutocompleteView));
+        mAutoCompleteTextView.setAdapter(mAdapter);
     }
 
     private void initSpinners() {
@@ -165,10 +215,100 @@ public class NewAccidentActivity extends AppCompatActivity implements LoaderMana
         mRegionSpinner.setAdapter(mSpinnerRegionsAdapter);
         mRegionSpinner.setOnItemSelectedListener(this);
         mCitySpinner.setAdapter(mSpinnerLocalitiesAdapter);
-        mOffenderPertySpinner.setAdapter(mSpinnerPartiesAdapter);
-        mBeneficiarSpinner.setAdapter(mSpinnerPartiesAdapter);
-        mAgainstPertySpinner.setAdapter(mSpinnerPartiesAdapter);
+        mOffenderPartySpinner.setAdapter(mSpinnerPartiesAdapter);
+        mBeneficiarySpinner.setAdapter(mSpinnerPartiesAdapter);
+        mAgainstPartySpinner.setAdapter(mSpinnerPartiesAdapter);
         mElectionTypeSpinner.setAdapter(mSpinnerElectionsTypesAdapter);
+    }
+
+    private AdapterView.OnItemClickListener mAutocompleteClickListener
+            = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            final PlaceAutocompleteAdapter.PlaceAutocomplete item = mAdapter.getItem(position);
+            final String placeId = String.valueOf(item.placeId);
+            Log.i(TAG, "Autocomplete item selected: " + item.description);
+
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                    .getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+
+            Log.i(TAG, "Called getPlaceById to get Place details for " + item.placeId);
+        }
+    };
+
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
+            = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(PlaceBuffer places) {
+            if (!places.getStatus().isSuccess()) {
+                Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
+                places.release();
+                return;
+            }
+
+            final Place place = places.get(0);
+
+            final CharSequence placeAddress = place.getAddress();
+//            if (placeAddress == null) {
+//                mPlaceDetails.setVisibility(View.GONE);
+//            } else {
+//                mPlaceDetails.setVisibility(VISIBLE);
+//                mPlaceDetails.setText(placeAddress);
+//            }
+
+            final LatLng placeLocation = place.getLatLng();
+//            mNewViolation.setLocation(new ParseGeoPoint(placeLocation.latitude, placeLocation.longitude));
+//            mNewViolation.setPlaceName(place.getName().toString());
+            showPlaceOnMap(placeLocation);
+            Log.i(TAG, "Place details received: " + place.getName());
+            places.release();
+        }
+    };
+
+    private void showPlaceOnMap(LatLng placeLocation) {
+        if (placeLocation == null) {
+            mMapView.setVisibility(View.GONE);
+        } else {
+            mMapView.setVisibility(VISIBLE);
+            if (mGoogleMap != null) {
+                mGoogleMap.addMarker(new MarkerOptions().position(placeLocation));
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(placeLocation));
+            }
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
+        }
+        super.onStop();
+    }
+
+    private synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .build();
+    }
+
+    @OnClick(R.id.pick_date_view)
+    void pickDate() {
+        showDatePickerDialog();
+    }
+
+    private void showDatePickerDialog() {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
     private void loadAccident() {
@@ -251,6 +391,11 @@ public class NewAccidentActivity extends AppCompatActivity implements LoaderMana
                 return new CursorLoader(this, ElectionTypeEntry.CONTENT_URI, null, null, null, null);
         }
         return null;
+    }
+
+    @Override
+    public void onDataSet(Date date) {
+        mDateTextView.setText(GeneralUtil.getFriendlyDayString(date));
     }
 
     @Override
