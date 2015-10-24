@@ -26,7 +26,7 @@ import org.oporaua.localelections.R;
 import org.oporaua.localelections.data.OporaContract.AccidentEntry;
 import org.oporaua.localelections.data.OporaContract.RegionEntry;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
-import org.oporaua.localelections.ui.activity.NewAccidentActivity;
+import org.oporaua.localelections.accidents.new_accident.NewAccidentActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;

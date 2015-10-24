@@ -17,8 +17,11 @@ import org.oporaua.localelections.R;
 import org.oporaua.localelections.violations.model.ViolationChild;
 import org.oporaua.localelections.violations.model.ViolationParent;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import rx.Subscription;
 
@@ -94,6 +97,11 @@ public final class GeneralUtil {
             return false;
         }
         return true;
+    }
+
+    public static String getFriendlyDayString(Date date) {
+        SimpleDateFormat friendlyDateFormat = new SimpleDateFormat("dd MMM yyyy 'р.'", new Locale("uk"));
+        return friendlyDateFormat.format(date);
     }
 
 }

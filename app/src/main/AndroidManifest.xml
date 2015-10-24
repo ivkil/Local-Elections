@@ -122,7 +122,7 @@
                 android:value=".ui.activity.MainActivity" />
         </activity>
 
-        <activity android:name=".ui.activity.NewAccidentActivity"
+        <activity android:name=".accidents.new_accident.NewAccidentActivity"
                   android:theme="@style/AppTheme.DarkActionBar"/>
 
     </application>

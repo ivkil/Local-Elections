@@ -49,7 +49,7 @@ import org.oporaua.localelections.data.AccidentType;
 import org.oporaua.localelections.data.OporaContract;
 import org.oporaua.localelections.data.OporaContract.AccidentTypeEntry;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
-import org.oporaua.localelections.ui.activity.NewAccidentActivity;
+import org.oporaua.localelections.accidents.new_accident.NewAccidentActivity;
 import org.oporaua.localelections.util.GeneralUtil;
 
 import java.util.List;
