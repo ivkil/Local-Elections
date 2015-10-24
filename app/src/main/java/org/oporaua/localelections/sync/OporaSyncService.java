@@ -3,7 +3,6 @@ package org.oporaua.localelections.sync;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
 
 public class OporaSyncService extends Service {
 
@@ -12,7 +11,6 @@ public class OporaSyncService extends Service {
 
     @Override
     public void onCreate() {
-        Log.d("OporaSyncService", "onCreate - OporaSyncService");
         synchronized (sSyncAdapterLock) {
             if (sOporaSyncAdapter == null) {
                 sOporaSyncAdapter = new OporaSyncAdapter(getApplicationContext(), true);

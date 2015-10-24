@@ -16,6 +16,8 @@ import java.util.List;
 
 public class AccidentsLoader extends AsyncTaskLoader<List<AccidentMap>> {
 
+    private static final long ALL_ACCIDENT_TYPES_ID = -1;
+
     private List<AccidentMap> mAccidents;
     private AccidentsContentObserver mContentObserver;
 
@@ -45,7 +47,7 @@ public class AccidentsLoader extends AsyncTaskLoader<List<AccidentMap>> {
         Uri uri = AccidentEntry.buildAccidentWithTypeUri();
         String selection = null;
         String[] selectionArgs = null;
-        if (mAccidentTypeId != -1) {
+        if (mAccidentTypeId != ALL_ACCIDENT_TYPES_ID) {
             selection = AccidentSubtypeEntry.COLUMN_ACCIDENT_TYPE_ID + " = ?";
             selectionArgs = new String[]{Long.toString(mAccidentTypeId)};
         }

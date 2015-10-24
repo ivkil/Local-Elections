@@ -1,15 +1,15 @@
-package org.oporaua.localelections;
+package org.oporaua.localelections.ui.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
+import org.oporaua.localelections.R;
 import org.oporaua.localelections.accidents.Accident;
 import org.oporaua.localelections.accidents.AccidentsRestService;
 import org.oporaua.localelections.accidents.Evidence;
@@ -43,7 +43,7 @@ public class NewAccidentActivity extends AppCompatActivity {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         client.interceptors().add(interceptor);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.TEST_URL)
+                .baseUrl(Constants.ACCIDENTS_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(client)
                 .build();
@@ -61,12 +61,12 @@ public class NewAccidentActivity extends AppCompatActivity {
         accident.setLocalityId(12658);
         accident.setOffender("offender");
         accident.setOffenderPartyId(19);
-        accident.setBeneficciary("benef");
+        accident.setBeneficiary("benef");
         accident.setBeneficiaryPartyId(19);
         accident.setVictim("victim");
         accident.setVictimPartyId(19);
         accident.setSource("Юрій Іванович");
-        accident.setPosition(new LatLng(25, 34));
+        //accident.setPosition(new LatLng(25, 34));
         accident.setDate(new Date());
         accident.setLastIp("192.18.0.1");
         accident.setEvidence(new Evidence("/url"));

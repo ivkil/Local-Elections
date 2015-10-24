@@ -21,6 +21,7 @@ import com.squareup.okhttp.OkHttpClient;
 
 import org.oporaua.localelections.R;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
+import org.oporaua.localelections.util.Constants;
 import org.oporaua.localelections.util.DividerItemDecoration;
 import org.oporaua.localelections.util.GeneralUtil;
 
@@ -40,7 +41,6 @@ import rx.schedulers.Schedulers;
 public class TvkMembersFragment extends Fragment implements SearchView.OnQueryTextListener,
         SearchView.OnCloseListener {
 
-    private static final String TVK_OPORA_BASE_URL = "http://tvk.oporaua.org/";
     private static final String MEMBERS_TAG = "members_tag";
 
     @Bind(R.id.rv_tvk_members)
@@ -78,7 +78,7 @@ public class TvkMembersFragment extends Fragment implements SearchView.OnQueryTe
         }
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(TVK_OPORA_BASE_URL)
+                .baseUrl(Constants.TVK_BASE_URL)
                 .client(new OkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -179,8 +179,8 @@ public class TvkMembersFragment extends Fragment implements SearchView.OnQueryTe
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(MEMBERS_TAG, new ArrayList<>(mTvkMemberAdapter.getData()));
+        super.onSaveInstanceState(outState);
     }
 
 }

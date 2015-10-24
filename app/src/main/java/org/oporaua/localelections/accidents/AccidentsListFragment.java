@@ -10,7 +10,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,15 +32,17 @@ import butterknife.OnClick;
 public class AccidentsListFragment extends ListFragment implements LoaderCallbacks<Cursor>,
         OnItemSelectedListener, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
-    private static final int ACCIDENTS_LOADER_ID = 0;
-    private static final int REGIONS_LOADER_ID = 1;
+    private static final int ACCIDENTS_LOADER_ID = 21;
+    private static final int REGIONS_LOADER_ID = 22;
+
+    private static final String QUERY_TAG = "query";
+    private static final long ALL_REGIONS_ID = -1;
 
     private AccidentsAdapter mAccidentsAdapter;
     private FilterSpinnerAdapter mSpinnerAdapter;
 
-    private Spinner mSpinner;
-
     private long mRegionId;
+    private String mQuery = "";
 
     private static final String[] ACCIDENTS_COLUMNS = {
             AccidentEntry._ID,
@@ -67,6 +68,9 @@ public class AccidentsListFragment extends ListFragment implements LoaderCallbac
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        if (savedInstanceState != null && savedInstanceState.containsKey(QUERY_TAG)) {
+            mQuery = savedInstanceState.getString(QUERY_TAG);
+        }
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -81,7 +85,7 @@ public class AccidentsListFragment extends ListFragment implements LoaderCallbac
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
-        mSpinner = ButterKnife.findById(toolbar, R.id.spinner_filter);
+        Spinner mSpinner = ButterKnife.findById(toolbar, R.id.spinner_filter);
 
         mAccidentsAdapter = new AccidentsAdapter(getActivity());
         mSpinnerAdapter = new FilterSpinnerAdapter(getActivity(), R.layout.spinner_dropdown_item, null,
@@ -109,18 +113,16 @@ public class AccidentsListFragment extends ListFragment implements LoaderCallbac
         switch (id) {
             case ACCIDENTS_LOADER_ID:
                 sortOrder = "date (" + AccidentEntry.COLUMN_DATE_TEXT + ") DESC";
-                String selection = null;
-                String[] selectionArgs = null;
-                if (mRegionId != -1) {
-                    selection = AccidentEntry.COLUMN_REGION_ID + " = ?";
-                    selectionArgs = new String[]{Long.toString(mRegionId)};
+                String selection = AccidentEntry.COLUMN_SOURCE + " LIKE '%" + mQuery + "%'";
+                if (mRegionId != ALL_REGIONS_ID) {
+                    selection += " AND " + AccidentEntry.COLUMN_REGION_ID + " = '" + Long.toString(mRegionId) + "'";
                 }
                 return new CursorLoader(
                         getActivity(),
                         AccidentEntry.CONTENT_URI,
                         ACCIDENTS_COLUMNS,
                         selection,
-                        selectionArgs,
+                        null,
                         sortOrder
                 );
             case REGIONS_LOADER_ID:
@@ -162,7 +164,6 @@ public class AccidentsListFragment extends ListFragment implements LoaderCallbac
         Cursor cursor = (Cursor) parent.getSelectedItem();
         mRegionId = cursor.getLong(0);
         getLoaderManager().restartLoader(ACCIDENTS_LOADER_ID, null, this);
-        Log.d("log", Long.toString(cursor.getLong(0)));
     }
 
     @Override
@@ -179,6 +180,8 @@ public class AccidentsListFragment extends ListFragment implements LoaderCallbac
         inflater.inflate(R.menu.menu_settings, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        mSearchView.setQuery(mQuery, false);
+        mSearchView.clearFocus();
     }
 
     @Override
@@ -195,7 +198,9 @@ public class AccidentsListFragment extends ListFragment implements LoaderCallbac
 
     @Override
     public boolean onQueryTextChange(String query) {
-        return true;
+        mQuery = query;
+        getLoaderManager().restartLoader(ACCIDENTS_LOADER_ID, null, this);
+        return false;
     }
 
     @Override
@@ -203,4 +208,9 @@ public class AccidentsListFragment extends ListFragment implements LoaderCallbac
         return false;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(QUERY_TAG, mQuery);
+        super.onSaveInstanceState(outState);
+    }
 }

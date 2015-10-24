@@ -24,20 +24,19 @@
     <string name="contacts_mail">info@opora.org.ua</string>
     <string name="contacts_phone">044 286 26 70</string>
     <string name="contacts_address">м. Київ, вул. Професора Підвисоцького, 10/10, офіс 3</string>
-    <string name="nav_sub_header">Інше</string>
+    <string name="other">Інше</string>
 
     <string name="sync_account_type">dts2015.oporaua.org</string>
-    <string name="no_accidents_found">Немає порушень</string>
-    <string name="drawer_accidents_list">Список інцидентів</string>
+    <string name="no_accidents_found">Немає інцидентів</string>
+    <string name="drawer_accidents_list">Список</string>
 
     <string name="accident_id_tag">accident id</string>
-    <string name="drawer_accidents_map">Карта інцидентів</string>
+    <string name="drawer_accidents_map">Карта</string>
     <string name="title_activity_accident_details">Інцидент</string>
 
-    <string name="is_elections_types">is_elections_types</string>
-    <string name="title_activity_settings">Налаштування</string>
     <string name="members_empty">Нічого не знайдено</string>
     <string name="settings_title">Налаштування</string>
-    <string name="settings">Налаштування</string>
+    <string name="new_accident">Новий інцидент</string>
+    <string name="accidents">Інциденти</string>
 
 </resources>
