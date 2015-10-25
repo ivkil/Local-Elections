@@ -25,10 +25,6 @@ import org.oporaua.localelections.R;
 import org.oporaua.localelections.accidents.Accident;
 import org.oporaua.localelections.accidents.AccidentDetailsActivity;
 import org.oporaua.localelections.accidents.AccidentsRestService;
-import org.oporaua.localelections.data.model.AccidentSubtype;
-import org.oporaua.localelections.data.model.AccidentType;
-import org.oporaua.localelections.data.model.ElectionsType;
-import org.oporaua.localelections.data.model.Locality;
 import org.oporaua.localelections.data.OporaContract;
 import org.oporaua.localelections.data.OporaContract.AccidentEntry;
 import org.oporaua.localelections.data.OporaContract.AccidentSubtypeEntry;
@@ -37,6 +33,10 @@ import org.oporaua.localelections.data.OporaContract.ElectionTypeEntry;
 import org.oporaua.localelections.data.OporaContract.LocalityEntry;
 import org.oporaua.localelections.data.OporaContract.PartyEntry;
 import org.oporaua.localelections.data.OporaContract.RegionEntry;
+import org.oporaua.localelections.data.model.AccidentSubtype;
+import org.oporaua.localelections.data.model.AccidentType;
+import org.oporaua.localelections.data.model.ElectionsType;
+import org.oporaua.localelections.data.model.Locality;
 import org.oporaua.localelections.data.model.Party;
 import org.oporaua.localelections.data.model.Region;
 import org.oporaua.localelections.util.Constants;
@@ -121,20 +121,23 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
         Call<Accident> call = mAccidentsRestService.getAccident(id);
         try {
             Response<Accident> response = call.execute();
+
             Accident accident = response.body();
-            ContentValues accidentValues = getAccidentValues(accident);
-            int count = getContext().getContentResolver().update(
-                    AccidentEntry.CONTENT_URI,
-                    accidentValues,
-                    AccidentEntry._ID + " = ? ",
-                    new String[]{String.valueOf(id)});
-            if (count == 0) {
-                getContext().getContentResolver().insert(AccidentEntry.CONTENT_URI, accidentValues);
-            }
-            String region = String.valueOf(accident.getRegionId());
-            Set<String> regions = PrefUtil.getRegionSubscribeIds();
-            if (regions != null && regions.contains(region)) {
-                notifyAccident(id, accident.getTitle());
+            if (accident != null) {
+                ContentValues accidentValues = getAccidentValues(accident);
+                int count = getContext().getContentResolver().update(
+                        AccidentEntry.CONTENT_URI,
+                        accidentValues,
+                        AccidentEntry._ID + " = ? ",
+                        new String[]{String.valueOf(id)});
+                if (count == 0) {
+                    getContext().getContentResolver().insert(AccidentEntry.CONTENT_URI, accidentValues);
+                }
+                String region = String.valueOf(accident.getRegionId());
+                Set<String> regions = PrefUtil.getRegionSubscribeIds();
+                if (regions != null && regions.contains(region)) {
+                    notifyAccident(id, accident.getTitle());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -147,24 +150,26 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
             @Override
             public void onResponse(Response<ElectionsType[]> response, Retrofit retrofit) {
                 ElectionsType[] electionsTypes = response.body();
-                Vector<ContentValues> cVVector = new Vector<>(electionsTypes.length);
-                for (ElectionsType electionsType : electionsTypes) {
-                    ContentValues valuesRegions = new ContentValues();
-                    valuesRegions.put(ElectionTypeEntry._ID, electionsType.getId());
-                    valuesRegions.put(ElectionTypeEntry.COLUMN_TITLE, electionsType.getTitle());
-                    cVVector.add(valuesRegions);
-                }
-                if (cVVector.size() > 0) {
-                    ContentValues[] cVArray = new ContentValues[cVVector.size()];
-                    cVVector.toArray(cVArray);
-                    int count = getContext().getContentResolver().bulkInsert(
-                            ElectionTypeEntry.CONTENT_URI,
-                            cVArray
-                    );
-                    if (count > 0) {
-                        PrefUtil.setElectionsTypes(true);
+                if (electionsTypes != null) {
+                    Vector<ContentValues> cVVector = new Vector<>(electionsTypes.length);
+                    for (ElectionsType electionsType : electionsTypes) {
+                        ContentValues valuesRegions = new ContentValues();
+                        valuesRegions.put(ElectionTypeEntry._ID, electionsType.getId());
+                        valuesRegions.put(ElectionTypeEntry.COLUMN_TITLE, electionsType.getTitle());
+                        cVVector.add(valuesRegions);
                     }
-                    Log.d(LOG_TAG, count + " elections types inserted");
+                    if (cVVector.size() > 0) {
+                        ContentValues[] cVArray = new ContentValues[cVVector.size()];
+                        cVVector.toArray(cVArray);
+                        int count = getContext().getContentResolver().bulkInsert(
+                                ElectionTypeEntry.CONTENT_URI,
+                                cVArray
+                        );
+                        if (count > 0) {
+                            PrefUtil.setElectionsTypes(true);
+                        }
+                        Log.d(LOG_TAG, count + " elections types inserted");
+                    }
                 }
             }
 
@@ -181,24 +186,26 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
             @Override
             public void onResponse(Response<Party[]> response, Retrofit retrofit) {
                 Party[] parties = response.body();
-                Vector<ContentValues> cVVector = new Vector<>(parties.length);
-                for (Party party : parties) {
-                    ContentValues valuesRegions = new ContentValues();
-                    valuesRegions.put(PartyEntry._ID, party.getId());
-                    valuesRegions.put(PartyEntry.COLUMN_TITLE, party.getTitle());
-                    cVVector.add(valuesRegions);
-                }
-                if (cVVector.size() > 0) {
-                    ContentValues[] cVArray = new ContentValues[cVVector.size()];
-                    cVVector.toArray(cVArray);
-                    int count = getContext().getContentResolver().bulkInsert(
-                            PartyEntry.CONTENT_URI,
-                            cVArray
-                    );
-                    if (count > 0) {
-                        PrefUtil.setParties(true);
+                if (parties != null) {
+                    Vector<ContentValues> cVVector = new Vector<>(parties.length);
+                    for (Party party : parties) {
+                        ContentValues valuesRegions = new ContentValues();
+                        valuesRegions.put(PartyEntry._ID, party.getId());
+                        valuesRegions.put(PartyEntry.COLUMN_TITLE, party.getTitle());
+                        cVVector.add(valuesRegions);
                     }
-                    Log.d(LOG_TAG, count + " parties inserted");
+                    if (cVVector.size() > 0) {
+                        ContentValues[] cVArray = new ContentValues[cVVector.size()];
+                        cVVector.toArray(cVArray);
+                        int count = getContext().getContentResolver().bulkInsert(
+                                PartyEntry.CONTENT_URI,
+                                cVArray
+                        );
+                        if (count > 0) {
+                            PrefUtil.setParties(true);
+                        }
+                        Log.d(LOG_TAG, count + " parties inserted");
+                    }
                 }
             }
 
@@ -215,26 +222,28 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
             @Override
             public void onResponse(Response<Locality[]> response, Retrofit retrofit) {
                 Locality[] localities = response.body();
-                Vector<ContentValues> cVVector = new Vector<>(localities.length);
-                for (Locality locality : localities) {
-                    ContentValues valuesLocalities = new ContentValues();
-                    valuesLocalities.put(LocalityEntry._ID, locality.getId());
-                    valuesLocalities.put(LocalityEntry.COLUMN_TITLE, locality.getTitle());
-                    valuesLocalities.put(LocalityEntry.COLUMN_REGION_ID, locality.getRegionId());
-                    valuesLocalities.put(LocalityEntry.COLUMN_DISTRICT, locality.getDistrict());
-                    cVVector.add(valuesLocalities);
-                }
-                if (cVVector.size() > 0) {
-                    ContentValues[] cVArray = new ContentValues[cVVector.size()];
-                    cVVector.toArray(cVArray);
-                    int count = getContext().getContentResolver().bulkInsert(
-                            LocalityEntry.CONTENT_URI,
-                            cVArray
-                    );
-                    if (count > 0) {
-                        PrefUtil.setLocalities(true);
+                if (localities != null) {
+                    Vector<ContentValues> cVVector = new Vector<>(localities.length);
+                    for (Locality locality : localities) {
+                        ContentValues valuesLocalities = new ContentValues();
+                        valuesLocalities.put(LocalityEntry._ID, locality.getId());
+                        valuesLocalities.put(LocalityEntry.COLUMN_TITLE, locality.getTitle());
+                        valuesLocalities.put(LocalityEntry.COLUMN_REGION_ID, locality.getRegionId());
+                        valuesLocalities.put(LocalityEntry.COLUMN_DISTRICT, locality.getDistrict());
+                        cVVector.add(valuesLocalities);
                     }
-                    Log.d(LOG_TAG, count + " localities inserted");
+                    if (cVVector.size() > 0) {
+                        ContentValues[] cVArray = new ContentValues[cVVector.size()];
+                        cVVector.toArray(cVArray);
+                        int count = getContext().getContentResolver().bulkInsert(
+                                LocalityEntry.CONTENT_URI,
+                                cVArray
+                        );
+                        if (count > 0) {
+                            PrefUtil.setLocalities(true);
+                        }
+                        Log.d(LOG_TAG, count + " localities inserted");
+                    }
                 }
             }
 
@@ -251,27 +260,30 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
             @Override
             public void onResponse(Response<Region[]> response, Retrofit retrofit) {
                 Region[] regions = response.body();
-                Vector<ContentValues> cVVector = new Vector<>(regions.length);
-                ContentValues values = new ContentValues();
-                values.put(RegionEntry._ID, -1);
-                values.put(RegionEntry.COLUMN_TITLE, " Усі регіони");
-                cVVector.add(values);
-                for (Region region : regions) {
-                    ContentValues valuesRegions = new ContentValues();
-                    valuesRegions.put(RegionEntry._ID, region.getId());
-                    valuesRegions.put(RegionEntry.COLUMN_TITLE, region.getTitle());
-                    cVVector.add(valuesRegions);
-                }
-                if (cVVector.size() > 0) {
-                    ContentValues[] cVArray = new ContentValues[cVVector.size()];
-                    cVVector.toArray(cVArray);
-                    int count = getContext().getContentResolver().bulkInsert(
-                            RegionEntry.CONTENT_URI,
-                            cVArray
-                    );
-                    Log.d(LOG_TAG, count + " regions inserted");
-                    if (count > 0) {
-                        PrefUtil.setRegions(true);
+                if (regions != null) {
+
+                    Vector<ContentValues> cVVector = new Vector<>(regions.length);
+                    ContentValues values = new ContentValues();
+                    values.put(RegionEntry._ID, -1);
+                    values.put(RegionEntry.COLUMN_TITLE, " Усі регіони");
+                    cVVector.add(values);
+                    for (Region region : regions) {
+                        ContentValues valuesRegions = new ContentValues();
+                        valuesRegions.put(RegionEntry._ID, region.getId());
+                        valuesRegions.put(RegionEntry.COLUMN_TITLE, region.getTitle());
+                        cVVector.add(valuesRegions);
+                    }
+                    if (cVVector.size() > 0) {
+                        ContentValues[] cVArray = new ContentValues[cVVector.size()];
+                        cVVector.toArray(cVArray);
+                        int count = getContext().getContentResolver().bulkInsert(
+                                RegionEntry.CONTENT_URI,
+                                cVArray
+                        );
+                        Log.d(LOG_TAG, count + " regions inserted");
+                        if (count > 0) {
+                            PrefUtil.setRegions(true);
+                        }
                     }
                 }
 
@@ -290,26 +302,29 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
             @Override
             public void onResponse(Response<AccidentSubtype[]> response, Retrofit retrofit) {
                 AccidentSubtype[] accidentSubtypes = response.body();
-                Vector<ContentValues> cVVector = new Vector<>(accidentSubtypes.length);
-                for (AccidentSubtype accidentSubtype : accidentSubtypes) {
-                    ContentValues valuesAccidentsSubtypes = new ContentValues();
-                    valuesAccidentsSubtypes.put(AccidentSubtypeEntry._ID, accidentSubtype.getId());
-                    valuesAccidentsSubtypes.put(AccidentSubtypeEntry.COLUMN_TITLE, accidentSubtype.getTitle());
-                    valuesAccidentsSubtypes.put(AccidentSubtypeEntry.COLUMN_ACCIDENT_TYPE_ID, accidentSubtype.getAccidentTypeId());
-                    cVVector.add(valuesAccidentsSubtypes);
-                }
-                if (cVVector.size() > 0) {
-                    ContentValues[] cVArray = new ContentValues[cVVector.size()];
-                    cVVector.toArray(cVArray);
-                    int count = getContext().getContentResolver().bulkInsert(
-                            AccidentSubtypeEntry.CONTENT_URI,
-                            cVArray
-                    );
-                    Log.d(LOG_TAG, count + " accidents subtypes inserted");
-                    if (count > 0) {
-                        PrefUtil.setAccidentsSubtypes(true);
+                if (accidentSubtypes != null) {
+                    Vector<ContentValues> cVVector = new Vector<>(accidentSubtypes.length);
+                    for (AccidentSubtype accidentSubtype : accidentSubtypes) {
+                        ContentValues valuesAccidentsSubtypes = new ContentValues();
+                        valuesAccidentsSubtypes.put(AccidentSubtypeEntry._ID, accidentSubtype.getId());
+                        valuesAccidentsSubtypes.put(AccidentSubtypeEntry.COLUMN_TITLE, accidentSubtype.getTitle());
+                        valuesAccidentsSubtypes.put(AccidentSubtypeEntry.COLUMN_ACCIDENT_TYPE_ID, accidentSubtype.getAccidentTypeId());
+                        cVVector.add(valuesAccidentsSubtypes);
+                    }
+                    if (cVVector.size() > 0) {
+                        ContentValues[] cVArray = new ContentValues[cVVector.size()];
+                        cVVector.toArray(cVArray);
+                        int count = getContext().getContentResolver().bulkInsert(
+                                AccidentSubtypeEntry.CONTENT_URI,
+                                cVArray
+                        );
+                        Log.d(LOG_TAG, count + " accidents subtypes inserted");
+                        if (count > 0) {
+                            PrefUtil.setAccidentsSubtypes(true);
+                        }
                     }
                 }
+
             }
 
             @Override
@@ -325,29 +340,32 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
             @Override
             public void onResponse(Response<AccidentType[]> response, Retrofit retrofit) {
                 AccidentType[] accidentTypes = response.body();
-                Vector<ContentValues> cVVector = new Vector<>(accidentTypes.length);
-                ContentValues values = new ContentValues();
-                values.put(AccidentTypeEntry._ID, -1);
-                values.put(AccidentTypeEntry.COLUMN_TITLE, " Усі порушення");
-                cVVector.add(values);
-                for (AccidentType accidentType : accidentTypes) {
-                    ContentValues valuesAccidentsTypes = new ContentValues();
-                    valuesAccidentsTypes.put(AccidentTypeEntry._ID, accidentType.getId());
-                    valuesAccidentsTypes.put(AccidentTypeEntry.COLUMN_TITLE, accidentType.getTitle());
-                    cVVector.add(valuesAccidentsTypes);
-                }
-                if (cVVector.size() > 0) {
-                    ContentValues[] cVArray = new ContentValues[cVVector.size()];
-                    cVVector.toArray(cVArray);
-                    int count = getContext().getContentResolver().bulkInsert(
-                            AccidentTypeEntry.CONTENT_URI,
-                            cVArray
-                    );
-                    Log.d(LOG_TAG, count + " accidents types inserted");
-                    if (count > 0) {
-                        PrefUtil.setAccidentsTypes(true);
+                if (accidentTypes != null) {
+                    Vector<ContentValues> cVVector = new Vector<>(accidentTypes.length);
+                    ContentValues values = new ContentValues();
+                    values.put(AccidentTypeEntry._ID, -1);
+                    values.put(AccidentTypeEntry.COLUMN_TITLE, " Усі порушення");
+                    cVVector.add(values);
+                    for (AccidentType accidentType : accidentTypes) {
+                        ContentValues valuesAccidentsTypes = new ContentValues();
+                        valuesAccidentsTypes.put(AccidentTypeEntry._ID, accidentType.getId());
+                        valuesAccidentsTypes.put(AccidentTypeEntry.COLUMN_TITLE, accidentType.getTitle());
+                        cVVector.add(valuesAccidentsTypes);
+                    }
+                    if (cVVector.size() > 0) {
+                        ContentValues[] cVArray = new ContentValues[cVVector.size()];
+                        cVVector.toArray(cVArray);
+                        int count = getContext().getContentResolver().bulkInsert(
+                                AccidentTypeEntry.CONTENT_URI,
+                                cVArray
+                        );
+                        Log.d(LOG_TAG, count + " accidents types inserted");
+                        if (count > 0) {
+                            PrefUtil.setAccidentsTypes(true);
+                        }
                     }
                 }
+
             }
 
             @Override
@@ -377,21 +395,25 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
         try {
             Response<Accident[]> response = call.execute();
             Accident[] accidents = response.body();
-            Vector<ContentValues> cVVector = new Vector<>(accidents.length);
-            for (Accident accident : accidents) {
-                if (accident.getId() != 933) { // REMOVE THIS
-                    cVVector.add(getAccidentValues(accident));
+            if (accidents != null) {
+
+                Vector<ContentValues> cVVector = new Vector<>(accidents.length);
+                for (Accident accident : accidents) {
+                    if (accident.getId() != 933) { // REMOVE THIS
+                        cVVector.add(getAccidentValues(accident));
+                    }
+                }
+                if (cVVector.size() > 0) {
+                    ContentValues[] cVArray = new ContentValues[cVVector.size()];
+                    cVVector.toArray(cVArray);
+                    int count = getContext().getContentResolver().bulkInsert(
+                            AccidentEntry.CONTENT_URI,
+                            cVArray
+                    );
+                    Log.d(LOG_TAG, count + " accidents inserted");
                 }
             }
-            if (cVVector.size() > 0) {
-                ContentValues[] cVArray = new ContentValues[cVVector.size()];
-                cVVector.toArray(cVArray);
-                int count = getContext().getContentResolver().bulkInsert(
-                        AccidentEntry.CONTENT_URI,
-                        cVArray
-                );
-                Log.d(LOG_TAG, count + " accidents inserted");
-            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -60,7 +60,6 @@ import java.util.Date;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -215,6 +214,7 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
         if (GeneralUtil.isPlayServicesAvailable(this)) {
             buildGoogleApiClient();
         }
+
         mAdapter = new PlaceAutocompleteAdapter(this, android.R.layout.simple_list_item_1,
                 mGoogleApiClient, BOUNDS_UKRAINE, null);
 
@@ -341,7 +341,6 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
-
     private void loadAccident() {
         if (TextUtils.isEmpty(mAccident.getTitle())) {
             Toast.makeText(this, "Необіхно додати заголовок", Toast.LENGTH_SHORT).show();
@@ -386,28 +385,29 @@ public class NewAccidentActivity extends AppCompatActivity implements DatePicker
         String ip = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
         mAccident.setLastIp(ip);
 
-        Observable<String> observable = GeneralUtil.submitAccident(mAccident, mImageBitmap);
-        observable.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread()).subscribe(new Subscriber<String>() {
-            @Override
-            public void onCompleted() {
-                Toast.makeText(getApplicationContext(),
-                        "Дякуємо. Ваше повідомлення успішно додано",
-                        Toast.LENGTH_SHORT)
-                        .show();
-                finish();
-            }
+        GeneralUtil.submitAccident(mAccident, mImageBitmap)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+                        Toast.makeText(NewAccidentActivity.this,
+                                "Дякуємо. Ваше повідомлення успішно додано",
+                                Toast.LENGTH_SHORT)
+                                .show();
+                        finish();
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                finish();
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        finish();
+                    }
 
-            @Override
-            public void onNext(String accident) {
-
-            }
-        });
+                    @Override
+                    public void onNext(String accident) {
+                    }
+                });
     }
 
     @Override
