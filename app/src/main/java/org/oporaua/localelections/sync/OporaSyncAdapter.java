@@ -46,11 +46,12 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.Vector;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.GsonConverterFactory;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
 
@@ -82,39 +83,39 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-        if (extras == null) return;
-        if (extras.containsKey(SYNC_MODE)) {
-            int mode = extras.getInt(SYNC_MODE);
-            switch (mode) {
-                case SYNC_ACCIDENT_TYPES:
-                    syncAccidentTypes();
-                    break;
-                case SYNC_ACCIDENT_SUBTYPES:
-                    syncAccidentsSubtypes();
-                    break;
-                case SYNC_REGIONS:
-                    syncRegions();
-                    break;
-                case SYNC_LOCALITIES:
-                    syncLocalities();
-                    break;
-                case SYNC_PARTIES:
-                    syncParties();
-                    break;
-                case SYNC_ELECTIONS_TYPES:
-                    syncElectionsTypes();
-                    break;
-                case SYNC_ACCIDENTS:
-                    syncAccidents();
-                    break;
-                case SYNC_ACCIDENT:
-                    long id = extras.getLong(AccidentDetailsActivity.ARG_ACCIDENT_ID);
-                    syncAccident(id);
-                    break;
-                default:
-                    throw new UnsupportedOperationException("Unknown sync mode");
-            }
-        }
+//        if (extras == null) return;
+//        if (extras.containsKey(SYNC_MODE)) {
+//            int mode = extras.getInt(SYNC_MODE);
+//            switch (mode) {
+//                case SYNC_ACCIDENT_TYPES:
+//                    syncAccidentTypes();
+//                    break;
+//                case SYNC_ACCIDENT_SUBTYPES:
+//                    syncAccidentsSubtypes();
+//                    break;
+//                case SYNC_REGIONS:
+//                    syncRegions();
+//                    break;
+//                case SYNC_LOCALITIES:
+//                    syncLocalities();
+//                    break;
+//                case SYNC_PARTIES:
+//                    syncParties();
+//                    break;
+//                case SYNC_ELECTIONS_TYPES:
+//                    syncElectionsTypes();
+//                    break;
+//                case SYNC_ACCIDENTS:
+//                    syncAccidents();
+//                    break;
+//                case SYNC_ACCIDENT:
+//                    long id = extras.getLong(AccidentDetailsActivity.ARG_ACCIDENT_ID);
+//                    syncAccident(id);
+//                    break;
+//                default:
+//                    throw new UnsupportedOperationException("Unknown sync mode");
+//            }
+//        }
     }
 
     private void syncAccident(long id) {
@@ -148,7 +149,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
         Call<ElectionsType[]> call = mAccidentsRestService.getElectionsTypes();
         call.enqueue(new Callback<ElectionsType[]>() {
             @Override
-            public void onResponse(Response<ElectionsType[]> response, Retrofit retrofit) {
+            public void onResponse(Call<ElectionsType[]> call, Response<ElectionsType[]> response) {
                 ElectionsType[] electionsTypes = response.body();
                 if (electionsTypes != null) {
                     Vector<ContentValues> cVVector = new Vector<>(electionsTypes.length);
@@ -174,7 +175,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<ElectionsType[]> call, Throwable t) {
                 t.printStackTrace();
             }
         });
@@ -184,7 +185,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
         Call<Party[]> call = mAccidentsRestService.getParties();
         call.enqueue(new Callback<Party[]>() {
             @Override
-            public void onResponse(Response<Party[]> response, Retrofit retrofit) {
+            public void onResponse(Call<Party[]> call, Response<Party[]> response) {
                 Party[] parties = response.body();
                 if (parties != null) {
                     Vector<ContentValues> cVVector = new Vector<>(parties.length);
@@ -210,7 +211,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Party[]> call, Throwable t) {
                 t.printStackTrace();
             }
         });
@@ -220,7 +221,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
         Call<Locality[]> call = mAccidentsRestService.getLocalities();
         call.enqueue(new Callback<Locality[]>() {
             @Override
-            public void onResponse(Response<Locality[]> response, Retrofit retrofit) {
+            public void onResponse(Call<Locality[]> call, Response<Locality[]> response) {
                 Locality[] localities = response.body();
                 if (localities != null) {
                     Vector<ContentValues> cVVector = new Vector<>(localities.length);
@@ -248,9 +249,10 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Locality[]> call, Throwable t) {
                 t.printStackTrace();
             }
+
         });
     }
 
@@ -258,7 +260,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
         Call<Region[]> call = mAccidentsRestService.getRegions();
         call.enqueue(new Callback<Region[]>() {
             @Override
-            public void onResponse(Response<Region[]> response, Retrofit retrofit) {
+            public void onResponse(Call<Region[]> call, Response<Region[]> response) {
                 Region[] regions = response.body();
                 if (regions != null) {
 
@@ -286,11 +288,10 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
                         }
                     }
                 }
-
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Region[]> call, Throwable t) {
                 t.printStackTrace();
             }
         });
@@ -300,7 +301,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
         Call<AccidentSubtype[]> call = mAccidentsRestService.getAccidentSubtypes();
         call.enqueue(new Callback<AccidentSubtype[]>() {
             @Override
-            public void onResponse(Response<AccidentSubtype[]> response, Retrofit retrofit) {
+            public void onResponse(Call<AccidentSubtype[]> call, Response<AccidentSubtype[]> response) {
                 AccidentSubtype[] accidentSubtypes = response.body();
                 if (accidentSubtypes != null) {
                     Vector<ContentValues> cVVector = new Vector<>(accidentSubtypes.length);
@@ -328,7 +329,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<AccidentSubtype[]> call, Throwable t) {
                 t.printStackTrace();
             }
         });
@@ -338,7 +339,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
         Call<AccidentType[]> call = mAccidentsRestService.getAccidentTypes();
         call.enqueue(new Callback<AccidentType[]>() {
             @Override
-            public void onResponse(Response<AccidentType[]> response, Retrofit retrofit) {
+            public void onResponse(Call<AccidentType[]> call, Response<AccidentType[]> response) {
                 AccidentType[] accidentTypes = response.body();
                 if (accidentTypes != null) {
                     Vector<ContentValues> cVVector = new Vector<>(accidentTypes.length);
@@ -369,7 +370,7 @@ public class OporaSyncAdapter extends AbstractThreadedSyncAdapter {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<AccidentType[]> call, Throwable t) {
                 t.printStackTrace();
             }
         });

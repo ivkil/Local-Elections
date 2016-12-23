@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <include layout="@layout/app_toolbar"/>
+    <include layout="@layout/app_toolbar" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -27,35 +26,15 @@
                 android:background="?attr/selectableItemBackground"
                 android:padding="@dimen/opora_medium_dimen"
                 android:src="@drawable/logo_opora"
-                tools:ignore="contentDescription"/>
+                tools:ignore="contentDescription" />
 
-            <LinearLayout
-                android:id="@+id/contacts_mail_view"
+
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="?attr/listPreferredItemHeightSmall"
-                android:background="?attr/selectableItemBackground"
-                android:gravity="center_vertical"
-                android:paddingEnd="@dimen/opora_medium_dimen"
-                android:paddingLeft="@dimen/opora_medium_dimen"
-                android:paddingRight="@dimen/opora_medium_dimen"
-                android:paddingStart="@dimen/opora_medium_dimen">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_email_24dp"
-                    tools:ignore="contentDescription"/>
-
-                <TextView
-                    style="@style/TextAppearance.AppCompat.Body1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingEnd="@dimen/opora_medium_dimen"
-                    android:paddingLeft="@dimen/opora_medium_dimen"
-                    android:paddingRight="@dimen/opora_medium_dimen"
-                    android:paddingStart="@dimen/opora_medium_dimen"
-                    android:text="@string/contacts_mail"/>
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/opora_medium_dimen"
+                android:text="Консультації з виборчих питань, збір інформації про порушення - " />
 
             <LinearLayout
                 android:id="@+id/contacts_phone_view"
@@ -73,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_call_24dp"
-                    tools:ignore="contentDescription"/>
+                    tools:ignore="contentDescription" />
 
                 <TextView
                     style="@style/TextAppearance.AppCompat.Body1"
@@ -83,37 +62,9 @@
                     android:paddingLeft="@dimen/opora_medium_dimen"
                     android:paddingRight="@dimen/opora_medium_dimen"
                     android:paddingStart="@dimen/opora_medium_dimen"
-                    android:text="@string/contacts_phone"/>
+                    android:text="@string/contacts_phone" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/contacts_address_view"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/listPreferredItemHeightSmall"
-                android:background="?attr/selectableItemBackground"
-                android:gravity="center_vertical"
-                android:paddingEnd="@dimen/opora_medium_dimen"
-                android:paddingLeft="@dimen/opora_medium_dimen"
-                android:paddingRight="@dimen/opora_medium_dimen"
-                android:paddingStart="@dimen/opora_medium_dimen">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_location_on_24dp"
-                    tools:ignore="contentDescription"/>
-
-                <TextView
-                    style="@style/TextAppearance.AppCompat.Body1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingEnd="@dimen/opora_medium_dimen"
-                    android:paddingLeft="@dimen/opora_medium_dimen"
-                    android:paddingRight="@dimen/opora_medium_dimen"
-                    android:paddingStart="@dimen/opora_medium_dimen"
-                    android:text="@string/contacts_address"/>
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

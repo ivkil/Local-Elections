@@ -16,13 +16,11 @@ import org.oporaua.localelections.R;
 import org.oporaua.localelections.accidents.AccidentsListFragment;
 import org.oporaua.localelections.accidents.AccidentsMapFragment;
 import org.oporaua.localelections.blanks.BlanksFragment;
-import org.oporaua.localelections.gcm.RegistrationIntentService;
 import org.oporaua.localelections.interfaces.SetToolbarListener;
 import org.oporaua.localelections.tvk.TvkMembersFragment;
 import org.oporaua.localelections.ui.fragment.ContactsFragment;
 import org.oporaua.localelections.ui.fragment.WebViewFragment;
 import org.oporaua.localelections.util.Constants;
-import org.oporaua.localelections.util.GeneralUtil;
 import org.oporaua.localelections.violations.ViolationsFragment;
 
 import java.lang.annotation.Retention;
@@ -80,10 +78,10 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         mNavigationView.getMenu().findItem(mPreviousMenuItem).setCheckable(true);
         mNavigationView.getMenu().findItem(mPreviousMenuItem).setChecked(true);
 
-        if (GeneralUtil.isPlayServicesAvailable(this)) {
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
-        }
+//        if (GeneralUtil.isPlayServicesAvailable(this)) {
+//            Intent intent = new Intent(this, RegistrationIntentService.class);
+//            startService(intent);
+//        }
     }
 
     @Override
@@ -178,16 +176,16 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 return DRAWER_ID_VIOLATIONS;
             case R.id.blanks:
                 return DRAWER_ID_BLANKS;
-            case R.id.tvkmembers:
-                return DRAWER_ID_TVK_MEMBERS;
-            case R.id.accidents_map:
-                return DRAWER_ID_ACCIDENTS_MAP;
-            case R.id.accidents_list:
-                return DRAWER_ID_ACCIDENTS_LIST;
+//            case R.id.tvkmembers:
+//                return DRAWER_ID_TVK_MEMBERS;
+//            case R.id.accidents_map:
+//                return DRAWER_ID_ACCIDENTS_MAP;
+//            case R.id.accidents_list:
+//                return DRAWER_ID_ACCIDENTS_LIST;
             case R.id.contacts:
                 return DRAWER_ID_CONTACTS;
-            case R.id.settings:
-                return DRAWER_ID_SETTING;
+//            case R.id.settings:
+//                return DRAWER_ID_SETTING;
             default:
                 return DRAWER_ID_LAW;
         }

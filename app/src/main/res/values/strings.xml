@@ -13,7 +13,7 @@
     <string name="drawer_violations_title">Порушення</string>
     <string name="drawer_blanks_title">Бланки документів</string>
     <string name="drawer_tvk_members_title">ТВК. Пошук ротацій</string>
-    <string name="drawer_contacts_title">Контакти</string>
+    <string name="drawer_contacts_title">ГАРЯЧА ЛІНІЯ</string>
 
     <string name="find_indicator_empty">0/0</string>
     <string name="search_hint">Знайти</string>
@@ -22,7 +22,7 @@
     <string name="action_scroll_up_title">Угору</string>
     <string name="action_print_title">Друк</string>
     <string name="contacts_mail">info@opora.org.ua</string>
-    <string name="contacts_phone">044 286 26 70</string>
+    <string name="contacts_phone">044 591 44 44</string>
     <string name="contacts_address">м. Київ, вул. Професора Підвисоцького, 10/10, офіс 3</string>
     <string name="other">Інше</string>
 

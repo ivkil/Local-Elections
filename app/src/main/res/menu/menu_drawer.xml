@@ -1,63 +1,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group>
-        <item
-            android:id="@+id/law"
-            android:icon="@mipmap/ic_launcher"
-            android:title="@string/drawer_law_title" />
 
-        <item
-            android:id="@+id/manual"
-            android:icon="@mipmap/ic_launcher"
-            android:title="@string/drawer_manual_title" />
+    <item
+        android:id="@+id/law"
+        android:icon="@mipmap/ic_launcher"
+        android:title="@string/drawer_law_title" />
 
-        <item
-            android:id="@+id/violations"
-            android:icon="@mipmap/ic_launcher"
-            android:title="@string/drawer_violations_title" />
+    <item
+        android:id="@+id/manual"
+        android:icon="@mipmap/ic_launcher"
+        android:title="@string/drawer_manual_title" />
 
-        <item
-            android:id="@+id/blanks"
-            android:icon="@mipmap/ic_launcher"
-            android:title="@string/drawer_blanks_title" />
+    <item
+        android:id="@+id/violations"
+        android:icon="@mipmap/ic_launcher"
+        android:title="@string/drawer_violations_title" />
 
-        <item
-            android:id="@+id/tvkmembers"
-            android:icon="@mipmap/ic_launcher"
-            android:title="@string/drawer_tvk_members_title" />
-
-    </group>
-
-    <group>
-        <item android:title="@string/accidents">
-            <menu>
-                <item
-                    android:id="@+id/accidents_map"
-                    android:icon="@mipmap/ic_launcher"
-                    android:title="@string/drawer_accidents_map" />
-
-                <item
-                    android:id="@+id/accidents_list"
-                    android:icon="@mipmap/ic_launcher"
-                    android:title="@string/drawer_accidents_list" />
-            </menu>
-        </item>
-    </group>
+    <item
+        android:id="@+id/blanks"
+        android:icon="@mipmap/ic_launcher"
+        android:title="@string/drawer_blanks_title" />
 
 
-    <group>
-        <item android:title="@string/other">
-            <menu>
-                <item
-                    android:id="@+id/contacts"
-                    android:icon="@mipmap/ic_launcher"
-                    android:title="@string/drawer_contacts_title" />
-
-                <item
-                    android:id="@+id/settings"
-                    android:icon="@mipmap/ic_launcher"
-                    android:title="@string/settings_title" />
-            </menu>
-        </item>
-    </group>
+    <item
+        android:id="@+id/contacts"
+        android:icon="@mipmap/ic_launcher"
+        android:title="@string/drawer_contacts_title" />
 
 </menu>
